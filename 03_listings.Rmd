@@ -23,33 +23,31 @@ p_load(data.table)
 # Load files with AirBnB listings in Berlin
 One has more detailed information, while the other has only summarized information
 ```{r, echo = FALSE, include = FALSE}
-listings_detailed <- read.csv("18.10_listings_detailed.csv", sep=",", header=TRUE,
+listings_detailed <- utils::read.csv("18.10_listings_detailed.csv", sep=",", header=TRUE,
                          encoding = "UTF-8", na.strings = c("NA", ""),
                          stringsAsFactors = FALSE)
-listings_summarized <- read.csv("18.10_listings_summary.csv", sep=",", header=TRUE, 
+listings_summarized <- utils::read.csv("18.10_listings_summary.csv", sep=",", header=TRUE, 
                          encoding = "UTF-8", na.strings = c("NA", ""),
                          stringsAsFactors = FALSE)
 listings_detailed <-  listings_detailed %>% 
-    mutate_if(grepl("price|cleaning|deposit|people" , 
+    dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
                     names(listings_detailed)), funs(gsub("\\$", "", .))) %>%
-    mutate_if(grepl("price|cleaning|deposit|people" , 
+    dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
                     names(listings_detailed)), funs(gsub("\\,", "", .))) %>%
-    mutate_if(grepl("price|cleaning|deposit|people" , 
+    dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
                     names(listings_detailed)), funs(as.numeric(.)))
-# listings_detailed %>% dplyr::select(id, price) %>% filter(is.na(price))
 ```
 
 # Join the dataframes and clean columns of interest
 ```{r}
 # Checking that some info is equal in both dataframes
-listings_check <- full_join(listings_summarized, listings_detailed, by = "id") %>% 
-            transmute(diff_neighborhood = ifelse(
-              neighbourhood_group_cleansed == neighbourhood_group, TRUE, FALSE),
-                      diff_price = ifelse(price.x == price.y, TRUE, FALSE),
-                      diff_room = ifelse(room_type.x == room_type.y, TRUE, FALSE),
-                      diff_nights = ifelse(minimum_nights.x == minimum_nights.y, TRUE, FALSE)
-                      ) %>%
-            mutate_all(funs(as.factor))
+listings_check <- dplyr::full_join(listings_summarized, listings_detailed, by = "id") %>%
+  dplyr::transmute(diff_neighborhood = 
+                     ifelse(neighbourhood_group_cleansed == neighbourhood_group, TRUE, FALSE),
+                  diff_price = ifelse(price.x == price.y, TRUE, FALSE),
+                  diff_room = ifelse(room_type.x == room_type.y, TRUE, FALSE),
+                  diff_nights = ifelse(minimum_nights.x == minimum_nights.y, TRUE, FALSE)) %>%
+  dplyr::mutate_all(funs(as.factor))
 rm(listings_check)
 # Join dataframes, first clean and keep only variables of interest
 listings <- df_join_clean(df1 = listings_detailed, df2 = listings_summarized)
@@ -75,7 +73,7 @@ According to airbnb: https://www.airbnb.com/help/article/828
 We may therefore think that, if this variable has missing values, the host probably is not a superhost
 ```{r}
 listings <- listings %>%
-  mutate(host_is_superhost = ifelse(is.na(host_is_superhost), FALSE, host_is_superhost))
+  dplyr::mutate(host_is_superhost = ifelse(is.na(host_is_superhost), FALSE, host_is_superhost))
 ```
 
 Secondly, we have a look at the rows that have missing values for review_scores_rating (together with the column number_of_reviews)
@@ -89,9 +87,7 @@ listings %>%
 If the number_of_reviews is zero, we set the review_scores_value to 0 meanwhile creating a variable to keep the fact that some listings have not been reviewed yet
 ```{r}
 listings <- listings %>%
-  mutate(review_scores_value = replace(review_scores_value, 
-                                       values = ifelse(number_of_reviews == 0, 0,
-                                                       review_scores_value)),
+  dplyr::mutate(review_scores_value = ifelse(number_of_reviews == 0, 0, review_scores_value),
          reviewed_yn = ifelse(number_of_reviews == 0, FALSE, TRUE))
 ```
 
@@ -148,21 +144,15 @@ listings %>%
 ```
 Being the amount of missing values in these features relative small, we can derive their value from the other variables:
 ```{r}
-# If beds is NA, but bedrooms has a valid value, we set beds with the number of bedrooms
 listings <- listings %>%
-  mutate(beds = replace(beds, values = ifelse(is.na(beds) & !is.na(bedrooms), 
-                                              bedrooms, beds)))
-# If bedrooms is NA, but beds) has a valid value, we set bedrooms with the number of beds
-listings <- listings %>%
-  mutate(bedrooms = replace(bedrooms, values = ifelse(is.na(bedrooms) & !is.na(beds),
-                                                      beds, bedrooms)))
-# If both beds and bedrooms are NA: 1
-# Since in this case the property can accomodate only one person, we assume that it has 1 bed and 1 bedroom (even if it might not be separate)
-listings <- listings %>%
-  mutate(beds = replace(beds, values = ifelse(is.na(beds) & is.na(bedrooms),
-                                              1, beds)),
-         bedrooms = replace(beds, values = ifelse(is.na(beds) & is.na(bedrooms),
-                                              1, bedrooms)))
+        # If beds is NA, but bedrooms has a valid value, we set beds with the number of bedrooms
+  dplyr::mutate(beds = ifelse(is.na(beds) & !is.na(bedrooms), bedrooms, beds),
+         # If bedrooms is NA, but beds) has a valid value, we set bedrooms with the number of beds
+              bedrooms = ifelse(is.na(bedrooms) & !is.na(beds), beds, bedrooms),
+         # If both beds and bedrooms are NA: 1
+        # Since in this case the property can accomodate only one person, we assume that it has 1 bed and 1            bedroom (even if it might not be separate)
+              beds = ifelse(is.na(beds) & is.na(bedrooms), 1, beds),
+              bedrooms = ifelse(is.na(beds) & is.na(bedrooms), 1, bedrooms))
 ```
 
 ## Keep only variables of interest
@@ -248,15 +238,15 @@ Firstly we need to extract all subway (U-Bahn) and railway (S-Bahn, Regio, Long-
 # The DF stations_df is created in 03_maps.Rmd
 # If U-Bahn and S-Bahn station have different coordinates, find the middle point
 bahn_stations_df <- stations_df %>%
-  filter(fclass %like% "railway") %>%
-  mutate(s_bahn = ifelse(startsWith(name, "S "), TRUE, FALSE),
-        u_bahn = ifelse(startsWith(name, "U "), TRUE, FALSE),
-        # name = replace(name = values("^[[:alpha:]](?=\\s)", "",name)), )
-        name = replace(name, values = gsub("S ", "", name)),
-        name = replace(name, values = gsub("U ", "", name))) %>%
-  group_by(name) %>%
+  dplyr::filter(fclass %like% "railway") %>%
+  dplyr::mutate(s_bahn = ifelse(startsWith(name, "S "), TRUE, FALSE),
+                u_bahn = ifelse(startsWith(name, "U "), TRUE, FALSE),
+                # name = replace(name = values("^[[:alpha:]](?=\\s)", "",name)), )
+                name = replace(name, values = gsub("S ", "", name)),
+                name = replace(name, values = gsub("U ", "", name))) %>%
+  dplyr::group_by(name) %>%
   dplyr::summarize(long = mean(long), lat = mean(lat),
-         s_bahn = any(s_bahn), u_bahn = any(u_bahn))
+                  s_bahn = any(s_bahn), u_bahn = any(u_bahn))
 ```
 
 Secondly we calculate the distance from the nearest station and the number of station within 1km (1000m)
@@ -275,8 +265,7 @@ attractions_df <- data.frame(
   lat = c(52.518611, 52.516389, 52.520803, 52.513333, 52.519167, 
           52.500833, 52.521111, 52.520556, 52.535, 52.509444),
   long = c(13.376111, 13.377778, 13.40945, 13.393056, 13.401111,
-           13.312778, 13.295833, 13.397222, 13.389722, 13.375833)
-                             )
+           13.312778, 13.295833, 13.397222, 13.389722, 13.375833))
 ```
 
 Secondly we calculate the distance from the nearest attraction and the number of attractions within 2km (2000m)
