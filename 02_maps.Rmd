@@ -24,9 +24,9 @@ p_load(tidyverse)
 p_load(leaflet)
 p_load(Tmisc)
 p_load(htmltools)
+p_load(sp)
+p_load(rgdal)
 
-
-library(sp)
 library(data.table)
 
 
@@ -42,45 +42,54 @@ library(XML)
 
 # Load the shapefile
 ```{r}
-berlin <- shapefile(file.path(getwd(), "mygeodata", "Berlin-Ortsteile-polygon.shp", fsep="/"))
+berlin <- raster::shapefile(file.path(getwd(), "mygeodata", "Berlin-Ortsteile-polygon.shp", fsep="/"))
 # Calculating the center of Berlin
-berlin_center <- slot(berlin, "bbox") %>%
-  as.data.frame() %>%
-  transmute(center = (max + min)/2,
+berlin_center <- methods::slot(berlin, "bbox") %>%
+  base::as.data.frame() %>%
+  dplyr::transmute(center = (max + min)/2,
             coords = c("long", "lat")) %>%
-  spread(key = coords, value = center)
+  tidyr::spread(key = coords, value = center)
 ```
 
 # Create sf objects with Berlin districts
 The shapefile comes with all Berlin neighbourhoods, but we want to show only the districts
 ```{r}
-berlin_district_sf <- unionSpatialPolygons(berlin, berlin$BEZNAME) %>% # Join polygons according to district name
-  st_as_sf() %>% # Transform into sf Object
-  st_set_crs(proj4string(berlin)) %>% # add Coordinate Reference System (CRM)
-  mutate(id = berlin$BEZNAME %>% unique() %>% sort())
+berlin_district_sf <- maptools::unionSpatialPolygons(berlin, berlin$BEZNAME) %>% 
+  # Join polygons according to district name
+  sf::st_as_sf() %>% # Transform into sf Object
+  sf::st_set_crs(proj4string(berlin)) %>% # add Coordinate Reference System (CRM)
+  dplyr::mutate(id = berlin$BEZNAME %>% unique() %>% sort())
 ```
 
 # Map the SpatialPolygons with Leaflet
 ```{r}
 # District names with coordinates
 districts <- broom::tidy(berlin, region = "BEZNAME") %>%
-  dplyr::select(id, group, long, lat) %>% 
-  mutate(group = replace(group, values = id)) %>%
-  mutate(group = replace(group, values = gsub("-", "-<br/>", group))) %>%
-  group_by(group, id) %>%
-  summarize(long = mean(long),
+  dplyr::select(id, long, lat) %>% 
+  dplyr::mutate(leaflet = gsub("-", "-<br/>", id),
+                ggplot = gsub("-", "- \n ", id)) %>%
+  dplyr::group_by(id, leaflet, ggplot) %>%
+  dplyr::summarize(long = mean(long),
             lat = mean(lat)) %>%
-  ungroup()
+  dplyr::ungroup()
 
+# leaflet
 colorlist = list("blue", "green", "yellow", "orange", "pink", "brown", "purple", "grey", "black", "darkblue", "khaki", "magenta")
 leaflet() %>%
   addTiles() %>%
   addPolygons(data = berlin_district_sf, weight = 1, smoothFactor = 0.5, fillOpacity = 0.5,
               fillColor = colorlist, color = colorlist) %>%
   addLabelOnlyMarkers(data = districts,
-                    lng = ~long, lat = ~lat, label = ~lapply(group, htmltools::HTML),
+                    lng = ~long, lat = ~lat, label = ~lapply(leaflet, htmltools::HTML),
                     labelOptions = labelOptions(noHide = TRUE, direction = 'center',
                                                 textOnly = TRUE))
+# ggplot
+ggplot() + 
+  geom_sf(data = berlin_district_sf, show.legend = FALSE) +
+  coord_sf(datum = NA) +
+  aes(fill = id) +
+  geom_text(data = districts, aes(x = long, y = lat, label = ggplot, hjust = "center"), size = 3.5) + 
+  theme_void()
 ```
 
 
@@ -92,25 +101,25 @@ Area C will not be displayed since it is in Brandenburg.
 
 # Create SpatialPolygons of all Berlin
 ```{r}
-berlin_all_sf <- aggregate(berlin,dissolve=TRUE) %>%
-  st_as_sf() %>%
-  st_set_crs(proj4string(berlin))
+berlin_all_sf <- raster::aggregate(berlin,dissolve=TRUE) %>%
+  sf::st_as_sf() %>%
+  sf::st_set_crs(proj4string(berlin))
 ```
 
 # Create SpatialPolygons for the Ringbahn (area A)
 First of all, we load the shapefile containing the location of all stations and transport stops in Berlin
 ```{r}
-stations <- shapefile(file.path(getwd(), "berlin-latest-free", "gis_osm_transport_free_1.shp", fsep="/"))
+stations <- raster::shapefile(file.path(getwd(), "berlin-latest-free", "gis_osm_transport_free_1.shp", fsep="/"))
 ```
 
 Secondly, we extract the coordinates for the Ringbahn stations
 ```{r}
 # Create DF out of SpatialPointsDataFrame
-stations_df <- data.frame(stations) %>% 
-  rename(long = coords.x1, lat = coords.x2) %>%
-  mutate(name = replace(name, values = gsub("Berlin ", "", name)),
-        name = replace(name, values = gsub("Berlin-", "", name)),
-        name = replace(name, values = gsub(" *\\(.*?\\) *", "", name))) %>%
+stations_df <- base::data.frame(stations) %>% 
+  dplyr::rename(long = coords.x1, lat = coords.x2) %>%
+  dplyr::mutate(name = gsub("Berlin ", "", name),
+        name = gsub("Berlin-", "", name),
+        name = gsub(" *\\(.*?\\) *", "", name)) %>%
   dplyr::select(fclass, name, long, lat)
   
 # Load the names of all Ringbahn stations, the initial one repeated at the end so we can get a full circle
@@ -123,17 +132,17 @@ ringbahn_names <- c("Südkreuz", "Schöneberg", "Innsbrucker Platz", "Bundesplat
                     "Sonnenallee", "Neukölln", "Hermannstraße",
                     "Tempelhof", "Südkreuz") 
 # Create DF with Ringbahn stations and their order
-ringbahn_names_df <- data.frame(name = ringbahn_names, stringsAsFactors = FALSE) %>% 
-  mutate(order = 1:n()) 
+ringbahn_names_df <- base::data.frame(name = ringbahn_names, stringsAsFactors = FALSE) %>% 
+  dplyr::mutate(order = 1:n()) 
 # Select from the list of all stations those that are railway and whose name belongs to our Ringbahn names list and the rearrange according to the order we inserted before
 ringbahn_df <- stations_df %>%
-  mutate(name = replace(name, values = gsub("S ", "", name)),
+  dplyr::mutate(name = replace(name, values = gsub("S ", "", name)),
         name = replace(name, values = gsub("U ", "", name))) %>%
-  filter(fclass %like% "railway" & name %in% ringbahn_names) %>%
-  group_by(name) %>%
+  dplyr::filter(fclass %like% "railway" & name %in% ringbahn_names) %>%
+  dplyr::group_by(name) %>%
   dplyr::summarize(long = mean(long), lat = mean(lat)) %>%
-  full_join(ringbahn_names_df, by = "name") %>%
-  arrange(order) 
+  dplyr::full_join(ringbahn_names_df, by = "name") %>%
+  dplyr::arrange(order) 
 ```
 
 Finally, we transform the coordinate points into a polygon
@@ -141,26 +150,26 @@ Finally, we transform the coordinate points into a polygon
 # Create DF with just the coordinates
 ringbahn_coordinates <- ringbahn_df %>% dplyr::select(long, lat) 
 # Transform points into polygons
-ringbahn_sf <- SpatialPolygons(list(Polygons(list(Polygon(ringbahn_coordinates)),
+ringbahn_sf <- sp::SpatialPolygons(list(Polygons(list(Polygon(ringbahn_coordinates)),
                                              ID = "A")),
                                proj4string = CRS(proj4string(berlin))) %>% # Transform into spatial polygon
-  st_as_sf() %>%
-  mutate(id = "A") # Transform into sf Object
+  sf::st_as_sf() %>%
+  dplyr::mutate(id = "A") # Transform into sf Object
 ```
 
 # Create sf Object with areas A and B
 Firstly we need to create an sf object with a hole for B
 ```{r}
-vbb_B_sf <-  rbind(ringbahn_sf$geometry, berlin_all_sf) %>%
-  st_intersection() %>% # Calculate intersections
-  filter(n.overlaps == 1) %>% # Select only polygon where there is only one intersection
-  select(geometry) %>%
-  mutate(id = "B")
+vbb_B_sf <-  base::rbind(ringbahn_sf$geometry, berlin_all_sf) %>%
+  sf::st_intersection() %>% # Calculate intersections
+  dplyr::filter(n.overlaps == 1) %>% # Select only polygon where there is only one intersection
+  dplyr::select(geometry) %>%
+  dplyr::mutate(id = "B")
 ```
 
 Then we join the sf object for B with the sf object for A
 ```{r}
-vbb_AB_sf <- rbind(ringbahn_sf, vbb_B_sf)
+vbb_AB_sf <- base::rbind(ringbahn_sf, vbb_B_sf)
 ```
 
 # Map the VBB areas A and B with Leaflet
@@ -182,7 +191,7 @@ leaflet() %>%
             stroke = FALSE,
             fillColor = ~pal_districts(Listings_District$price_avg)) %>%
   addLabelOnlyMarkers(data = districts,
-                    lng = ~long, lat = ~lat, label = ~lapply(group, html),
+                    lng = ~long, lat = ~lat, label = ~lapply(leaflet, html),
                     labelOptions = labelOptions(noHide = TRUE, direction = 'center', textOnly = TRUE)) %>%
   addLegend(position = "bottomright", pal = pal_districts, values = Listings_District$price_avg,
           title = "Average $/night")
