@@ -1,0 +1,314 @@
+---
+title: "Listings"
+author: "Silvia Ventoruzzo"
+date: "27/11/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+Sys.setenv(LANG = "en")
+Sys.setlocale("LC_ALL", "en_US.UTF-8")
+```
+
+```{r}
+source("01_functions.R")
+p_load(geosphere)
+p_load(data.table)
+
+```
+
+## Dataframe with aggregated infos about AirBnB listings in Berlin
+
+# Load files with AirBnB listings in Berlin
+One has more detailed information, while the other has only summarized information
+```{r, echo = FALSE, include = FALSE}
+listings_detailed <- read.csv("18.10_listings_detailed.csv", sep=",", header=TRUE,
+                         encoding = "UTF-8", na.strings = c("NA", ""),
+                         stringsAsFactors = FALSE)
+listings_summarized <- read.csv("18.10_listings_summary.csv", sep=",", header=TRUE, 
+                         encoding = "UTF-8", na.strings = c("NA", ""),
+                         stringsAsFactors = FALSE)
+listings_detailed <-  listings_detailed %>% 
+    mutate_if(grepl("price|cleaning|deposit|people" , 
+                    names(listings_detailed)), funs(gsub("\\$", "", .))) %>%
+    mutate_if(grepl("price|cleaning|deposit|people" , 
+                    names(listings_detailed)), funs(gsub("\\,", "", .))) %>%
+    mutate_if(grepl("price|cleaning|deposit|people" , 
+                    names(listings_detailed)), funs(as.numeric(.)))
+# listings_detailed %>% dplyr::select(id, price) %>% filter(is.na(price))
+```
+
+# Join the dataframes and clean columns of interest
+```{r}
+# Checking that some info is equal in both dataframes
+listings_check <- full_join(listings_summarized, listings_detailed, by = "id") %>% 
+            transmute(diff_neighborhood = ifelse(
+              neighbourhood_group_cleansed == neighbourhood_group, TRUE, FALSE),
+                      diff_price = ifelse(price.x == price.y, TRUE, FALSE),
+                      diff_room = ifelse(room_type.x == room_type.y, TRUE, FALSE),
+                      diff_nights = ifelse(minimum_nights.x == minimum_nights.y, TRUE, FALSE)
+                      ) %>%
+            mutate_all(funs(as.factor))
+rm(listings_check)
+# Join dataframes, first clean and keep only variables of interest
+listings <- df_join_clean(df1 = listings_detailed, df2 = listings_summarized)
+```
+
+# Dealing with missing values
+Check if there are missing values
+```{r}
+# Check if there are missing values
+apply(listings, 2, function(x) any(is.na(x)))
+```
+
+Columns of interest that have missing values: host_is_superhost, bedrooms, beds, review_scores_rating.
+First, we have a look at the rows containing missing values for host_is_superhost
+```{r}
+listings %>%
+  filter(is.na(host_is_superhost))
+# 22
+```
+
+According to airbnb: https://www.airbnb.com/help/article/828
+"Once a host reaches Superhost status, a badge will automatically appear on their listing and profile to help you identify them."
+We may therefore think that, if this variable has missing values, the host probably is not a superhost
+```{r}
+listings <- listings %>%
+  mutate(host_is_superhost = ifelse(is.na(host_is_superhost), FALSE, host_is_superhost))
+```
+
+Secondly, we have a look at the rows that have missing values for review_scores_rating (together with the column number_of_reviews)
+```{r}
+listings %>%
+  filter(is.na(review_scores_value)) %>%
+  dplyr::select(id, review_scores_value, number_of_reviews)
+# 4,339
+```
+
+If the number_of_reviews is zero, we set the review_scores_value to 0 meanwhile creating a variable to keep the fact that some listings have not been reviewed yet
+```{r}
+listings <- listings %>%
+  mutate(review_scores_value = replace(review_scores_value, 
+                                       values = ifelse(number_of_reviews == 0, 0,
+                                                       review_scores_value)),
+         reviewed_yn = ifelse(number_of_reviews == 0, FALSE, TRUE))
+```
+
+For the rest, we derive this information has an average of the review scores for the specific catgories
+```{r}
+listings %>%
+  filter(is.na(review_scores_value)) %>%
+  dplyr::select(id, review_scores_accuracy,
+                review_scores_cleanliness, review_scores_checkin, review_scores_communication,
+                review_scores_location, review_scores_value,
+                number_of_reviews)
+# 531
+
+listings %>%
+  filter(is.na(review_scores_value)) %>%
+  mutate(review_scores_value = 
+        ifelse(is.na(review_scores_value) & !is.na(review_scores_accuracy) &
+                  !is.na(review_scores_cleanliness) & !is.na(review_scores_checkin) &
+                  !is.na(review_scores_communication) & !is.na(review_scores_location),
+              sum(review_scores_accuracy, review_scores_cleanliness,
+                  review_scores_checkin, review_scores_communication,
+                  review_scores_location)/5 %>% round(0),
+        ifelse()))) %>%
+  dplyr::select(id, review_scores_accuracy,
+                review_scores_cleanliness, review_scores_checkin, review_scores_communication,
+                review_scores_location, review_scores_value,
+                number_of_reviews)
+# needs a lot of ifelse: can it be looped?
+
+
+
+
+# all: 0
+# to be finished!
+
+listings %>%
+  dplyr::summarize(mean = mean(review_scores_value, na.rm = TRUE)) %>%
+  round(0)
+# 8
+# to keep working I firstly subsitute with mean value
+listings <- listings %>%
+  mutate(review_scores_value = 
+        ifelse(is.na(review_scores_value), 8, review_scores_value))
+```
+
+
+Now we tackle bedrooms and beds.
+```{r}
+listings %>%
+  filter(is.na(bedrooms) | 
+        is.na(beds)) %>%
+  dplyr::select(id, accommodates, bedrooms, beds)
+# 56
+```
+Being the amount of missing values in these features relative small, we can derive their value from the other variables:
+```{r}
+# If beds is NA, but bedrooms has a valid value, we set beds with the number of bedrooms
+listings <- listings %>%
+  mutate(beds = replace(beds, values = ifelse(is.na(beds) & !is.na(bedrooms), 
+                                              bedrooms, beds)))
+# If bedrooms is NA, but beds) has a valid value, we set bedrooms with the number of beds
+listings <- listings %>%
+  mutate(bedrooms = replace(bedrooms, values = ifelse(is.na(bedrooms) & !is.na(beds),
+                                                      beds, bedrooms)))
+# If both beds and bedrooms are NA: 1
+# Since in this case the property can accomodate only one person, we assume that it has 1 bed and 1 bedroom (even if it might not be separate)
+listings <- listings %>%
+  mutate(beds = replace(beds, values = ifelse(is.na(beds) & is.na(bedrooms),
+                                              1, beds)),
+         bedrooms = replace(beds, values = ifelse(is.na(beds) & is.na(bedrooms),
+                                              1, bedrooms)))
+```
+
+## Keep only variables of interest
+```{r}
+listings <- listings %>%
+    # Keep only columns of interest
+    dplyr::select(id, neighbourhood_group, lat, long, price, property_type, room_type,
+                  security_deposit_yn, cleaning_fee_yn,
+                  host_is_superhost, accommodates, bedrooms, beds, minimum_nights, 
+                  review_scores_value, number_of_reviews, cancellation_policy)
+```
+
+## New features
+# District and vbb area
+```{r}
+listings <- point_in_polygons(points_df = listings,
+                              polys_sf = berlin_district_sf,
+                              var_name = "district")
+
+listings <- point_in_polygons(points_df = listings,
+                              polys_sf = vbb_AB_sf,
+                              var_name = "vbb_area")
+```
+
+Check for missing values and in case plot them
+```{r}
+listings %>%
+  filter(is.na(district) | is.na(vbb_area))
+# 3
+leaflet() %>%
+  addTiles() %>%
+  addPolygons(data = berlin_district_sf, weight = 1, smoothFactor = 0.5, fillOpacity = 0.5,
+              fillColor = colorlist, color = colorlist) %>%
+  addLabelOnlyMarkers(data = districts,
+                    lng = ~long, lat = ~lat, label = ~id, # here should be lapply(group, HTML)
+                    labelOptions = labelOptions(noHide = TRUE, direction = 'center',
+                                                textOnly = TRUE)) %>%
+  addCircles(data = listings %>%
+                    filter(is.na(district) | is.na(vbb_area)),
+             lng = ~long, lat = ~lat, color = "red")
+# For the sake of consistency, we will delete these listings
+listings <- listings %>%
+  filter(!is.na(district) & !is.na(vbb_area))
+```
+
+I'll also check that "district" is the same as "neighbourhood_group"
+```{r}
+listings %>%
+  dplyr::select(id, neighbourhood_group, district, lat, long) %>%
+  dplyr::filter(neighbourhood_group != district)
+# 5
+```
+
+Five are different: let me check the plot first.
+```{r}
+leaflet() %>%
+  addTiles() %>%
+  addPolygons(data = Berlin_district_sf, weight = 1, smoothFactor = 0.5, fillOpacity = 0.5,
+              fillColor = colorlist, color = colorlist) %>%
+  addLabelOnlyMarkers(data = districts,
+                    lng = ~long, lat = ~lat, label = ~id, # here should be lapply(group, HTML)
+                    labelOptions = labelOptions(noHide = TRUE, direction = 'center',
+                                                textOnly = TRUE)) %>%
+  addCircles(data = listings %>%
+              dplyr::select(id, neighbourhood_group, district, lat, long) %>%
+              dplyr::filter(neighbourhood_group != district),
+             lng = ~long, lat = ~lat) %>%
+  addMarkers(data = listings %>%
+              dplyr::select(id, neighbourhood_group, district, lat, long) %>%
+              dplyr::filter(neighbourhood_group != district),
+              lng = ~long, lat = ~lat,
+              popup = htmlEscape(id)) # this is not working, need to show id
+```
+
+We can see they are all on the borders, so without information on how "neighbourhood_group" was derived, for the sake of consistency with the categorization, we keep "district" for further analysis 
+```{r}
+listings$neighbourhood_group <- NULL
+```
+
+# Distance from stations
+Firstly we need to extract all subway (U-Bahn) and railway (S-Bahn, Regio, Long-distance) stations
+```{r}
+# The DF stations_df is created in 03_maps.Rmd
+# If U-Bahn and S-Bahn station have different coordinates, find the middle point
+bahn_stations_df <- stations_df %>%
+  filter(fclass %like% "railway") %>%
+  mutate(s_bahn = ifelse(startsWith(name, "S "), TRUE, FALSE),
+        u_bahn = ifelse(startsWith(name, "U "), TRUE, FALSE),
+        # name = replace(name = values("^[[:alpha:]](?=\\s)", "",name)), )
+        name = replace(name, values = gsub("S ", "", name)),
+        name = replace(name, values = gsub("U ", "", name))) %>%
+  group_by(name) %>%
+  dplyr::summarize(long = mean(long), lat = mean(lat),
+         s_bahn = any(s_bahn), u_bahn = any(u_bahn))
+```
+
+Secondly we calculate the distance from the nearest station and the number of station within 1km (1000m)
+```{r}
+listings <- distance_count(main = listings, reference = bahn_stations_df,
+                           var_name = "station", distance = 1000)
+```
+
+# Distance from top attractions
+Firstly we create the dataframe with the top 10 attractions (according to visitberlin.de) with their coordinates (from Wikipedia and tools.wmflabs.org/geohack)
+```{r}
+attractions_df <- data.frame(
+  name = c("Reichstag", "Brandenburger Tor", "Fernsehturm", "Gendarmenmarkt",
+          "Berliner Dom", "Kurfürstendamm", "Schloss Charlottenburg", "Museuminsel",
+          "Gedenkstätte Berliner Mauer", "Potsdamer Platz"),
+  lat = c(52.518611, 52.516389, 52.520803, 52.513333, 52.519167, 
+          52.500833, 52.521111, 52.520556, 52.535, 52.509444),
+  long = c(13.376111, 13.377778, 13.40945, 13.393056, 13.401111,
+           13.312778, 13.295833, 13.397222, 13.389722, 13.375833)
+                             )
+```
+
+Secondly we calculate the distance from the nearest attraction and the number of attractions within 2km (2000m)
+```{r}
+listings <- distance_count(main = listings, reference = attractions_df,
+                           var_name = "attraction", distance = 2000)
+```
+
+## Summary dataframe
+Variables to summarize:
+- price: mean (all and pro district)
+- review_scores_value: mean (all and pro district)
+- property_type: how many pro type (all and pro district)
+- room_type: how many pro type (all and pro district)
+- cancellation_policy: how many pro type (all and pro district)
+```{r}
+listings_summary <- summarize_df(df = listings,
+                                 vars_mean = c("price", "review_scores_value"),
+                                 vars_count = c("property_type", "room_type",
+                                                "cancellation_policy"))
+```
+
+And now the same summarizes for each district
+```{r}
+listings_district_summary <- summarize_df(df = listings,
+                                  wrt = "district",
+                                 vars_mean = c("price", "review_scores_value"),
+                                 vars_count = c("property_type", "room_type",
+                                                "cancellation_policy"))
+```
+
+
+```{r}
+
+```
