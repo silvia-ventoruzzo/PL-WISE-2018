@@ -36,7 +36,44 @@ listings_detailed <-  listings_detailed %>%
                     names(listings_detailed)), funs(gsub("\\,", "", .))) %>%
     dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
                     names(listings_detailed)), funs(as.numeric(.)))
+
+load_listings <- function(file) {
+  wd <- getwd()
+  setwd(file.path(getwd(), "insideairbnb", fsep="/"))
+  df <- utils::read.csv(file, sep = ",", header = TRUE, stringsAsFactors = FALSE, encoding = "UTF-8",
+                        na.strings = c("NA", ""))
+  df <- df %>%
+    dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
+                    names(df)), funs(gsub("\\$", "", .))) %>%
+    dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
+                    names(df)), funs(gsub("\\,", "", .))) %>%
+    dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
+                    names(df)), funs(as.numeric(.)))
+  setwd(wd)
+  return(df)
+}
+
+listings_detailed_10 <- load_listings(file = "18.10_listings_detailed.csv")
+listings_summarized_10 <- load_listings(file = "18.10_listings_summary.csv")
+listings_detailed_11 <- load_listings(file = "07.11_listings_detailed.csv")
+listings_summarized_11 <- load_listings(file = "07.11_listings_summary.csv")
 ```
+
+Compare df for October and November
+```{r}
+p_load(arsenal)
+empty_rows <- listings_summarized_10 %>%
+  filter(row_number() %in% 1:(nrow(listings_summarized_11) - nrow(listings_summarized_10))) %>%
+  mutate_all(funs(replace(., values = NA)))
+  
+listings_summarized_10_empty_rows <- rbind(listings_summarized_10, empty_rows)
+  
+listings_summarized_10 
+comparison <- testthat::compare(listings_summarized_10_empty_rows$id, listings_summarized_11$id)
+
+summary(comparison)
+```
+
 
 # Join the dataframes and clean columns of interest
 ```{r}
