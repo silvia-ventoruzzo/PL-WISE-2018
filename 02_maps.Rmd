@@ -27,11 +27,10 @@ p_load(htmltools)
 p_load(sp)
 p_load(rgdal)
 
-library(data.table)
 
 
 
-library(XML)
+# library(XML)
 
 # library(Hmisc)
 
@@ -122,23 +121,24 @@ stations_df <- base::data.frame(stations) %>%
         name = gsub(" *\\(.*?\\) *", "", name)) %>%
   dplyr::select(fclass, name, long, lat)
   
-# Load the names of all Ringbahn stations, the initial one repeated at the end so we can get a full circle
-ringbahn_names <- c("Südkreuz", "Schöneberg", "Innsbrucker Platz", "Bundesplatz",
+# Create DF with Ringbahn stations and their order
+# The initial station is repeated to have a full circle
+ringbahn_names_df <- base::data.frame(name = c("Südkreuz", "Schöneberg", "Innsbrucker Platz", "Bundesplatz",
                     "Heidelberger Platz", "Hohenzollerndamm", "Halensee", "Westkreuz",
                     "Messe Nord/ICC", "Westend", "Jungfernheide", "Beusselstraße",
                     "Westhafen", "Wedding", "Gesundbrunnen", "Schönhauser Allee",
                     "Prenzlauer Allee", "Greifswalder Straße", "Landsberger Allee", 
                     "Storkower Straße", "Frankfurter Allee", "Ostkreuz", "Treptower Park",
                     "Sonnenallee", "Neukölln", "Hermannstraße",
-                    "Tempelhof", "Südkreuz") 
-# Create DF with Ringbahn stations and their order
-ringbahn_names_df <- base::data.frame(name = ringbahn_names, stringsAsFactors = FALSE) %>% 
-  dplyr::mutate(order = 1:n()) 
+                    "Tempelhof", "Südkreuz"),
+                    stringsAsFactors = FALSE) %>% 
+  dplyr::mutate(order = as.integer(rownames(.)))
+
 # Select from the list of all stations those that are railway and whose name belongs to our Ringbahn names list and the rearrange according to the order we inserted before
 ringbahn_df <- stations_df %>%
   dplyr::mutate(name = replace(name, values = gsub("S ", "", name)),
         name = replace(name, values = gsub("U ", "", name))) %>%
-  dplyr::filter(fclass %like% "railway" & name %in% ringbahn_names) %>%
+  dplyr::filter(fclass %like% "railway" & name %in% ringbahn_names_df$name) %>%
   dplyr::group_by(name) %>%
   dplyr::summarize(long = mean(long), lat = mean(lat)) %>%
   dplyr::full_join(ringbahn_names_df, by = "name") %>%
@@ -158,17 +158,16 @@ ringbahn_sf <- sp::SpatialPolygons(list(Polygons(list(Polygon(ringbahn_coordinat
 ```
 
 # Create sf Object with areas A and B
-Firstly we need to create an sf object with a hole for B
+
 ```{r}
+# Firstly we need to create an sf object with a hole for B
 vbb_B_sf <-  base::rbind(ringbahn_sf$geometry, berlin_all_sf) %>%
   sf::st_intersection() %>% # Calculate intersections
   dplyr::filter(n.overlaps == 1) %>% # Select only polygon where there is only one intersection
   dplyr::select(geometry) %>%
   dplyr::mutate(id = "B")
-```
 
-Then we join the sf object for B with the sf object for A
-```{r}
+# Then we join the sf object for B with the sf object for A
 vbb_AB_sf <- base::rbind(ringbahn_sf, vbb_B_sf)
 ```
 

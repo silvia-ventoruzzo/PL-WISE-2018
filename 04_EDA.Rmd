@@ -1,0 +1,44 @@
+---
+title: "Exploratory Data Analysis"
+author: "Silvia Ventoruzzo"
+date: "4/12/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+Sys.setenv(LANG = "en")
+Sys.setlocale("LC_ALL", "en_US.UTF-8")
+```
+
+```{r}
+source("01_functions.R")
+```
+
+## Distribution of price
+```{r}
+# bp <- boxplot(listings$price)
+# bp$out
+# 
+# 
+# ?ggplot(listings, aes(x = price)) +
+#     geom_histogram(binwidth=.5, colour="black", fill="light blue") +
+#     geom_vline(aes(xintercept=mean(price, na.rm=T)),   # Ignore NA values for mean
+#                color="red", linetype="dashed", size=1)
+```
+
+# Correlation between different variables and price
+
+```{r}
+listings_correlation <- listings %>%
+  recode_all("room_type") %>% from_row_to_col("room_type") %>%
+  recode_all("property_type") %>% from_row_to_col("property_type") %>%
+  recode_all("cancellation_policy") %>% from_row_to_col("cancellation_policy") %>%
+  recode_all("district") %>% from_row_to_col("district") %>%
+  recode_all("vbb_area") %>% from_row_to_col("vbb_area")
+
+
+
+  
+```
+

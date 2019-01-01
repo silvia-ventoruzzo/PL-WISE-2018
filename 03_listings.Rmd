@@ -23,55 +23,28 @@ p_load(data.table)
 # Load files with AirBnB listings in Berlin
 One has more detailed information, while the other has only summarized information
 ```{r, echo = FALSE, include = FALSE}
-listings_detailed <- utils::read.csv("18.10_listings_detailed.csv", sep=",", header=TRUE,
-                         encoding = "UTF-8", na.strings = c("NA", ""),
-                         stringsAsFactors = FALSE)
-listings_summarized <- utils::read.csv("18.10_listings_summary.csv", sep=",", header=TRUE, 
-                         encoding = "UTF-8", na.strings = c("NA", ""),
-                         stringsAsFactors = FALSE)
-listings_detailed <-  listings_detailed %>% 
-    dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
-                    names(listings_detailed)), funs(gsub("\\$", "", .))) %>%
-    dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
-                    names(listings_detailed)), funs(gsub("\\,", "", .))) %>%
-    dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
-                    names(listings_detailed)), funs(as.numeric(.)))
+# listings_detailed_10 <- load_listings(file = "18.10_listings_detailed.csv")
+# listings_summarized_10 <- load_listings(file = "18.10_listings_summary.csv")
+# listings_detailed_11 <- load_listings(file = "07.11_listings_detailed.csv")
+# listings_summarized_11 <- load_listings(file = "07.11_listings_summary.csv")
 
-load_listings <- function(file) {
-  wd <- getwd()
-  setwd(file.path(getwd(), "insideairbnb", fsep="/"))
-  df <- utils::read.csv(file, sep = ",", header = TRUE, stringsAsFactors = FALSE, encoding = "UTF-8",
-                        na.strings = c("NA", ""))
-  df <- df %>%
-    dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
-                    names(df)), funs(gsub("\\$", "", .))) %>%
-    dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
-                    names(df)), funs(gsub("\\,", "", .))) %>%
-    dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
-                    names(df)), funs(as.numeric(.)))
-  setwd(wd)
-  return(df)
-}
-
-listings_detailed_10 <- load_listings(file = "18.10_listings_detailed.csv")
-listings_summarized_10 <- load_listings(file = "18.10_listings_summary.csv")
-listings_detailed_11 <- load_listings(file = "07.11_listings_detailed.csv")
-listings_summarized_11 <- load_listings(file = "07.11_listings_summary.csv")
+listings_detailed <- load_listings(file = "18.10_listings_detailed.csv")
+listings_summarized <- load_listings(file = "18.10_listings_summary.csv")
 ```
 
 Compare df for October and November
 ```{r}
-p_load(arsenal)
-empty_rows <- listings_summarized_10 %>%
-  filter(row_number() %in% 1:(nrow(listings_summarized_11) - nrow(listings_summarized_10))) %>%
-  mutate_all(funs(replace(., values = NA)))
-  
-listings_summarized_10_empty_rows <- rbind(listings_summarized_10, empty_rows)
-  
-listings_summarized_10 
-comparison <- testthat::compare(listings_summarized_10_empty_rows$id, listings_summarized_11$id)
-
-summary(comparison)
+# p_load(arsenal)
+# empty_rows <- listings_summarized_10 %>%
+#   filter(row_number() %in% 1:(nrow(listings_summarized_11) - nrow(listings_summarized_10))) %>%
+#   mutate_all(funs(replace(., values = NA)))
+#   
+# listings_summarized_10_empty_rows <- rbind(listings_summarized_10, empty_rows)
+#   
+# listings_summarized_10 
+# comparison <- testthat::compare(listings_summarized_10_empty_rows$id, listings_summarized_11$id)
+# 
+# summary(comparison)
 ```
 
 
@@ -85,9 +58,11 @@ listings_check <- dplyr::full_join(listings_summarized, listings_detailed, by = 
                   diff_room = ifelse(room_type.x == room_type.y, TRUE, FALSE),
                   diff_nights = ifelse(minimum_nights.x == minimum_nights.y, TRUE, FALSE)) %>%
   dplyr::mutate_all(funs(as.factor))
-rm(listings_check)
+
 # Join dataframes, first clean and keep only variables of interest
 listings <- df_join_clean(df1 = listings_detailed, df2 = listings_summarized)
+
+rm("listings_detailed", "listings_summarized", "listings_check")
 ```
 
 # Dealing with missing values
@@ -311,6 +286,7 @@ listings <- distance_count(main = listings, reference = attractions_df,
                            var_name = "attraction", distance = 2000)
 ```
 
+
 ## Summary dataframe
 Variables to summarize:
 - price: mean (all and pro district)
@@ -328,7 +304,7 @@ listings_summary <- summarize_df(df = listings,
 And now the same summarizes for each district
 ```{r}
 listings_district_summary <- summarize_df(df = listings,
-                                  wrt = "district",
+                                 wrt = "district",
                                  vars_mean = c("price", "review_scores_value"),
                                  vars_count = c("property_type", "room_type",
                                                 "cancellation_policy"))
