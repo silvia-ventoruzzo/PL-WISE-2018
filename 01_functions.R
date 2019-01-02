@@ -26,47 +26,33 @@ df_join_clean <- function(df1, df2) {
     rename(lat = latitude,
            long = longitude) %>%
     # neighbourhood_group
-    mutate(neighbourhood_group = replace(neighbourhood_group,
-                                         values = gsub("\\ ", "", neighbourhood_group)),
-           neighbourhood_group = as.factor(replace(neighbourhood_group,
-                                                   values = ifelse(neighbourhood_group ==
+    mutate(neighbourhood_group = gsub("\\ ", "", neighbourhood_group),
+           neighbourhood_group = as.factor(ifelse(neighbourhood_group ==
                                                                      "Charlottenburg-Wilm.",
                                                                    "Charlottenburg-Wilmersdorf",
-                                                                   neighbourhood_group)))) %>%
+                                                                   neighbourhood_group))) %>%
     # property_type
     group_by(property_type) %>% 
     mutate(property_type_count=n()) %>% 
     ungroup() %>%
-    mutate(property_type = as.factor(replace(property_type,
-                                             values = ifelse(property_type_count <= 10,
-                                                             "Other", property_type)))) %>%
+    mutate(property_type = as.factor(ifelse(property_type_count <= 10,
+                                                             "Other", property_type))) %>%
     # security_deposit
-    mutate(security_deposit_yn = as.factor(ifelse(security_deposit == 0 |
-                                                    is.na(security_deposit), FALSE, TRUE)),
-           # cleaning_fee
-           cleaning_fee_yn = as.factor(ifelse(cleaning_fee == 0 |
-                                                is.na(cleaning_fee), FALSE, TRUE)),
-           # host_is_superhost
-           host_is_superhost = as.factor(replace(host_is_superhost,
-                                                 values = ifelse(host_is_superhost == "t",
-                                                                 TRUE, FALSE)))) %>%
-    # cancellation_policy
-    mutate(cancellation_policy = 
-             recode(cancellation_policy,
-                      "strict_14_with_grace_period" = "strict",
-                      "super_strict_30" = "very_strict",
-                      "super_strict_60" = "super_strict"))
-    # mutate(cancellation_policy = as.factor(replace(cancellation_policy,
-    #                                                values = ifelse(cancellation_policy ==
-    #                                                                  "strict_14_with_grace_period",
-    #                                                                "strict",
-    #                                                                ifelse(cancellation_policy ==
-    #                                                                         "super_strict_30",
-    #                                                                       "very_strict",
-    #                                                                       ifelse(cancellation_policy ==
-    #                                                                                "super_strict_60",
-    #                                                                              "super_strict",
-    #                                                                              cancellation_policy))))))
+    mutate(security_deposit_yn = ifelse(security_deposit == 0 |
+                                                    is.na(security_deposit), 0, 1),
+    # cleaning_fee
+      cleaning_fee_yn = ifelse(cleaning_fee == 0 |
+                                                is.na(cleaning_fee), 0, 1),
+    # host_is_superhost
+      host_is_superhost = ifelse(host_is_superhost == "t", 0, 1))
+  # %>%
+  #   # cancellation_policy
+  #   mutate(cancellation_policy = 
+  #            recode(cancellation_policy,
+  #                     "strict_14_with_grace_period" = "strict",
+  #                     "super_strict_30" = "very_strict",
+  #                     "super_strict_60" = "super_strict"))
+
   return(df_joined)
 }
 

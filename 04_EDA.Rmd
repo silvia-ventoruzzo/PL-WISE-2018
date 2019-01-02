@@ -30,15 +30,62 @@ source("01_functions.R")
 # Correlation between different variables and price
 
 ```{r}
-listings_correlation <- listings %>%
+# Transform categorical variables from rows to column
+listings_price_correlation <- listings %>%
   recode_all("room_type") %>% from_row_to_col("room_type") %>%
   recode_all("property_type") %>% from_row_to_col("property_type") %>%
   recode_all("cancellation_policy") %>% from_row_to_col("cancellation_policy") %>%
   recode_all("district") %>% from_row_to_col("district") %>%
-  recode_all("vbb_area") %>% from_row_to_col("vbb_area")
+  recode_all("vbb_area") %>% from_row_to_col("vbb_area") %>%
+  dplyr::select(-id, -lat, -long)
 
+# Create dataframe with price correlations
+listings_price_correlation <- cor(listings_price_correlation$price, listings_price_correlation) %>%
+  t() %>%
+  as.data.frame() %>%
+  dplyr::rename(corr = V1) %>%
+  tibble::rownames_to_column(var = "variable") %>%
+  dplyr::filter(variable != "price") %>%
+  dplyr::arrange(variable)
 
+# Product vector with colors for y-axis text
+color <-  ifelse(listings_price_correlation$corr > 0, "green4",
+                        ifelse(listings_price_correlation$corr < 0, "red1",
+                                         "blue3"))
 
-  
+# Produce plot
+listings_price_correlation %>%
+  dplyr::mutate(sign = ifelse(corr > 0, "positive",
+                       ifelse(corr < 0, "negative",
+                                        "null"))) %>%
+  ggplot(aes(x = variable, y = corr, fill = sign)) +
+  geom_bar(stat="identity") +
+  scale_fill_manual("sign", values = c("positive" = "green4", "negative" = "red1", "null" = "blue3"),
+                    guide=FALSE) +
+  coord_flip() +
+  labs(title = "Correlation with price") +
+  theme(axis.text.y = element_text(colour = color),
+        plot.title = element_text(hjust = 0.5, size = 17))
+```
+
+## Boxplot
+
+```{r}
+# District
+listings %>% 
+  dplyr::mutate(median_price = median(price),
+                median = ifelse(listings_district_summary$price > median_price, "high",
+                         ifelse(listings_district_summary$price < median_price, "low",
+                                                                                 "average"))) %>%
+  ggplot(aes(x = district, y = price, fill = median)) + 
+  geom_boxplot(outlier.shape = NA) +
+  coord_flip() +
+    scale_fill_manual("median", values = c("low" = "green4", "high" = "red1", "average" = "blue3"),
+                    guide=FALSE) +
+  scale_y_continuous(limits = quantile(listings$price, c(0, 0.95))) +
+  labs(title = "Boxplot of districts with respect to the price",
+       subtitle = "Outliers not displayed") +
+  theme(plot.title = element_text(hjust = 0.5, size = 15),
+        plot.subtitle = element_text(hjust = 0.5, size = 10))
 ```
 

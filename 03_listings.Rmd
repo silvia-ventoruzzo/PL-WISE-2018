@@ -85,7 +85,7 @@ According to airbnb: https://www.airbnb.com/help/article/828
 We may therefore think that, if this variable has missing values, the host probably is not a superhost
 ```{r}
 listings <- listings %>%
-  dplyr::mutate(host_is_superhost = ifelse(is.na(host_is_superhost), FALSE, host_is_superhost))
+  dplyr::mutate(host_is_superhost = ifelse(is.na(host_is_superhost), 0, host_is_superhost))
 ```
 
 Secondly, we have a look at the rows that have missing values for review_scores_rating (together with the column number_of_reviews)
@@ -100,7 +100,7 @@ If the number_of_reviews is zero, we set the review_scores_value to 0 meanwhile 
 ```{r}
 listings <- listings %>%
   dplyr::mutate(review_scores_value = ifelse(number_of_reviews == 0, 0, review_scores_value),
-         reviewed_yn = ifelse(number_of_reviews == 0, FALSE, TRUE))
+         reviewed_yn = ifelse(number_of_reviews == 0, 0, 1))
 ```
 
 For the rest, we derive this information has an average of the review scores for the specific catgories
@@ -174,7 +174,7 @@ listings <- listings %>%
     dplyr::select(id, neighbourhood_group, lat, long, price, property_type, room_type,
                   security_deposit_yn, cleaning_fee_yn,
                   host_is_superhost, accommodates, bedrooms, beds, minimum_nights, 
-                  review_scores_value, number_of_reviews, cancellation_policy)
+                  review_scores_value, number_of_reviews, reviewed_yn, cancellation_policy)
 ```
 
 ## New features

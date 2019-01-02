@@ -160,15 +160,22 @@ ringbahn_sf <- sp::SpatialPolygons(list(Polygons(list(Polygon(ringbahn_coordinat
 # Create sf Object with areas A and B
 
 ```{r}
-# Firstly we need to create an sf object with a hole for B
-vbb_B_sf <-  base::rbind(ringbahn_sf$geometry, berlin_all_sf) %>%
+vbb_AB_sf <-base::rbind(ringbahn_sf$geometry, berlin_all_sf) %>%
   sf::st_intersection() %>% # Calculate intersections
-  dplyr::filter(n.overlaps == 1) %>% # Select only polygon where there is only one intersection
-  dplyr::select(geometry) %>%
-  dplyr::mutate(id = "B")
+  dplyr::mutate(id = ifelse(n.overlaps > 1, "A", "B")) %>% # Define IDs for different areas
+  dplyr::select(id, geometry)
 
-# Then we join the sf object for B with the sf object for A
-vbb_AB_sf <- base::rbind(ringbahn_sf, vbb_B_sf)
+
+## ALTERNATIVE IF WE WANT TO HAVE B AS SEPARATE DATAFRAME
+# # Firstly we need to create an sf object with a hole for B
+# vbb_B_sf <- base::rbind(ringbahn_sf$geometry, berlin_all_sf) %>%
+#   sf::st_intersection() %>% # Calculate intersections
+#   dplyr::filter(n.overlaps == 1) %>% # Select only polygon where there is only one intersection
+#   dplyr::select(geometry) %>%
+#   dplyr::mutate(id = "B")
+# 
+# # Then we join the sf object for B with the sf object for A
+# vbb_AB_sf <- base::rbind(ringbahn_sf, vbb_B_sf)
 ```
 
 # Map the VBB areas A and B with Leaflet
