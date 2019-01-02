@@ -13,6 +13,8 @@ Sys.setlocale("LC_ALL", "en_US.UTF-8")
 
 ```{r}
 source("01_functions.R")
+p_load(grid)
+p_load(gridExtra)
 ```
 
 ## Distribution of price
@@ -66,26 +68,123 @@ listings_price_correlation %>%
   labs(title = "Correlation with price") +
   theme(axis.text.y = element_text(colour = color),
         plot.title = element_text(hjust = 0.5, size = 17))
+
+# check error!
+# Removed 1 rows containing missing values (position_stack).
+
 ```
 
-## Boxplot
+## Boxplots
 
+Price
 ```{r}
-# District
+# District vs. Price
 listings %>% 
+  dplyr::group_by(district) %>%
+  dplyr::mutate(median_price_district = median(price)) %>%
+  ungroup() %>%
   dplyr::mutate(median_price = median(price),
-                median = ifelse(listings_district_summary$price > median_price, "high",
-                         ifelse(listings_district_summary$price < median_price, "low",
-                                                                                 "average"))) %>%
+                median = ifelse(median_price_district > median_price, "high",
+                         ifelse(median_price_district < median_price, "low",
+                                                                      "average"))) %>%
   ggplot(aes(x = district, y = price, fill = median)) + 
   geom_boxplot(outlier.shape = NA) +
   coord_flip() +
-    scale_fill_manual("median", values = c("low" = "green4", "high" = "red1", "average" = "blue3"),
-                    guide=FALSE) +
+    scale_fill_manual("median", values = c("low" = "green4", "high" = "red1", "average" = "blue3")) +
   scale_y_continuous(limits = quantile(listings$price, c(0, 0.95))) +
   labs(title = "Boxplot of districts with respect to the price",
        subtitle = "Outliers not displayed") +
   theme(plot.title = element_text(hjust = 0.5, size = 15),
         plot.subtitle = element_text(hjust = 0.5, size = 10))
+```
+
+Cancellation policy
+From: https://stackoverflow.com/questions/40912966/format-the-y-axis-labels-with-two-lines
+
+```{r}
+# Cancellation policy vs. Price
+g1 <- listings %>% 
+  dplyr::group_by(cancellation_policy) %>%
+  dplyr::mutate(median_price_cancellation = median(price)) %>%
+  ungroup() %>%
+  dplyr::mutate(median_price = median(price),
+                median = ifelse(median_price_cancellation > median_price, "high",
+                         ifelse(median_price_cancellation < median_price, "low",
+                                                                          "average"))) %>%
+  ggplot(aes(x = cancellation_policy, y = price, fill = median)) + 
+  geom_boxplot(outlier.shape = NA) +
+  coord_flip() +
+  scale_y_reverse(limits = quantile(listings$price, c(0.95, 0))) +
+  scale_fill_manual("median", values = c("low" = "green4", "high" = "red1", "average" = "blue3"),
+                    guide=FALSE) +
+  labs(title = "with respect to the price",
+       subtitle = "Outliers not displayed") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8),
+        plot.subtitle = element_text(hjust = 0.5, size = 6),
+        axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        plot.margin = unit(c(1,-1,1,0), "mm"))
+gg1 <- g1 %>%
+  ggplot_build() %>%
+  ggplot_gtable()
+
+# Cancellation policy vs. Distance to nearest (top 10) attraction
+g2 <- listings %>% 
+  dplyr::group_by(cancellation_policy) %>%
+  dplyr::mutate(median_attrdist_cancellation = median(attraction_dist)) %>%
+  ungroup() %>%
+  dplyr::mutate(median_attrdist = median(attraction_dist),
+                median = ifelse(median_attrdist_cancellation > median_attrdist, "high",
+                         ifelse(median_attrdist_cancellation < median_attrdist, "low",
+                                                                          "average"))) %>%
+  ggplot(aes(x = cancellation_policy, y = attraction_dist, fill = median)) + 
+  geom_boxplot(outlier.shape = 1, outlier.stroke = 0.3) +
+  coord_flip() +
+  scale_fill_manual("median", values = c("low" = "green4", "high" = "red1", "average" = "blue3"),
+                    guide=FALSE) +
+  # scale_y_continuous(limits = quantile(listings$price, c(0, 0.95))) +
+  labs(title = "with respect to distance\nto the nearest (top 10) attractions") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8),
+        axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        plot.margin = unit(c(1,0,1,-1), "mm"))
+gg2 <- g2 %>%
+  ggplot_build() %>%
+  ggplot_gtable()
+
+# Central part
+g.mid <- listings %>%
+  dplyr::group_by(cancellation_policy) %>%
+  summarize(x = 1) %>%
+  dplyr::mutate(cancellation_policy = recode(as.factor(cancellation_policy),
+                                             "strict_14_with_grace_period" = "strict\n14\nwith\ngrace\nperiod",
+                                             "super_strict_30" = "super\nstrict\n30",
+                                             "super_strict_60" = "super\nstrict\n60")) %>%
+  ggplot(aes(x = x, y = cancellation_policy)) +
+  geom_text(aes(label = cancellation_policy), size = 3) +
+  geom_segment(aes(x = 0.94, xend = 0.96, yend = cancellation_policy)) +
+  geom_segment(aes(x = 1.04, xend = 1.065, yend = cancellation_policy)) +
+  labs(title = "") +
+  scale_x_continuous(expand=c(0,0),limits=c(0.94,1.065)) +
+  theme(axis.title=element_blank(),
+        panel.grid=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        panel.background=element_blank(),
+        axis.text.x=element_text(color=NA),
+        axis.ticks.x=element_line(color=NA),
+        plot.margin = unit(c(1,-1,1,-1), "mm"))
+gg.mid <- g.mid %>%
+  ggplot_build() %>%
+  ggplot_gtable()
+
+# Join plots
+grid.arrange(gg1, gg.mid, gg2, ncol=3,
+             widths = c(4/9,1/9,4/9),
+             top = textGrob("Boxplots of cancellation policies"))
+
+
 ```
 

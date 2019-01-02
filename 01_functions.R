@@ -128,12 +128,17 @@ summarize_df <- function(df, wrt = NULL, vars_mean, vars_count) {
   for (var in vars_count) {
     var_name <- sym(var)
     if(is.null(wrt)) {
-      count_df <- df %>% group_by(!!var_name) %>% dplyr::summarize(count = n()) %>%
+      count_df <- df %>%
+        recode_all(var) %>%
+        group_by(!!var_name) %>% 
+        dplyr::summarize(count = n()) %>%
         spread(key = !!var_name, value = count)    
       summary_df <- summary_df %>% cbind(count_df)
     } else {
       wrt_name <- sym(wrt)
-      count_df <- df %>% group_by(!!var_name, !!wrt_name) %>%
+      count_df <- df %>%
+        recode_all(var) %>%
+        group_by(!!var_name, !!wrt_name) %>%
         dplyr::summarize(count = n()) %>%
         spread(key = !!var_name, value = count)  
       summary_df <- summary_df %>% full_join(count_df, by = wrt) %>%
