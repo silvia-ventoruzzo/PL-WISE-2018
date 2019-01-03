@@ -1,0 +1,46 @@
+---
+title: "Colored maps"
+author: "Silvia Ventoruzzo"
+date: "2/1/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Maps colored depending on aggregated data
+
+I'm first trying this with the average price
+
+```{r}
+# I don't like these colours
+pal_districts <- colorNumeric(palette = "Dark2", domain = listings_district_summary$price, n = 12, reverse = TRUE)
+leaflet() %>% 
+  addTiles() %>%
+  addPolygons(data = berlin_district_sf,
+            stroke = FALSE,
+            fillColor = ~pal_districts(listings_district_summary$price)) %>%
+  addLabelOnlyMarkers(data = districts,
+                    lng = ~long, lat = ~lat, label = ~lapply(leaflet, htmltools::HTML),
+                    labelOptions = labelOptions(noHide = TRUE, direction = 'center', textOnly = TRUE)) %>%
+  addLegend(position = "bottomright", pal = pal_districts, values = listings_district_summary$price,
+          title = "Average $/night")
+```
+
+Percentage of the properties in the different districts
+
+```{r}
+# I don't like these colours
+pal_districts <- colorNumeric(palette = "OrRd", domain = listings_district_summary$percentage, n = 12, reverse = TRUE)
+leaflet() %>% 
+  addTiles() %>%
+  addPolygons(data = berlin_district_sf,
+            stroke = FALSE,
+            fillColor = ~pal_districts(listings_district_summary$percentage)) %>%
+  addLabelOnlyMarkers(data = districts,
+                    lng = ~long, lat = ~lat, label = ~lapply(leaflet, htmltools::HTML),
+                    labelOptions = labelOptions(noHide = TRUE, direction = 'center', textOnly = TRUE)) %>%
+  addLegend(position = "bottomright", pal = pal_districts, values = listings_district_summary$percentage,
+          title = "Properties %")
+```

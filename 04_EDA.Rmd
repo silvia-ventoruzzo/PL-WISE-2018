@@ -76,7 +76,8 @@ listings_price_correlation %>%
 
 ## Boxplots
 
-Price
+Price per district
+
 ```{r}
 # District vs. Price
 listings %>% 
@@ -96,6 +97,74 @@ listings %>%
        subtitle = "Outliers not displayed") +
   theme(plot.title = element_text(hjust = 0.5, size = 15),
         plot.subtitle = element_text(hjust = 0.5, size = 10))
+```
+
+Price wrt number of stations and attractions nearby
+
+```{r}
+# Number of attractions nearby
+g1 <- listings %>% 
+  dplyr::mutate(attraction_count = as.factor(attraction_count)) %>%
+  ggplot(aes(x = attraction_count, y = price)) + 
+  geom_boxplot(outlier.shape = NA) +
+  scale_y_reverse(limits = quantile(listings$price, c(0.992, 0))) +
+  # scale_fill_manual("median", values = c("low" = "green4", "high" = "red1", "average" = "blue3"),
+  #                   guide=FALSE) +
+  labs(title = "for the number of attractions attractions nearby",
+       subtitle = "Outliers not displayed") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8),
+        plot.subtitle = element_text(hjust = 0.5, size = 6),
+        axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        plot.margin = unit(c(1,-1,1,0), "mm"))
+gg1 <- g1 %>%
+  ggplot_build() %>%
+  ggplot_gtable()
+
+# Number of stations nearby
+g2 <- listings %>% 
+  dplyr::mutate(station_count = as.factor(station_count)) %>%
+  ggplot(aes(x = station_count, y = price)) + 
+  geom_boxplot(outlier.shape = NA) +
+  # scale_fill_manual("median", values = c("low" = "green4", "high" = "red1", "average" = "blue3"),
+  #                   guide=FALSE) +
+  scale_y_continuous(limits = quantile(listings$price, c(0, 0.992))) +
+  labs(title = "for the number of stations nearby") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8),
+        axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        plot.margin = unit(c(1,0,1,-1), "mm"))
+gg2 <- g2 %>%
+  ggplot_build() %>%
+  ggplot_gtable()
+
+# Central part - NOT WORKING YET
+listings %>%
+  # dplyr::group_by(cancellation_policy) %>%
+  # summarize(x = 1) %>%
+  # dplyr::mutate(cancellation_policy = recode(as.factor(cancellation_policy),
+  #                                            "strict_14_with_grace_period" = "strict\n14\nwith\ngrace\nperiod",
+  #                                            "super_strict_30" = "super\nstrict\n30",
+  #                                            "super_strict_60" = "super\nstrict\n60")) %>%
+  ggplot(aes(x = 1, y = price)) +
+  # geom_text(aes(label = cancellation_policy), size = 3) +
+  geom_segment(aes(x = 0.94, xend = 0.96, yend = price)) +
+  geom_segment(aes(x = 1.04, xend = 1.065, yend = price)) +
+  labs(title = "") +
+  scale_x_continuous(expand=c(0,0),limits=c(0.94,1.065)) +
+  theme(axis.title=element_blank(),
+        panel.grid=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        panel.background=element_blank(),
+        axis.text.x=element_text(color=NA),
+        axis.ticks.x=element_line(color=NA),
+        plot.margin = unit(c(1,-1,1,-1), "mm"))
+gg.mid <- g.mid %>%
+  ggplot_build() %>%
+  ggplot_gtable()
 ```
 
 Cancellation policy
@@ -184,7 +253,5 @@ gg.mid <- g.mid %>%
 grid.arrange(gg1, gg.mid, gg2, ncol=3,
              widths = c(4/9,1/9,4/9),
              top = textGrob("Boxplots of cancellation policies"))
-
-
 ```
 

@@ -186,22 +186,8 @@ leaflet() %>%
               opacity = 1.0, fillOpacity = 0.5)
 ```
 
-## Maps colored depending on aggregated data
-I'm first trying this with price_avg
-```{r}
-# I don't like these colours
-pal_districts <- colorNumeric(palette = "Dark2", domain = Listings_District$price_avg, n = 12, reverse = TRUE)
-leaflet() %>% 
-  addTiles() %>%
-  addPolygons(data = berlin_district_sf,
-            stroke = FALSE,
-            fillColor = ~pal_districts(Listings_District$price_avg)) %>%
-  addLabelOnlyMarkers(data = districts,
-                    lng = ~long, lat = ~lat, label = ~lapply(leaflet, html),
-                    labelOptions = labelOptions(noHide = TRUE, direction = 'center', textOnly = TRUE)) %>%
-  addLegend(position = "bottomright", pal = pal_districts, values = Listings_District$price_avg,
-          title = "Average $/night")
-```
+
+
 
 
 
