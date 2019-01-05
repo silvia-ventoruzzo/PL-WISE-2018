@@ -28,8 +28,9 @@ One has more detailed information, while the other has only summarized informati
 # listings_detailed_11 <- load_listings(file = "07.11_listings_detailed.csv")
 # listings_summarized_11 <- load_listings(file = "07.11_listings_summary.csv")
 
-listings_detailed <- load_listings(file = "18.10_listings_detailed.csv")
-listings_summarized <- load_listings(file = "18.10_listings_summary.csv")
+listings_detailed <- load_listings(file = "07.11_listings_detailed.csv")
+listings_summarized <- load_listings(file = "07.11_listings_summary.csv")
+listings_calendar <- read.csv(file.path(getwd(), "insideairbnb", "calendar.csv", fsep="/"))
 ```
 
 Compare df for October and November
@@ -47,6 +48,94 @@ Compare df for October and November
 # summary(comparison)
 ```
 
+# Calendar
+```{r}
+p_load(lubridate)
+
+listings_calendar <- listings_calendar %>%
+  rename (id = listing_id) %>%
+  mutate(date = as.Date(date),
+         available = recode(available,
+                            "f" = 0,
+                            "t" = 1),
+         year = year(date),
+         month = month(date, label = TRUE),
+         day = day(date),
+         weekday = wday(date, label = TRUE),
+         season = ifelse((month == "Mar" & day >= 21) | (month == "Apr") | 
+                         (month == "May") | (month == "Jun" & day < 21), "Spring",
+                  ifelse((month == "Jun" & day >= 21) | (month == "Jul") | 
+                         (month == "Aug") | (month == "Sep" & day < 21), "Summer",
+                  ifelse((month == "Sep" & day >= 21) | (month == "Oct") | 
+                         (month == "Nov") | (month == "Dec" & day < 21), "Fall",
+                        "Winter"))) %>%
+                  factor(levels = c("Spring", "Summer", "Fall", "Winter")),
+         week = ifelse(weekday == "Sat" | weekday == "Sun" |
+                      (month == "Dec" & (day == 25 | day == 26)) |
+                      (month == "Jan" & day == 1) |
+                      (month == "Apr" & day == 19 & year == 2019) |
+                      (month == "Apr" & day == 22 & year == 2019) |
+                      (month == "May" & day == 1) |
+                      (month == "May" & day == 30 & year == 2019) |
+                      (month == "Jun" & day == 10 & year == 2019) |  
+                      (month == "Oct" & day == 3),
+                      "Offday", "Workday") %>%
+                factor(levels = c("Workday", "Offday")))
+  select(-price)
+
+
+# Availability per month
+listings_month_availability <- listings_calendar %>% 
+  group_by(id, year, month) %>% 
+  summarize(count = sum(available)) %>% 
+  arrange(id, year, month) %>%
+  ungroup() %>%
+  mutate(year_month = paste(year, month, sep = "_") %>%
+                      paste("availability", sep = "_") %>%
+                      tolower() %>%
+                      factor(levels = unique(tolower(paste(year, month, "availability", sep = "_"))))) %>%
+  dplyr::select(-month, -year) %>%
+  spread(year_month, count)
+
+# Availability per weekday
+listings_weekday_availability <- listings_calendar %>% 
+  group_by(id, weekday) %>% 
+  summarize(count = sum(available)) %>% 
+  arrange(id, weekday) %>%
+  ungroup() %>%
+  mutate(weekday_av = paste(weekday, "availability", sep = "_") %>%
+                      tolower() %>%
+                      factor(levels = unique(tolower(paste(weekday, "availability", sep = "_"))))) %>%
+  dplyr::select(-weekday) %>%
+  spread(weekday_av, count)
+
+# Availability per season
+listings_season_availability <- listings_calendar %>% 
+  group_by(id, season) %>% 
+  summarize(count = sum(available)) %>% 
+  arrange(id, season) %>%
+  ungroup() %>%
+  mutate(season_av =  paste(season, "availability", sep = "_") %>%
+                      tolower() %>%
+                      factor(levels = unique(tolower(paste(season, "availability", sep = "_"))))) %>%
+  dplyr::select(-season) %>%
+  spread(season_av, count)
+
+# Availability per day-type
+listings_daytype_availability <- listings_calendar %>% 
+  group_by(id, week) %>% 
+  summarize(count = sum(available)) %>% 
+  arrange(id, week) %>%
+  ungroup() %>%
+  mutate(week_av  =   paste(week, "availability", sep = "_") %>%
+                      tolower() %>%
+                      factor(levels = unique(tolower(paste(week, "availability", sep = "_"))))) %>%
+  dplyr::select(-week) %>%
+  spread(week_av, count)
+
+rm(listings_calendar)
+
+```
 
 # Join the dataframes and clean columns of interest
 ```{r}
@@ -174,10 +263,28 @@ listings <- listings %>%
     dplyr::select(id, neighbourhood_group, lat, long, price, property_type, room_type,
                   security_deposit_yn, cleaning_fee_yn,
                   host_is_superhost, accommodates, bedrooms, beds, minimum_nights, 
-                  review_scores_value, number_of_reviews, reviewed_yn, cancellation_policy)
+                  review_scores_value, number_of_reviews, reviewed_yn, cancellation_policy,
+                  availability_30, availability_60, availability_90, availability_365)
 ```
 
 ## New features
+
+Join with info from the calendar
+
+```{r}
+listings <- listings %>%
+  left_join(listings_month_availability, by = "id") %>%
+  left_join(listings_weekday_availability, by = "id") %>%
+  left_join(listings_season_availability, by = "id") %>%
+  left_join(listings_daytype_availability, by = "id") %>%
+  replace(is.na(.), 0)
+
+rm("listings_month_availability", "listings_weekday_availability", 
+   "listings_season_availability", "listings_daytype_availability")
+
+```
+
+
 # District and vbb area
 ```{r}
 listings <- point_in_polygons(points_df = listings,
@@ -308,6 +415,10 @@ listings_district_summary <- summarize_df(df = listings,
                                  vars_mean = c("price", "review_scores_value"),
                                  vars_count = c("property_type", "room_type",
                                                 "cancellation_policy"))
+
+listings %>%
+  select(grepl(""))
+
 ```
 
 
