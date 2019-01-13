@@ -15,6 +15,7 @@ Sys.setlocale("LC_ALL", "en_US.UTF-8")
 source("01_functions.R")
 p_load(grid)
 p_load(gridExtra)
+p_load(ggplot2)
 ```
 
 ## Distribution of price
@@ -39,7 +40,10 @@ listings_price_correlation <- listings %>%
   recode_all("cancellation_policy") %>% from_row_to_col("cancellation_policy") %>%
   recode_all("district") %>% from_row_to_col("district") %>%
   recode_all("vbb_area") %>% from_row_to_col("vbb_area") %>%
+  recode_all("neighbourhood") %>% from_row_to_col("neighbourhood") %>%
   dplyr::select(-id, -lat, -long)
+
+# RECODE_ALL FUNCTION DOESN'T WORK :(
 
 # Create dataframe with price correlations
 listings_price_correlation <- cor(listings_price_correlation$price, listings_price_correlation) %>%
@@ -48,7 +52,10 @@ listings_price_correlation <- cor(listings_price_correlation$price, listings_pri
   dplyr::rename(corr = V1) %>%
   tibble::rownames_to_column(var = "variable") %>%
   dplyr::filter(variable != "price") %>%
-  dplyr::arrange(variable)
+  # dplyr::arrange(variable) %>%
+  dplyr::mutate(sign = ifelse(corr > 0, "positive",
+                       ifelse(corr < 0, "negative",
+                                        "null")))
 
 # Product vector with colors for y-axis text
 color <-  ifelse(listings_price_correlation$corr > 0, "green4",
@@ -57,20 +64,17 @@ color <-  ifelse(listings_price_correlation$corr > 0, "green4",
 
 # Produce plot
 listings_price_correlation %>%
-  dplyr::mutate(sign = ifelse(corr > 0, "positive",
-                       ifelse(corr < 0, "negative",
-                                        "null"))) %>%
   ggplot(aes(x = variable, y = corr, fill = sign)) +
   geom_bar(stat="identity") +
   scale_fill_manual("sign", values = c("positive" = "green4", "negative" = "red1", "null" = "blue3"),
                     guide=FALSE) +
   coord_flip() +
   labs(title = "Correlation with price") +
+  # coord_fixed(ylim = length(unique(listings_price_correlation$variable))) +
   theme(axis.text.y = element_text(colour = color),
         plot.title = element_text(hjust = 0.5, size = 17))
 
-# check error!
-# Removed 1 rows containing missing values (position_stack).
+
 
 ```
 

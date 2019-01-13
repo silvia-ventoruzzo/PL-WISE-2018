@@ -23,7 +23,7 @@ df_join_clean <- function(df1, df2) {
                                           "minimum_nights",
                                           "number_of_reviews", 
                                           "latitude", "longitude",
-                                          "availability_365")) %>% 
+                                          "availability_365", "neighbourhood_cleansed" = "neighbourhood")) %>% 
     rename(lat = latitude,
            long = longitude) %>%
     # neighbourhood_group
@@ -91,9 +91,9 @@ distance_count <- function(main, reference, var_name, distance) {
                                 fun = distHaversine) %>%
     as.data.frame() %>%
     data.table::setnames(as.character(reference$name))
-  # Calculate how many stations are within 1km
+  # Calculate how many "reference" are within "distance"
   point_distance[,var_name_count] <- rowSums(point_distance <= distance)
-  # Calculate the distance to the nearest station
+  # Calculate the distance to the nearest "reference"
   point_distance[,var_name_dist] <- apply(point_distance[,-ncol(point_distance)],
                                           MARGIN = 1, FUN = min) %>%
     round(0)
@@ -230,6 +230,14 @@ from_row_to_col <- function(df, variable) {
   return(df)
 }
 
+# Capitalize the first letter of every word
+# from the help for toupper()
+capwords <- function(s, strict = FALSE) {
+  cap <- function(s) paste(toupper(substring(s, 1, 1)),
+                           {s <- substring(s, 2); if(strict) tolower(s) else s},
+                           sep = "", collapse = " " )
+  sapply(strsplit(s, split = " "), cap, USE.NAMES = !is.null(names(s)))
+}
 
 # ## Transform points into lines (found online)
 # points_to_line <- function(data, long, lat, id_field = NULL, sort_field = NULL, id = "Ringbahn") {

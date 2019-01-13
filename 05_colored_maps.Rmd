@@ -33,7 +33,7 @@ Percentage of the properties in the different districts
 ```{r}
 # I don't like these colours
 pal_districts <- colorNumeric(palette = "OrRd", domain = listings_district_summary$percentage, n = 12, reverse = TRUE)
-leaflet() %>% 
+leaflet() %>%
   addTiles() %>%
   addPolygons(data = berlin_district_sf,
             stroke = FALSE,
