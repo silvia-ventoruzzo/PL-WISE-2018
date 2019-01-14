@@ -242,7 +242,7 @@ leaflet() %>%
                     lng = ~long, lat = ~lat, label = ~lapply(leaflet, htmltools::HTML),
                     labelOptions = labelOptions(noHide = TRUE, direction = 'center',
                                                 textOnly = TRUE, textsize = "11px")) %>%
-  addAwesomeMarkers(data = listings %>% filter(district == "Neukölln"),
+  addAwesomeMarkers(data = stations %>% filter(district == "Neukölln"),
              lng = ~long, lat = ~lat,
              icon = makeAwesomeIcon(icon = "eye-open", markerColor = "blue"),
              clusterOptions = markerClusterOptions(

@@ -41,9 +41,9 @@ listings_price_correlation <- listings %>%
   recode_all("district") %>% from_row_to_col("district") %>%
   recode_all("vbb_area") %>% from_row_to_col("vbb_area") %>%
   recode_all("neighbourhood") %>% from_row_to_col("neighbourhood") %>%
-  dplyr::select(-id, -lat, -long)
+  dplyr::select(-id, -lat, -long, -listing_url)
 
-# RECODE_ALL FUNCTION DOESN'T WORK :(
+# RECODE_ALL FUNCTION DIDN'T WORK ONCE :(
 
 # Create dataframe with price correlations
 listings_price_correlation <- cor(listings_price_correlation$price, listings_price_correlation) %>%
@@ -58,9 +58,9 @@ listings_price_correlation <- cor(listings_price_correlation$price, listings_pri
                                         "null")))
 
 # Product vector with colors for y-axis text
-color <-  ifelse(listings_price_correlation$corr > 0, "green4",
-                        ifelse(listings_price_correlation$corr < 0, "red1",
-                                         "blue3"))
+# color <-  ifelse(listings_price_correlation$corr > 0, "green4",
+#                         ifelse(listings_price_correlation$corr < 0, "red1",
+#                                          "blue3"))
 
 # Produce plot
 listings_price_correlation %>%
@@ -71,11 +71,51 @@ listings_price_correlation %>%
   coord_flip() +
   labs(title = "Correlation with price") +
   # coord_fixed(ylim = length(unique(listings_price_correlation$variable))) +
-  theme(axis.text.y = element_text(colour = color),
+  # expand_limits(x = 3*ncol(listings_price_correlation)) +
+  theme(axis.text.y = element_text(colour = ifelse(listings_price_correlation$corr > 0, "green4",
+                        ifelse(listings_price_correlation$corr < 0, "red1",
+                                         "blue3"))),
         plot.title = element_text(hjust = 0.5, size = 17))
 
 
+test <- listings_price_correlation %>%
+  filter(variable %in% c("attraction_count", "attraction_dist"))
+                         
+                         , "attraction_dist", "station_count", "station_dist",
+                         "accomodates", "bedrooms", "beds", "minimum_nighs"))
 
+test %>%
+  ggplot(aes(x = variable, y = corr, fill = sign)) +
+  geom_bar(stat="identity") +
+  scale_fill_manual("sign", values = c("positive" = "green4", "negative" = "red1", "null" = "blue3"),
+                    guide=FALSE) +
+  coord_flip() +
+  labs(title = "Correlation with price") +
+  # coord_fixed(ylim = length(unique(listings_price_correlation$variable))) +
+  # expand_limits(x = 6) +
+  theme(plot.margin = unit(c(4.5, 4.5, 4.5, 4.5), "cm")) +
+  theme(axis.text.y = element_text(colour = ifelse(listings_price_correlation$corr > 0, "green4",
+                        ifelse(listings_price_correlation$corr < 0, "red1",
+                                         "blue3"))),
+        plot.title = element_text(hjust = 0.5, size = 17))
+
+# 4 for 1 variable
+# 4 for 2 variable
+# 4 for 3 variable
+# 3 for 4 variable
+# 3 for 5 variable
+# 3 for 6 variable
+
+nrow(test)
+
+174/4.5
+
+seq(from = 4.5, to = 0, by = -0.1) %>%
+  c(rep(0.0, 128)) %>%
+  select(nrow == 2)
+
+
+rep(c(seq(from = 4.5, to = 0, by = -0.1), rep(0.0, 128))[2], 4)
 ```
 
 ## Boxplots

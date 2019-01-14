@@ -90,7 +90,7 @@ distance_count <- function(main, reference, var_name, distance) {
                                 reference %>% dplyr::select(long, lat),
                                 fun = distHaversine) %>%
     as.data.frame() %>%
-    data.table::setnames(as.character(reference$name))
+    data.table::setnames(as.character(reference$id))
   # Calculate how many "reference" are within "distance"
   point_distance[,var_name_count] <- rowSums(point_distance <= distance)
   # Calculate the distance to the nearest "reference"
