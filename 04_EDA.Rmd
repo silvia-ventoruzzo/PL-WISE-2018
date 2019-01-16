@@ -13,8 +13,8 @@ Sys.setlocale("LC_ALL", "en_US.UTF-8")
 
 ```{r}
 source("01_functions.R")
-p_load(grid)
-p_load(gridExtra)
+# p_load(grid)
+# p_load(gridExtra)
 p_load(ggplot2)
 ```
 
@@ -79,7 +79,7 @@ listings_price_correlation %>%
 
 
 test <- listings_price_correlation %>%
-  filter(variable %in% c("attraction_count", "attraction_dist"))
+  filter(variable %in% c("attraction_count"))
                          
                          , "attraction_dist", "station_count", "station_dist",
                          "accomodates", "bedrooms", "beds", "minimum_nighs"))
@@ -94,28 +94,25 @@ test %>%
   # coord_fixed(ylim = length(unique(listings_price_correlation$variable))) +
   # expand_limits(x = 6) +
   theme(plot.margin = unit(c(4.5, 4.5, 4.5, 4.5), "cm")) +
-  theme(axis.text.y = element_text(colour = ifelse(listings_price_correlation$corr > 0, "green4",
-                        ifelse(listings_price_correlation$corr < 0, "red1",
+  theme(axis.text.y = element_text(size = 5,
+                          colour = ifelse(listings_price_correlation$corr > 0, "green4",
+                                   ifelse(listings_price_correlation$corr < 0, "red1",
                                          "blue3"))),
         plot.title = element_text(hjust = 0.5, size = 17))
 
-# 4 for 1 variable
-# 4 for 2 variable
-# 4 for 3 variable
-# 3 for 4 variable
-# 3 for 5 variable
-# 3 for 6 variable
-
-nrow(test)
-
-174/4.5
-
-seq(from = 4.5, to = 0, by = -0.1) %>%
-  c(rep(0.0, 128)) %>%
-  select(nrow == 2)
-
-
 rep(c(seq(from = 4.5, to = 0, by = -0.1), rep(0.0, 128))[2], 4)
+
+c(seq(from = 13.65, to = 5, by = -0.05), rep(5, 7))
+
+10/174
+
+174/5
+
+# par(mfrow = c(1,1))
+# 
+# par(mfrow=c(2,2))
+
+
 ```
 
 ## Boxplots

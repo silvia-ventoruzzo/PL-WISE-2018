@@ -57,15 +57,23 @@ df_join_clean <- function(df1, df2) {
   return(df_joined)
 }
 
+# getmode function
+# from: https://www.tutorialspoint.com/r/r_mean_median_mode.htm
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
 
 ## Tells in which polygon (area) a point (listing) is
 point_in_polygons <- function(points_df, polys_sf, var_name)  {
   is_in <- data.frame(matrix(ncol = nrow(polys_sf), nrow = nrow(points_df)))
   is_in[,var_name] <- NA
   coordinates <- as.data.frame(st_coordinates(polys_sf))
-  name <- unique(polys_sf$id)
+  # name <- unique(polys_sf$id)
+  name <- polys_sf$id
   for (k in 1:nrow(polys_sf)) {
-    is_in[,k] <- point.in.polygon(point.x = points_df$long,
+    is_in[,k] <- sp::point.in.polygon(point.x = points_df$long,
                                   point.y = points_df$lat,
                                   pol.x = coordinates$X[coordinates$L2 == k],
                                   pol.y = coordinates$Y[coordinates$L2 == k])
@@ -73,8 +81,8 @@ point_in_polygons <- function(points_df, polys_sf, var_name)  {
   }
   is_in <- is_in %>%
     dplyr::select(var_name) %>%
-    mutate(id = points_df$id)
-  points_df <- full_join(points_df, is_in, by = "id")
+    dplyr::mutate(id = points_df$id)
+  points_df <- dplyr::full_join(points_df, is_in, by = "id")
   return(points_df)
 } 
 
@@ -86,9 +94,9 @@ distance_count <- function(main, reference, var_name, distance) {
   var_name_count <- paste(var_name, "count", sep = "_")
   var_name_dist <- paste(var_name, "dist", sep = "_")
   # Calculate distance for each listing to each station
-  point_distance <- geosphere::distm(main %>% dplyr::select(long, lat),
-                                reference %>% dplyr::select(long, lat),
-                                fun = distHaversine) %>%
+  point_distance <- geosphere::distm(x = main %>% dplyr::select(long, lat),
+                                     y = reference %>% dplyr::select(long, lat),
+                                     fun = distHaversine) %>%
     as.data.frame() %>%
     data.table::setnames(as.character(reference$id))
   # Calculate how many "reference" are within "distance"

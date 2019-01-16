@@ -16,6 +16,7 @@ source("01_functions.R")
 library(pacman)
 # p_load(raster)
 p_load(dplyr)
+p_load(sp)
 # p_load(rgdal)
 # To avoid issue Error in unionSpatialPolygons(berlin, berlin$BEZNAME) : isTRUE(gpclibPermitStatus()) is not TRUE, install rgeos, and ensure that it was attached prior to attaching maptools
 p_load(rgeos)
@@ -30,10 +31,10 @@ p_load(ggplot2)
 
 # p_load(tidyverse)
 
-p_load(Tmisc)
-p_load(htmltools)
-p_load(sp)
-p_load(rgdal)
+# p_load(Tmisc)
+# p_load(htmltools)
+# p_load(sp)
+# p_load(rgdal)
 
 
 
@@ -45,37 +46,40 @@ p_load(rgdal)
 ```
 
 
-## Map with Berlin districts
+## Creating Spatial Objects for mapping
 
-# Load the shapefile
+Load shapefiles
 ```{r}
 berlin <- raster::shapefile(file.path(getwd(), "mygeodata", "Berlin-Ortsteile-polygon.shp", fsep="/"))
-# Calculating the center of Berlin
-berlin_center <- methods::slot(berlin, "bbox") %>%
-  base::as.data.frame() %>%
-  dplyr::transmute(center = (max + min)/2,
-                   coords = c("long", "lat")) %>%
-  tidyr::spread(key = coords, value = center)
+stations <- raster::shapefile(file.path(getwd(), "berlin-latest-free", "gis_osm_transport_free_1.shp", fsep="/"))
 ```
 
-# Create sf objects with Berlin districts
-The shapefile comes with all Berlin neighbourhoods, but we want to show only the districts
+# Create sf objects with districts and neighbourhoods
 ```{r}
-# Object with the districts (not neighbourhoods)
-berlin_district_sf <- maptools::unionSpatialPolygons(berlin, berlin$BEZNAME) %>% 
-  # Join polygons according to district name
-  sf::st_as_sf() %>% # Transform into sf Object
-  sf::st_set_crs(proj4string(berlin)) %>% # add Coordinate Reference System (CRM)
-  dplyr::mutate(id    = berlin$BEZNAME %>% unique() %>% sort(),
-                group = id) %>%
-  mutate(view = "Districts")
+berlin_district_sf <- berlin %>%
+  st_as_sf() %>%
+  sf::st_set_crs(proj4string(berlin)) %>%
+  dplyr::rename(id = BEZNAME) %>%
+  dplyr::group_by(id) %>%
+  dplyr::summarize(do_union = TRUE) %>%
+  dplyr::mutate(group = id,
+                view  = "Districts")
+
+# ALTERNATIVE METHOD
+# berlin_district_sf <- maptools::unionSpatialPolygons(berlin, berlin$BEZNAME) %>% 
+#   # Join polygons according to district name
+#   sf::st_as_sf() %>% # Transform into sf Object
+#   sf::st_set_crs(sp::proj4string(berlin)) %>% # add Coordinate Reference System (CRM)
+#   dplyr::mutate(id    = berlin$BEZNAME %>% unique() %>% sort(),
+#                 group = id,
+#                 view = "Districts")
 
 # Object with the neightbourhoods (and respective district)
 berlin_neighbourhood_sf <- berlin %>%
   sf::st_as_sf() %>% # Transform into sf Object
   sf::st_set_crs(proj4string(berlin)) %>% # add Coordinate Reference System (CRM)
-  dplyr::rename("id"    = "Name",
-                "group" = "BEZNAME") %>%
+  dplyr::rename(id    = Name,
+                group = BEZNAME) %>%
   dplyr::select(id, group, geometry) %>%
   dplyr::arrange(group) %>%
   dplyr::mutate(view = "Neighbourhoods")
@@ -89,33 +93,27 @@ buckow_sf <- berlin_neighbourhood_sf %>%
                 group = "Neukölln",
                 view  = "Neighbourhoods")
 
+# Object where Buckow appears only once
 berlin_neighbourhood_singlebuckow_sf <- berlin_neighbourhood_sf %>%
   dplyr::filter(id != "Buckow") %>%
-  rbind(buckow_sf) %>%
-  sf::st_cast(to = 'MULTIPOLYGON')
+  rbind(buckow_sf) 
+# %>%
+#   sf::st_cast(to = 'MULTIPOLYGON')
 ```
 
-## Map with Berlin vbb areas
+# Create polygons for VBB Areas
 VBB areas are the one related to public transportation.
 Area A is delimited by the Ringbahn.
 Area B starts from the Ringbahn and covers the rest of Berlin.
 Area C will not be displayed since it is in Brandenburg.
 
-# Create SpatialPolygons of all Berlin
+
 ```{r}
-berlin_all_sf <- raster::aggregate(berlin,dissolve=TRUE) %>%
+# Create SpatialPolygons of all Berlin
+berlin_all_sf <- raster::aggregate(berlin, dissolve=TRUE) %>%
   sf::st_as_sf() %>%
   sf::st_set_crs(proj4string(berlin))
-```
 
-# Create SpatialPolygons for the Ringbahn (area A)
-First of all, we load the shapefile containing the location of all stations and transport stops in Berlin
-```{r}
-stations <- raster::shapefile(file.path(getwd(), "berlin-latest-free", "gis_osm_transport_free_1.shp", fsep="/"))
-```
-
-Secondly, we extract the coordinates for the Ringbahn stations
-```{r}
 # Create DF out of SpatialPointsDataFrame
 stations_df <- base::data.frame(stations) %>% 
   dplyr::rename(long = coords.x1, lat = coords.x2) %>%
@@ -138,48 +136,54 @@ ringbahn_names_df <- base::data.frame(name = c("Südkreuz", "Schöneberg", "Inns
   tibble::rownames_to_column(var = "order") %>%
   dplyr::mutate(order = as.numeric(order))
 
-# Select from the list of all stations those that are railway and whose name belongs to our Ringbahn names list and the rearrange according to the order we inserted before
-ringbahn_df <- stations_df %>%
+# Create the sf object for the VBB Areas
+vbb_AB_sf <- stations_df %>%
   dplyr::mutate(name = gsub("S ", "", name),
-        name = gsub("U ", "", name)) %>%
+                name = gsub("U ", "", name)) %>%
+  # Select from the list of all stations those that are railway and whose name belongs to our Ringbahn names DF
   dplyr::filter(fclass %like% "railway" & name %in% ringbahn_names_df$name) %>%
   dplyr::group_by(name) %>%
-  dplyr::summarize(long = mean(long), lat = mean(lat)) %>%
+  dplyr::summarize(long = mean(long), 
+                   lat  = mean(lat)) %>%
+  # Rearrange according to the order we inserted before
   dplyr::full_join(ringbahn_names_df, by = "name") %>%
-  dplyr::arrange(order) 
-```
-
-Finally, we transform the coordinate points into a polygon
-```{r}
-# Create DF with just the coordinates
-ringbahn_coordinates <- ringbahn_df %>% dplyr::select(long, lat) 
-# Transform points into polygons
-ringbahn_sf <- sp::SpatialPolygons(list(Polygons(list(Polygon(ringbahn_coordinates)),
-                                             ID = "A")),
-                               proj4string = CRS(proj4string(berlin))) %>% # Transform into spatial polygon
-  sf::st_as_sf() 
-```
-
-# Create sf Object with areas A and B
-
-```{r}
-vbb_AB_sf <- base::rbind(ringbahn_sf, berlin_all_sf) %>%
-  sf::st_intersection() %>% # Calculate intersections
-  dplyr::mutate(id    = ifelse(n.overlaps > 1, "A", "B"), # Define IDs for different areas
+  dplyr::arrange(order) %>%
+  dplyr::select(long, lat) %>%
+  # Transform the points into a polygon
+  base::as.matrix() %>%
+  base::list() %>%
+  sf::st_polygon() %>%
+  st_sfc() %>%
+  st_sf(crs = proj4string(berlin)) %>%
+  # Join with the polygon of whole Berlin
+  base::rbind(berlin_all_sf) %>%
+  # Calculate intersections
+  sf::st_intersection() %>% 
+  # Define IDs for different areas
+  dplyr::mutate(id    = ifelse(n.overlaps > 1, "A", "B"), 
                 view  = "VBB Areas",
                 group = id) %>% 
-  dplyr::select(id, group, view, geometry) %>%
+  dplyr::select(-n.overlaps, -origins) %>%
   dplyr::arrange(desc(id))
 
+# ALTERNATIVE WAY
+# ringbahn_sf <- sp::SpatialPolygons(list(Polygons(list(Polygon(ringbahn_df %>% dplyr::select(long, lat))),
+#                                              ID = "A")),
+#                                proj4string = CRS(proj4string(berlin))) %>%
+#   sf::st_as_sf() 
+```
+
+Join the sf objects
+```{r}
 berlin_sf <- base::rbind(berlin_district_sf, vbb_AB_sf, berlin_neighbourhood_singlebuckow_sf) %>%
     sf::st_cast(to = 'MULTIPOLYGON')
 ```
 
-
-# Map the SpatialPolygons with Leaflet
+Create a DF with the names of the areas and coordinates where to show them
 ```{r}
 # Names with coordinates
 berlin_names <- berlin_sf %>%
+  dplyr::filter(!id %in% c("B", "Buckow")) %>%
   sf::st_centroid() %>%
   as.data.frame() %>%
   tidyr::extract(geometry, c("long", "lat"), "\\((.*), (.*)\\)", remove = TRUE) %>%
@@ -188,6 +192,8 @@ berlin_names <- berlin_sf %>%
                 lat     = as.numeric(lat),
                 long    = as.numeric(long))
 
+# The coordinates for VBB Area B are calculated differently
+# We don't want the name at the center, but on the top part
 vbb_B <- berlin_all_sf %>%
   st_bbox() %>%
   as.matrix() %>%
@@ -195,12 +201,14 @@ vbb_B <- berlin_all_sf %>%
   as.data.frame() %>%
   dplyr::transmute(long = (xmax + xmin)/2,
                    lat  = (3*ymax + ymin)/4) %>%
-  dplyr::mutate(id = "B",
-                group = id,
-                view = "VBB Areas",
+  dplyr::mutate(id      = "B",
+                group   = id,
+                view    = "VBB Areas",
                 leaflet = gsub("-", "-<br/>", id),
                 ggplot  = gsub("-", "- \n ", id)) 
 
+# The coordinates for Neighourhood Buckow are calculated separately
+# We want the name to appear on both separate parts of the neighbourhood
 buckow <- berlin_neighbourhood_sf %>%
   dplyr::filter(id == "Buckow") %>%
   sf::st_centroid() %>%
@@ -213,9 +221,17 @@ buckow <- berlin_neighbourhood_sf %>%
                 long    = as.numeric(long))
 
 berlin_names <- berlin_names %>%
-  filter(!id %in% c("B", "Buckow")) %>%
   rbind(vbb_B, buckow)
 
+# Calculating the center of Berlin for setView
+berlin_center <- methods::slot(berlin, "bbox") %>%
+  base::as.data.frame() %>%
+  dplyr::transmute(center = (max + min)/2,
+                   coords = c("long", "lat")) %>%
+  tidyr::spread(key = coords, value = center)
+```
+
+```{r}
 # leaflet
 # colorlist = list("blue", "green", "yellow", "orange", "pink", "brown", "purple", "grey", "black", "darkblue", "khaki", "magenta")
 leaflet() %>%
@@ -225,7 +241,7 @@ leaflet() %>%
   addLabelOnlyMarkers(data = berlin_names %>% filter(view == "Districts"),
                     lng = ~long, lat = ~lat, label = ~lapply(leaflet, htmltools::HTML),
                     labelOptions = labelOptions(noHide = TRUE, direction = 'center',
-                                                textOnly = TRUE, textsize = "11px"))
+                                                textOnly = TRUE, textsize = "20px"))
 
 # Leaflet.markercluster
 # From: https://github.com/Leaflet/Leaflet.markercluster
@@ -241,7 +257,7 @@ leaflet() %>%
   addLabelOnlyMarkers(data = berlin_names %>% filter(group == "Neukölln", view == "Neighbourhoods"),
                     lng = ~long, lat = ~lat, label = ~lapply(leaflet, htmltools::HTML),
                     labelOptions = labelOptions(noHide = TRUE, direction = 'center',
-                                                textOnly = TRUE, textsize = "11px")) %>%
+                                                textOnly = TRUE, textsize = "20px")) %>%
   addAwesomeMarkers(data = stations %>% filter(district == "Neukölln"),
              lng = ~long, lat = ~lat,
              icon = makeAwesomeIcon(icon = "eye-open", markerColor = "blue"),
@@ -281,16 +297,16 @@ ggplot() +
 leaflet() %>%
   addTiles() %>%
   addPolygons(data = berlin_sf %>% filter(view == "VBB Areas"), weight = 1, fillColor = c("skyblue", "orange"), 
-              col = c("blue", "brown"),
+              col = "grey",
               opacity = 1.0, fillOpacity = 0.8) %>%
   addLabelOnlyMarkers(data = berlin_names %>% filter(view == "VBB Areas"),
                     lng = ~long, lat = ~lat, label = ~lapply(id, htmltools::HTML),
                     labelOptions = labelOptions(noHide = TRUE, direction = 'center',
-                                                textOnly = TRUE, textsize = "20px")) %>%
+                                                textOnly = TRUE, textsize = "25px")) %>%
   setView(lng = berlin_center$long, lat = berlin_center$lat, zoom = 10)
 ```
 
 ```{r}
-rm("ringbahn_df", "ringbahn_names_df", "ringbahn_sf", "berlin", "ringbahn_coordinates",
-   "stations", "buckow", "buckow_sf", "berlin_neighbourhood_singlebuckow_sf", "vbb_B", "berlin_all_sf")
+rm("ringbahn_names_df", "berlin", "stations", "buckow", "buckow_sf", "berlin_neighbourhood_singlebuckow_sf", 
+   "vbb_B", "berlin_all_sf")
 ```

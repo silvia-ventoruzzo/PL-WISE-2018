@@ -22,6 +22,7 @@ p_load(tidyr)
 
 # Load files with AirBnB listings in Berlin
 One has more detailed information, while the other has only summarized information
+The last one has the availability for each dy of the next year
 ```{r, echo = FALSE, include = FALSE}
 listings_detailed <- load_listings(file = "07.11_listings_detailed.csv")
 listings_summarized <- load_listings(file = "07.11_listings_summary.csv")
@@ -73,11 +74,7 @@ listings %>%
                 review_scores_cleanliness, review_scores_checkin, review_scores_communication,
                 review_scores_location, review_scores_rating,
                 number_of_reviews) # 499
-# getmode function from: https://www.tutorialspoint.com/r/r_mean_median_mode.htm
-getmode <- function(v) {
-   uniqv <- unique(v)
-   uniqv[which.max(tabulate(match(v, uniqv)))]
-}
+
 listings %>% 
   dplyr::summarize(mean = mean(review_scores_rating, na.rm = TRUE),
                    median = median(review_scores_rating, na.rm = TRUE),
@@ -105,22 +102,13 @@ listings <- listings %>%
               # Since in this case the property can accomodate only one person, we assume that it has 1 bed and 1                             bedroom (even if it might not be separate)
               beds = ifelse(is.na(beds) & is.na(bedrooms), 1, beds),
               bedrooms = ifelse(beds == 1 & is.na(bedrooms), 1, bedrooms))
-
-# neighbourhood
-# test <- listings %>%
-#   filter(is.na(neighbourhood)) %>% # 1131
-#   select(id, long, lat, neighbourhood, neighbourhood_cleansed, neighbourhood_group, neighbourhood_group_cleansed)
-
-# DON'T KNOW HOW TO SOLVE THIS, I WILL DELETE THEM FOR THE TIME BEING SO I CAN CONTINUE WORK
-# listings <- listings %>%
-#   tidyr::drop_na(neighbourhood)
 ```
 
 ## Keep only variables of interest
 ```{r}
 listings <- listings %>%
     # Keep only columns of interest
-    dplyr::select(id, lat, long, price, property_type, room_type,
+    dplyr::select(id, long, lat, price, property_type, room_type,
                   security_deposit_yn, cleaning_fee_yn,
                   host_is_superhost, accommodates, bedrooms, beds, minimum_nights, 
                   review_scores_rating, number_of_reviews, reviewed_yn, cancellation_policy,
@@ -148,6 +136,8 @@ listings <- point_in_polygons(points_df = listings,
 listings <- point_in_polygons(points_df = listings,
                               polys_sf = berlin_neighbourhood_sf,
                               var_name = "neighbourhood")
+
+# Not doing this with berlin_sf because the polys_sf need to have geometry sfc_POLYGON
 ```
 
 Check for missing values and in case plot them
@@ -155,12 +145,12 @@ Check for missing values and in case plot them
 listings %>%
   filter(is.na(district) | is.na(vbb_area) | is.na(neighbourhood)) %>%
   select(id, district, vbb_area, neighbourhood)
-# 2 + 11 - FIND OUT WHY IT DOESN'T RECOGNIZE THESE IN GRÜNAU
+# 2
 leaflet() %>%
   addTiles() %>%
-  addPolygons(data = berlin_sf %>% filter(view == "Neighbourhoods"), weight = 1, smoothFactor = 0.5, fillOpacity = 0.5,
+  addPolygons(data = berlin_sf %>% filter(view == "Districts"), weight = 1, smoothFactor = 0.5, fillOpacity = 0.5,
               fillColor = rainbow_hcl(96), color = "black") %>%
-  addLabelOnlyMarkers(data = berlin_names %>% filter(view == "Neighbourhoods"),
+  addLabelOnlyMarkers(data = berlin_names %>% filter(view == "Districts"),
                     lng = ~long, lat = ~lat, label = ~id, # here should be lapply(group, HTML)
                     labelOptions = labelOptions(noHide = TRUE, direction = 'center',
                                                 textOnly = TRUE)) %>%
@@ -169,8 +159,7 @@ leaflet() %>%
              lng = ~long, lat = ~lat, color = "red")
 # For the sake of consistency, we will delete these listings
 listings <- listings %>%
-  filter(!is.na(district) & !is.na(vbb_area)) %>%
-  mutate(neighbourhood = ifelse(is.na(neighbourhood), "Grünau", neighbourhood))
+  filter(!is.na(district) & !is.na(vbb_area))
 ```
 
 # Distance from stations
@@ -188,11 +177,30 @@ bahn_stations_df <- stations_df %>%
   dplyr::group_by(name) %>%
   dplyr::summarize(long = mean(long), lat = mean(lat),
                   s_bahn = any(s_bahn), u_bahn = any(u_bahn)) %>% 
-  rename("id" = "name")
+  rename(id = name)
 
 bahn_stations_df <- point_in_polygons(points_df = bahn_stations_df,
                                       polys_sf = berlin_district_sf,
                                       var_name = "district")
+
+# Check if there are any missing values
+bahn_stations_df %>%
+  filter(is.na(district))
+
+leaflet() %>%
+  addTiles() %>%
+  addPolygons(data = berlin_sf %>% filter(view == "Districts"), weight = 1, smoothFactor = 0.5, fillOpacity = 0.5,
+              fillColor = rainbow_hcl(96), color = "black") %>%
+  addLabelOnlyMarkers(data = berlin_names %>% filter(view == "Districts"),
+                    lng = ~long, lat = ~lat, label = ~id, # here should be lapply(group, HTML)
+                    labelOptions = labelOptions(noHide = TRUE, direction = 'center',
+                                                textOnly = TRUE)) %>%
+  addCircles(data = bahn_stations_df %>%
+                      filter(is.na(district)),
+             lng = ~long, lat = ~lat, color = "red")
+# For the sake of consistency, we will delete these listings
+bahn_stations_df <- bahn_stations_df %>%
+  filter(!is.na(district))
 
 rm("stations_df")
 ```
@@ -219,6 +227,9 @@ attractions_df <- point_in_polygons(points_df = attractions_df,
                                     polys_sf = berlin_district_sf,
                                     var_name = "district")
 
+# Check if there are any missing values
+attractions_df %>%
+  filter(is.na(district))
 ```
 
 Secondly we calculate the distance from the nearest attraction and the number of attractions within 2km (2000m)
@@ -230,23 +241,25 @@ listings <- distance_count(main = listings, reference = attractions_df,
 # Calendar
 ```{r}
 listings_calendar <- listings_calendar %>%
-  rename (id = listing_id) %>%
-  mutate(date = as.Date(date),
-         available = recode(available,
+  rename(id = listing_id) %>%
+  mutate(date        = as.Date(date),
+         available   = recode(available,
                             "f" = 0,
                             "t" = 1),
-         year = lubridate::year(date),
-         month = lubridate::month(date, label = TRUE),
-         day = lubridate::day(date),
-         weekday = lubridate::wday(date, label = TRUE),
-         season = ifelse((month == "Mar" & day >= 21) | (month == "Apr") | 
-                         (month == "May") | (month == "Jun" & day < 21), "Spring",
-                  ifelse((month == "Jun" & day >= 21) | (month == "Jul") | 
-                         (month == "Aug") | (month == "Sep" & day < 21), "Summer",
-                  ifelse((month == "Sep" & day >= 21) | (month == "Oct") | 
-                         (month == "Nov") | (month == "Dec" & day < 21), "Fall",
-                        "Winter"))) %>%
-                  factor(levels = c("Spring", "Summer", "Fall", "Winter"))
+         year        = lubridate::year(date),
+         month       = lubridate::month(date, label = TRUE),
+         day         = lubridate::day(date),
+         season      = ifelse((month == "Mar" & day >= 21) | (month == "Apr") | 
+                              (month == "May") | (month == "Jun" & day < 21), "Spring",
+                       ifelse((month == "Jun" & day >= 21) | (month == "Jul") | 
+                              (month == "Aug") | (month == "Sep" & day < 21), "Summer",
+                       ifelse((month == "Sep" & day >= 21) | (month == "Oct") | 
+                              (month == "Nov") | (month == "Dec" & day < 21), "Fall",
+                                                                              "Winter"))) %>%
+                       factor(levels = c("Spring", "Summer", "Fall", "Winter")),
+         year_season = paste(year, tolower(season), sep = "_") %>%
+                       factor(levels = c("2018_fall", "2018_winter", "2019_spring",
+                                         "2019_summer", "2019_winter", "2019_fall"))
          # ,
          # week = ifelse(weekday == "Sat" | weekday == "Sun" |
          #              (month == "Dec" & (day == 25 | day == 26)) |
@@ -262,87 +275,16 @@ listings_calendar <- listings_calendar %>%
          ) %>%
   dplyr::select(-price)
 
-# Availability per month
-listings_month_availability <- listings_calendar %>% 
-  group_by(id, year, month) %>% 
-  summarize(count = sum(available)) %>% 
-  arrange(id, year, month) %>%
-  ungroup() %>%
-  mutate(year_month = paste(year, month, sep = "_") %>%
-                      paste("availability", sep = "_") %>%
-                      tolower() %>%
-                      factor(levels = unique(tolower(paste(year, month, "availability", sep = "_"))))) %>%
-  dplyr::select(-month, -year) 
-
-listings_district_month_availability <- listings %>%
-  select(id, district) %>%
-  inner_join(listings_month_availability, by = "id") %>%
-  group_by(district, year_month) %>%
-  summarize(count = mean(count) %>% round(0)) %>%
-  spread(year_month, count)
-
-listings_vbb_month_availability <- listings %>%
-  select(id, vbb_area) %>%
-  inner_join(listings_month_availability, by = "id") %>%
-  group_by(vbb_area, year_month) %>%
-  summarize(count = mean(count) %>% round(0)) %>%
-  spread(year_month, count)
-
-listings_neighbourhood_month_availability <- listings %>%
-  select(id, neighbourhood) %>%
-  inner_join(listings_month_availability, by = "id") %>%
-  group_by(neighbourhood, year_month) %>%
-  summarize(count = mean(count) %>% round(0)) %>%
-  spread(year_month, count)
-
-listings_month_availability <- listings_month_availability %>%
-  spread(year_month, count)
-
-# Availability per weekday
-listings_weekday_availability <- listings_calendar %>% 
-  group_by(id, weekday) %>% 
-  summarize(count = sum(available)) %>% 
-  arrange(id, weekday) %>%
-  ungroup() %>%
-  mutate(weekday_av = paste(weekday, "availability", sep = "_") %>%
-                      tolower() %>%
-                      factor(levels = unique(tolower(paste(weekday, "availability", sep = "_"))))) %>%
-  select(-weekday)
-
-listings_district_weekday_availability <- listings %>%
-  select(id, district) %>%
-  inner_join(listings_weekday_availability, by = "id") %>%
-  group_by(district, weekday_av) %>%
-  summarize(count = mean(count) %>% round(0)) %>%
-  spread(weekday_av, count)
-
-listings_vbb_weekday_availability <- listings %>%
-  select(id, vbb_area) %>%
-  inner_join(listings_weekday_availability, by = "id") %>%
-  group_by(vbb_area, weekday_av) %>%
-  summarize(count = mean(count) %>% round(0)) %>%
-  spread(weekday_av, count)
-
-listings_neighbourhood_weekday_availability <- listings %>%
-  select(id, neighbourhood) %>%
-  inner_join(listings_weekday_availability, by = "id") %>%
-  group_by(neighbourhood, weekday_av) %>%
-  summarize(count = mean(count) %>% round(0)) %>%
-  spread(weekday_av, count)
-
-listings_weekday_availability <- listings_weekday_availability %>%
-  spread(weekday_av, count)
-
-# Availability per season
+# Availability per year_season
 listings_season_availability <- listings_calendar %>% 
-  group_by(id, season) %>% 
+  group_by(id, year_season) %>% 
   summarize(count = sum(available)) %>% 
-  arrange(id, season) %>%
+  arrange(id, year_season) %>%
   ungroup() %>%
-  mutate(season_av =  paste(season, "availability", sep = "_") %>%
+  mutate(season_av =  paste(year_season, "availability", sep = "_") %>%
                       tolower() %>%
-                      factor(levels = unique(tolower(paste(season, "availability", sep = "_"))))) %>%
-  dplyr::select(-season) 
+                      factor(levels = unique(tolower(paste(year_season, "availability", sep = "_"))))) %>%
+  dplyr::select(-year_season) 
 
 listings_district_season_availability <- listings %>%
   select(id, district) %>%
@@ -368,51 +310,12 @@ listings_neighbourhood_season_availability <- listings %>%
 listings_season_availability <- listings_season_availability %>%
   spread(season_av, count)
 
-# Availability per day-type
-# listings_daytype_availability <- listings_calendar %>% 
-#   group_by(id, week) %>% 
-#   summarize(count = sum(available)) %>% 
-#   arrange(id, week) %>%
-#   ungroup() %>%
-#   mutate(week_av  =   paste(week, "availability", sep = "_") %>%
-#                       tolower() %>%
-#                       factor(levels = unique(tolower(paste(week, "availability", sep = "_"))))) %>%
-#   dplyr::select(-week)
-# 
-# listings_district_daytype_availability <- listings %>%
-#   select(id, district) %>%
-#   inner_join(listings_daytype_availability, by = "id") %>%
-#   group_by(district, week_av) %>%
-#   summarize(count = mean(count) %>% round(0)) %>%
-#   spread(week_av, count)
-# 
-# listings_vbb_daytype_availability <- listings %>%
-#   select(id, vbb_area) %>%
-#   inner_join(listings_daytype_availability, by = "id") %>%
-#   group_by(vbb_area, week_av) %>%
-#   summarize(count = mean(count) %>% round(0)) %>%
-#   spread(week_av, count)
-# 
-# listings_neighbourhood_daytype_availability <- listings %>%
-#   select(id, neighbourhood) %>%
-#   inner_join(listings_daytype_availability, by = "id") %>%
-#   group_by(neighbourhood, week_av) %>%
-#   summarize(count = mean(count) %>% round(0)) %>%
-#   spread(week_av, count)
-# 
-# listings_daytype_availability <- listings_daytype_availability %>%
-#   spread(week_av, count)
-
-# Join all
+# Join to the listings
 listings <- listings %>%
-  left_join(listings_month_availability, by = "id") %>%
-  left_join(listings_weekday_availability, by = "id") %>%
   left_join(listings_season_availability, by = "id") %>%
-  # left_join(listings_daytype_availability, by = "id") %>%
   replace(is.na(.), 0)
 
-rm("listings_calendar", "listings_month_availability", "listings_weekday_availability", "listings_daytype_availability",
-   "listings_season_availability")
+rm("listings_calendar", "listings_season_availability")
 ```
 
 
@@ -424,14 +327,13 @@ Variables to summarize:
 - room_type: how many pro type (all and pro district)
 - cancellation_policy: how many pro type (all and pro district)
 ```{r}
+# For all Berlin
 listings_summary <- summarize_df(df = listings,
                                  vars_mean = c("price", "review_scores_rating"),
                                  vars_count = c("property_type", "room_type",
                                                 "cancellation_policy"))
-```
 
-And now the same summarizes for each vbb area
-```{r}
+# For each VBB Area
 listings_vbb_summary <- summarize_df(df = listings,
                                  wrt = "vbb_area",
                                  vars_mean = c("price", "review_scores_rating"),
@@ -439,20 +341,12 @@ listings_vbb_summary <- summarize_df(df = listings,
                                                 "cancellation_policy"))
 
 listings_vbb_summary <- listings_vbb_summary %>%
-  left_join(listings_vbb_month_availability, by = "vbb_area") %>%
-  left_join(listings_vbb_weekday_availability, by = "vbb_area") %>%
   left_join(listings_vbb_season_availability, by = "vbb_area") %>%
-  # left_join(listings_vbb_daytype_availability, by = "vbb_area") %>%
-  rename("id"  = "vbb_area") %>%
+  rename(id    = vbb_area) %>%
   mutate(view  = "VBB Areas",
          group = id)
 
-rm("listings_vbb_month_availability", "listings_vbb_weekday_availability",
-   "listings_vbb_season_availability", "listings_vbb_daytype_availability")
-```
-
-And now the same summarizes for each district
-```{r}
+# For each district
 listings_district_summary <- summarize_df(df = listings,
                                  wrt = "district",
                                  vars_mean = c("price", "review_scores_rating"),
@@ -460,41 +354,28 @@ listings_district_summary <- summarize_df(df = listings,
                                                 "cancellation_policy"))
 
 listings_district_summary <- listings_district_summary %>%
-  left_join(listings_district_month_availability, by = "district") %>%
-  left_join(listings_district_weekday_availability, by = "district") %>%
   left_join(listings_district_season_availability, by = "district") %>%
-  # left_join(listings_district_daytype_availability, by = "district") %>%
-  rename("id"  = "district") %>%
+  rename(id    = district) %>%
   mutate(view  = "Districts",
-         group = id) 
+         group = id)
 
-rm("listings_district_month_availability", "listings_district_weekday_availability",
-   "listings_district_season_availability", "listings_district_daytype_availability")
-```
-
-And now the same summarizes for each neighbourhood
-```{r}
 listings_neighbourhood_summary <- summarize_df(df = listings,
                                  wrt = "neighbourhood",
                                  vars_mean = c("price", "review_scores_rating"),
                                  vars_count = c("property_type", "room_type",
                                                 "cancellation_policy"))
 
-listings_neighbourhood_summary <- berlin_names %>%
+listings_neighbourhood_summary <- listings_neighbourhood_summary <- berlin_names %>%
   dplyr::filter(view == "Neighbourhoods") %>%
-  dplyr::select(id, group) %>% 
-  # dplyr::rename("neighbourhood" = "id") %>%
-  left_join(listings_neighbourhood_summary, by = c("id" = "neighbourhood")) %>%
-  left_join(listings_neighbourhood_month_availability, by = c("id" = "neighbourhood")) %>%
-  left_join(listings_neighbourhood_weekday_availability, by = c("id" = "neighbourhood")) %>%
-  left_join(listings_neighbourhood_season_availability, by = c("id" = "neighbourhood")) %>%
-  # left_join(listings_neighbourhood_daytype_availability, by = c("id" = "neighbourhood")) %>%
-  # rename("id" = "neighbourhood") %>%
-  mutate(view = "Neighbourhoods") %>%
+  dplyr::select(id, group) %>%
+  dplyr::rename(neighbourhood = id) %>%
+  dplyr::left_join(listings_neighbourhood_summary, by = "neighbourhood") %>%
+  dplyr::left_join(listings_neighbourhood_season_availability, by = "neighbourhood") %>%
+  dplyr::rename(id = neighbourhood) %>%
+  dplyr::mutate(view = "Neighbourhoods") %>%
   replace(is.na(.), 0)
 
-rm("listings_neighbourhood_month_availability", "listings_neighbourhood_weekday_availability",
-   "listings_neighbourhood_season_availability", "listings_neighbourhood_daytype_availability")
+rm("listings_vbb_season_availability", "listings_district_season_availability", "listings_neighbourhood_season_availability")
 ```
 
 Join the area summaries to make it easy to plot them
