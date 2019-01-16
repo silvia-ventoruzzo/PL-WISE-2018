@@ -40,7 +40,7 @@ server <- function(input, output) {
   # Title changes depending on the choice of view (input$view) and variable(input$variable1)
   title_main_map_change <- reactive({
     
-    if (gsub(" ", "_", input$variable1) == "None") {
+    if (gsub(" ", "_", input$variable1) == "none") {
       paste("Map of Berlin's", input$view, sep = " ")
     } else {
     capwords(input$variable1) %>%
@@ -54,7 +54,7 @@ server <- function(input, output) {
   
   title_main_table_change <- reactive({
     
-    if (gsub(" ", "_", input$variable1) == "None") {
+    if (gsub(" ", "_", input$variable1) == "none") {
       paste("Neighbourhoods in Berlin's", input$view, sep = " ")
     } else {
       capwords(input$variable1) %>%
@@ -78,7 +78,7 @@ server <- function(input, output) {
                                                       textOnly = TRUE, textsize = text_size()))  %>%
       setView(lng = berlin_center$long, lat = berlin_center$lat, zoom = 10)
     
-    if (gsub(" ", "_", input$variable1) == "None") {
+    if (gsub(" ", "_", input$variable1) == "none") {
       
       main_map %>%
         addPolygons(data = polygons(), weight = 1, smoothFactor = 1, fillOpacity = 0.8,
@@ -92,7 +92,7 @@ server <- function(input, output) {
         addPolygons(data = polygons(), weight = 1, smoothFactor = 1, fillOpacity = 0.8,
                     color = "grey", 
                     fillColor = ~colors_vars(listings_area_summary[listings_area_summary$view == input$view, gsub(" ", "_", input$variable1)])) %>%
-        addLegend(position = "bottomright", pal = colors_var(), 
+        addLegend(position = "bottomleft", pal = colors_var(), 
                   values = listings_area_summary[listings_area_summary$view == input$view, gsub(" ", "_", input$variable1)],
                   labFormat = labelFormat(transform = function(x) sort(x, decreasing = TRUE)),
                   title = gsub(" ", "_", input$variable1))
@@ -118,7 +118,7 @@ server <- function(input, output) {
       # Table of average or count values of the selected variable (input$variable1) for each area (input$view)
       output$main_table <- renderTable({
 
-        if (gsub(" ", "_", input$variable1) == "None") {
+        if (gsub(" ", "_", input$variable1) == "none") {
 
           listings_summary
 
@@ -137,7 +137,7 @@ server <- function(input, output) {
       # Title changes depending on the choice of district (input$district) and variable (input$variable2)
       title_secondary_map_change <- reactive({
         
-        if (gsub(" ", "_", input$variable2) == "None") {
+        if (gsub(" ", "_", input$variable2) == "none") {
           paste("Map of", input$district, sep = " ") %>%
             paste("'s", sep = "") %>%
             paste("Neighbourhoods", sep = " ")
@@ -153,7 +153,7 @@ server <- function(input, output) {
       
       title_secondary_table_change <- reactive({
 
-        if (gsub(" ", "_", input$variable2) == "None") {
+        if (gsub(" ", "_", input$variable2) == "none") {
           paste("Neighbourhoods in", input$district, sep = " ")
         } else {
           capwords(input$variable2) %>%
@@ -219,7 +219,7 @@ server <- function(input, output) {
           #                                                                            listings_area_summary$group == input$district, 
           #                                                                          gsub(" ", "_", input$variable2)]),
           #             group = "variables") %>%
-          # addLegend(position = "bottomright", pal = neighbourhood_colors_var(), 
+          # addLegend(position = "bottomleft", pal = neighbourhood_colors_var(), 
           #           values = listings_area_summary[listings_area_summary$view  == "Neighbourhoods" &
           #                                            listings_area_summary$group == input$district, 
           #                                          gsub(" ", "_", input$variable2)],
@@ -234,7 +234,8 @@ server <- function(input, output) {
                             lng = ~long, lat = ~lat,
                             icon = icons[["properties"]],
                             group = "properties",
-                            popup = ~lapply(paste(id, "Price: ", sep = "<br/>") %>%
+                            popup = ~lapply(paste("<b><a href=", listing_url, "> ID: ", id, "</a></b>", sep = "") %>%
+                                            paste("Price: ", sep = "<br/>") %>%
                                             paste(price, "$", sep = "") %>%
                                             paste(property_type, sep = "<br/>") %>%
                                             paste(room_type, sep = " - ") %>%     
@@ -242,7 +243,13 @@ server <- function(input, output) {
                                             paste(accommodates, ifelse(accommodates == 1, "person", "people"), sep = " "),
                                             htmltools::HTML),
                             clusterId = "1",
-                            clusterOptions = markerClusterOptions()) %>%
+                            clusterOptions = markerClusterOptions(
+                              iconCreateFunction=JS("function (cluster) {    
+                                                    var childCount = cluster.getChildCount();  
+                                                    if (childCount > 1) {  
+                                                    c = 'rgba(235, 0, 0, 1);'}    
+                                                    return new L.DivIcon({ html: '<div style=\"background-color:'+c+'\"><span>' + childCount + '</span></div>', className: 'marker-cluster', iconSize: new L.Point(40, 40) });}"),
+                        singleMarkerMode = FALSE)) %>%
           addAwesomeMarkers(data = bahn_stations_df %>% filter(district == input$district),
                             lng = ~long, lat = ~lat,
                             icon = icons[["stations"]],
@@ -254,14 +261,26 @@ server <- function(input, output) {
                                     paste(id, sep = " ")),
                             group = "stations",
                             clusterId = "2",
-                            clusterOptions = markerClusterOptions()) %>%
+                            clusterOptions = markerClusterOptions(
+                              iconCreateFunction = JS("function (cluster) {    
+                                                      var childCount = cluster.getChildCount();  
+                                                      if (childCount > 1) {  
+                                                      c = 'rgba(7, 187, 31, 1);'}    
+                                                      return new L.DivIcon({ html: '<div style=\"background-color:'+c+'\"><span>' + childCount + '</span></div>', className: 'marker-cluster', iconSize: new L.Point(40, 40) });}"),
+                              singleMarkerMode = FALSE)) %>%
           addAwesomeMarkers(data = attractions_df %>% filter(district == input$district),
                             lng = ~long, lat = ~lat,
                             icon = icons[["sights"]],
                             popup = ~htmltools::htmlEscape(id),
                             group = "sights",
                             clusterId = "3",
-                            clusterOptions = markerClusterOptions()) %>%
+                            clusterOptions = markerClusterOptions(
+                              iconCreateFunction = JS("function (cluster) {    
+                                                      var childCount = cluster.getChildCount();  
+                                                      if (childCount > 1) {  
+                                                      c = 'rgba(11, 200, 213, 1);'}    
+                                                      return new L.DivIcon({ html: '<div style=\"background-color:'+c+'\"><span>' + childCount + '</span></div>', className: 'marker-cluster', iconSize: new L.Point(40, 40) });}"),
+                              singleMarkerMode = FALSE)) %>%
           hideGroup(group = c("properties", "stations", "sights")) %>%
           addMiniMap(centerFixed = berlin_center %>% t() %>% c(),
                      zoomLevelFixed = 8,
@@ -271,7 +290,7 @@ server <- function(input, output) {
         #           lat = berlin_names[berlin_names$view == "Districts" & berlin_names$group == input$district, "lat"], 
         #           zoom = 11.5)
         
-        if (gsub(" ", "_", input$variable2) == "None") {
+        if (gsub(" ", "_", input$variable2) == "none") {
 
           secondary_map %>%
             addPolygons(data = neighbourhoods(), weight = 1, smoothFactor = 1, fillOpacity = 0.8,
@@ -287,7 +306,7 @@ server <- function(input, output) {
                         fillColor = ~neighbourhood_colors_vars(listings_area_summary[listings_area_summary$view  == "Neighbourhoods" &
                                                                                        listings_area_summary$group == input$district,
                                                                                      gsub(" ", "_", input$variable2)])) %>%
-            addLegend(position = "bottomright", pal = neighbourhood_colors_var(),
+            addLegend(position = "bottomleft", pal = neighbourhood_colors_var(),
                       values = listings_area_summary[listings_area_summary$view  == "Neighbourhoods" &
                                                        listings_area_summary$group == input$district,
                                                      gsub(" ", "_", input$variable2)],
@@ -301,7 +320,7 @@ server <- function(input, output) {
       #   
       #   proxy <- leafletProxy("secondary_map") 
       #   
-      #   if (input$variable2 == "None") {
+      #   if (input$variable2 == "none") {
       #     proxy %>%
       #       hideGroup(group = "variables") %>%
       #       addPolygons(data = neighbourhoods(), weight = 1, smoothFactor = 1, fillOpacity = 0.8,
@@ -318,7 +337,7 @@ server <- function(input, output) {
       #                                                                                  listings_area_summary$group == input$district, 
       #                                                                                gsub(" ", "_", input$variable2)]),
       #                   group = "variables") %>%
-      #       addLegend(position = "bottomright", pal = neighbourhood_colors_var(), 
+      #       addLegend(position = "bottomleft", pal = neighbourhood_colors_var(), 
       #                 values = listings_area_summary[listings_area_summary$view  == "Neighbourhoods" &
       #                                                  listings_area_summary$group == input$district, 
       #                                                gsub(" ", "_", input$variable2)],
@@ -351,7 +370,7 @@ server <- function(input, output) {
       
       output$secondary_table <- renderTable({
 
-        if (gsub(" ", "_", input$variable2) == "None") {
+        if (gsub(" ", "_", input$variable2) == "none") {
 
           listings_area_summary %>%
             dplyr::filter(view  == "Districts",
@@ -379,18 +398,47 @@ server <- function(input, output) {
         validate(
           need(!is.null(input$variable3), "Please select variable(s)")
         )
-        listings_price_correlation
+        listings_price_correlation %>%
+          filter(variable %in% gsub(" ", "_", input$variable3)) %>%
+          arrange(variable)
       })
+      
+      corr_color <- reactive({
+        validate(
+          need(!is.null(input$variable3), "Please select variable(s)")
+        )
+        ifelse(price_correlation()$corr > 0, "green4",
+        ifelse(price_correlation()$corr < 0, "red1",
+                                             "blue3"))
+      })
+      
+      corr_margin <- reactive({
+        validate(
+          need(!is.null(input$variable3), "Please select variable(s)")
+        )
+        rep(c(seq(from = 4.5, to = 0, by = -0.1), rep(0.0, 128))[length(input$variable3)], 4)
+      })
+      
+      corr_text_size <- reactive({
+        validate(
+          need(!is.null(input$variable3), "Please select variable(s)")
+        )
+        seq(from = 13.65, to = 5, by = -0.05)[length(input$variable3)]
+      })
+      
       
       # If it is, show plot
       output$corr_plot <- renderPlot({
         
-        color <-  ifelse(price_correlation()$corr > 0, "green4",
-                         ifelse(price_correlation()$corr < 0, "red1",
-                                "blue3"))
+        # color <-  ifelse(price_correlation()$corr > 0, "green4",
+        #                  ifelse(price_correlation()$corr < 0, "red1",
+        #                         "blue3"))
+        
+        # margin <- rep(c(seq(from = 4.5, to = 0, by = -0.1), rep(0.0, 128))[length(input$variable3)], 4)
+        
+        # text_size <- c(seq(from = 10, to = 5, by = -0.03), rep(5, 7))[length(input$variable3)]
 
         price_correlation() %>%
-          filter(variable %in% gsub(" ", "_", input$variable3)) %>%
           ggplot(aes(x = variable, y = corr, fill = sign)) +
           geom_bar(stat="identity") +
           scale_fill_manual("sign", values = c("positive" = "green4", "negative" = "red1", "null" = "blue3"),
@@ -398,8 +446,9 @@ server <- function(input, output) {
           coord_flip() +
           labs(x = "Variable(s)",
                y = "Correlation") +
-          theme(axis.text.y = element_text(colour = color), # COLORS ARE ALL WRONG
-                plot.title = element_text(hjust = 0.5, size = 17))
+          theme(axis.text.y = element_text(colour = corr_color(), size = corr_text_size()), 
+                plot.title = element_text(hjust = 0.5, size = 17),
+                plot.margin = unit(corr_margin(), "cm"))
         
       })
         

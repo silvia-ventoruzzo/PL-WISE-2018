@@ -258,30 +258,37 @@ leaflet() %>%
                     lng = ~long, lat = ~lat, label = ~lapply(leaflet, htmltools::HTML),
                     labelOptions = labelOptions(noHide = TRUE, direction = 'center',
                                                 textOnly = TRUE, textsize = "20px")) %>%
-  addAwesomeMarkers(data = stations %>% filter(district == "Neukölln"),
+  addAwesomeMarkers(data = bahn_stations_df %>% filter(district == "Neukölln"),
              lng = ~long, lat = ~lat,
-             icon = makeAwesomeIcon(icon = "eye-open", markerColor = "blue"),
+             icon = makeAwesomeIcon(icon = "subway", library = "fa", markerColor = "green", iconColor = "#FFFFFF"),
+             clusterId = "stations",
              clusterOptions = markerClusterOptions(
-               iconCreateFunction = JS("function (cluster) {var childCount = cluster.getChildCount();
-.marker-mycluster div {
-background-color: rgba(255,191,84, 1);
-}
-        return new L.DivIcon({ html: '<div><span>' + childCount + '</span></div>', className: 'marker-cluster marker-mycluster', iconSize: new L.Point(40, 40) });
-    }
-                                                }"),
-                        singleMarkerMode = TRUE)
+               iconCreateFunction=JS("function (cluster) {    
+    var childCount = cluster.getChildCount();  
+    if (childCount > 1) {  
+      c = 'rgba(181, 226, 140, 1.0);'
+    }    
+    return new L.DivIcon({ html: '<div style=\"background-color:'+c+'\"><span>' + childCount + '</span></div>', className: 'marker-cluster', iconSize: new L.Point(40, 40) });
+
+  }"),
+                        singleMarkerMode = FALSE)
              ) %>%
+    addAwesomeMarkers(data = listings %>% filter(district == "Neukölln"),
+             lng = ~long, lat = ~lat,
+             icon = makeAwesomeIcon(icon = "home", markerColor = "red"),
+             clusterId = "properties",
+             clusterOptions = markerClusterOptions(iconCreateFunction=JS("function (cluster) {    
+    var childCount = cluster.getChildCount();  
+    if (childCount > 1) {  
+      c = 'rgba(235, 0, 0, 1);'
+    }    
+    return new L.DivIcon({ html: '<div style=\"background-color:'+c+'\"><span>' + childCount + '</span></div>', className: 'marker-cluster', iconSize: new L.Point(40, 40) });
+
+  }"),
+                        singleMarkerMode = FALSE)) %>%
   addMiniMap(centerFixed = berlin_center %>% t() %>% c(),
              zoomLevelFixed = 8,
              zoomAnimation = FALSE) 
-
-%>%
-  htmlwidgets::onRender("var style = document.createElement('style');
-  style.type = 'text/css';
-  style.innerHTML = '.red, .red div { background-color: rgba(255,0,0,0.6); }'; // set both at the same time
-  document.getElementsByTagName('head')[0].appendChild(style);")
-
-berlin_center %>% t() %>% c()  
   
 # ggplot
 ggplot() + 

@@ -165,7 +165,7 @@ listings <- listings %>%
 # Distance from stations
 Firstly we need to extract all subway (U-Bahn) and railway (S-Bahn, Regio, Long-distance) stations
 ```{r}
-# The DF stations_df is created in 03_maps.Rmd
+# The DF stations_df is created in 02_maps.Rmd
 # If U-Bahn and S-Bahn station have different coordinates, find the middle point
 bahn_stations_df <- stations_df %>%
   dplyr::filter(fclass %like% "railway") %>%
@@ -259,20 +259,7 @@ listings_calendar <- listings_calendar %>%
                        factor(levels = c("Spring", "Summer", "Fall", "Winter")),
          year_season = paste(year, tolower(season), sep = "_") %>%
                        factor(levels = c("2018_fall", "2018_winter", "2019_spring",
-                                         "2019_summer", "2019_winter", "2019_fall"))
-         # ,
-         # week = ifelse(weekday == "Sat" | weekday == "Sun" |
-         #              (month == "Dec" & (day == 25 | day == 26)) |
-         #              (month == "Jan" & day == 1) |
-         #              (month == "Apr" & day == 19 & year == 2019) |
-         #              (month == "Apr" & day == 22 & year == 2019) |
-         #              (month == "May" & day == 1) |
-         #              (month == "May" & day == 30 & year == 2019) |
-         #              (month == "Jun" & day == 10 & year == 2019) |  
-         #              (month == "Oct" & day == 3),
-         #              "Offday", "Workday") %>%
-         #        factor(levels = c("Workday", "Offday"))
-         ) %>%
+                                         "2019_summer", "2019_fall", "2019_winter"))) %>%
   dplyr::select(-price)
 
 # Availability per year_season
