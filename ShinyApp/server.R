@@ -1,5 +1,3 @@
-# berlin_spdf <- sf:::as_Spatial(berlin_sf)
-
 p_load(colorspace)
 p_load(htmltools)
 
@@ -433,9 +431,10 @@ server <- function(input, output) {
         if (gsub(" ", "_", input$variable2) == "none") {
 
           listings_area_summary %>%
-            dplyr::filter(view  == "Districts",
+            dplyr::filter(view  == "Neighbourhoods",
                           group == input$district) %>%
-            dplyr::select(-group, -view)
+            dplyr::select(id) %>%
+            dplyr::rename(neighbourhoods = id)
 
         }  else {
 
