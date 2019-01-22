@@ -1,7 +1,5 @@
 ## Function to load files
 load_listings <- function(file) {
-  wd <- getwd()
-  setwd(file.path(getwd(), "insideairbnb", fsep="/"))
   df <- utils::read.csv(file, sep = ",", header = TRUE, stringsAsFactors = FALSE, encoding = "UTF-8",
                         na.strings = c("NA", ""))
   df <- df %>%
@@ -11,7 +9,6 @@ load_listings <- function(file) {
                            names(df)), funs(gsub("\\,", "", .))) %>%
     dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
                            names(df)), funs(as.numeric(.)))
-  setwd(wd)
   return(df)
 }
 

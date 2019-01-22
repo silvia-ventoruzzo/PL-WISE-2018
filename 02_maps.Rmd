@@ -50,8 +50,8 @@ p_load(ggplot2)
 
 Load shapefiles
 ```{r}
-berlin <- raster::shapefile(file.path(getwd(), "mygeodata", "Berlin-Ortsteile-polygon.shp", fsep="/"))
-stations <- raster::shapefile(file.path(getwd(), "berlin-latest-free", "gis_osm_transport_free_1.shp", fsep="/"))
+berlin <- raster::shapefile(file.path(getwd(), "spatial_data", "Berlin-Ortsteile-polygon.shp", fsep="/"))
+stations <- raster::shapefile(file.path(getwd(), "spatial_data", "gis_osm_transport_free_1.shp", fsep="/"))
 ```
 
 # Create sf objects with districts and neighbourhoods
