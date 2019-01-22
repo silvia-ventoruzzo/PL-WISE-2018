@@ -199,9 +199,6 @@ listings <- listings %>%
 Firstly we need to extract all subway (U-Bahn) and railway (S-Bahn, Regio, Long-distance) stations
 ```{r}
 # The dataframe bahn_stations_df is created in 02_spatial_data.Rmd
-bahn_stations_df <- bahn_stations_df %>%
-  rename(id = name)
-
 bahn_stations_df <- point_in_polygons(points_df = bahn_stations_df,
                                       polys_sf = berlin_district_sf,
                                       var_name = "district")
@@ -224,8 +221,6 @@ leaflet() %>%
 # For the sake of consistency, we will delete these listings
 bahn_stations_df <- bahn_stations_df %>%
   filter(!is.na(district))
-
-rm("stations_df")
 ```
 
 Secondly we calculate the distance from the nearest station and the number of station within 1km (1000m)
@@ -266,9 +261,10 @@ listings <- distance_count(main = listings, reference = attractions_df,
 listings_calendar <- listings_calendar %>%
   rename(id = listing_id) %>%
   mutate(date        = as.Date(date),
-         available   = recode(available,
-                            "f" = 0,
-                            "t" = 1),
+         # if loading the csv use recode, if loading the zip there is no need
+         # available   = recode(available,
+         #                    "f" = 0,
+         #                    "t" = 1),
          year        = lubridate::year(date),
          month       = lubridate::month(date, label = TRUE),
          day         = lubridate::day(date),
@@ -288,7 +284,10 @@ listings_calendar <- listings_calendar %>%
 # Availability per year_season
 listings_season_availability <- listings_calendar %>% 
   dplyr::group_by(id, year_season) %>% 
-  dplyr::summarize(count = sum(available)) %>% 
+  # if loading the csv use sum(available)
+  # dplyr::summarize(count = sum(available)) %>% 
+  # if loading the zip use sum(available == TRUE)
+  dplyr::summarize(count = sum(available == TRUE)) %>%   
   arrange(id, year_season) %>%
   ungroup() %>%
   mutate(season_av =  paste(year_season, "availability", sep = "_") %>%
@@ -375,7 +374,7 @@ listings_neighbourhood_summary <- summarize_df(df = listings,
                                  vars_count = c("property_type", "room_type",
                                                 "cancellation_policy"))
 
-listings_neighbourhood_summary <- listings_neighbourhood_summary <- berlin_names %>%
+listings_neighbourhood_summary <- berlin_names %>%
   dplyr::filter(view == "Neighbourhoods") %>%
   dplyr::select(id, group) %>%
   dplyr::rename(neighbourhood = id) %>%

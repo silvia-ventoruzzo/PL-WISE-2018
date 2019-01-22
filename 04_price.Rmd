@@ -64,6 +64,11 @@ listings_price_correlation %>%
 
 
 # Product vector with colors for y-axis text
+# listings_price_correlation <- listings_price_correlation %>%
+#   arrange(variable) %>%
+#   filter(variable %in% c("attraction_count", "attraction_dist", "station_count", "station_dist",
+#                          "security_deposit_yn"))
+# 
 # color <-  ifelse(listings_price_correlation$corr > 0, "green4",
 #                         ifelse(listings_price_correlation$corr < 0, "red1",
 #                                          "blue3"))
@@ -80,7 +85,8 @@ listings_price_correlation %>%
   # expand_limits(x = 3*ncol(listings_price_correlation)) +
   theme(axis.text.y = element_text(colour = ifelse(listings_price_correlation$corr > 0, "green4",
                         ifelse(listings_price_correlation$corr < 0, "red1",
-                                         "blue3"))),
+                                         "blue3")),
+                        size = 15),
         plot.title = element_text(hjust = 0.5, size = 17))
 ```
 

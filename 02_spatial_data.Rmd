@@ -19,7 +19,7 @@ p_load(dplyr)
 p_load(sp)
 # p_load(rgdal)
 # To avoid issue Error in unionSpatialPolygons(berlin, berlin$BEZNAME) : isTRUE(gpclibPermitStatus()) is not TRUE, install rgeos, and ensure that it was attached prior to attaching maptools
-# p_load(rgeos)
+p_load(rgeos)
 # p_load(maptools)
 p_load(sf)
 # p_load(DescTools)
@@ -95,23 +95,25 @@ berlin_all_sf <- raster::aggregate(berlin, dissolve=TRUE) %>%
 
 # Create dataframe of train/subway stations out of SpatialPointsDataFrame
 bahn_stations_df <- stations %>%
-  base::data.frame(stations) %>% 
+  base::as.data.frame() %>% 
   dplyr::filter(fclass %like% "railway") %>%
-  dplyr::rename(long = coords.x1, lat = coords.x2) %>%
-  dplyr::mutate(name = gsub("Berlin ", "", name),
-                name = gsub("Berlin-", "", name),
-                name = gsub(" *\\(.*?\\) *", "", name),
-                s_bahn = ifelse(startsWith(name, "S "), TRUE, FALSE),
-                u_bahn = ifelse(startsWith(name, "U "), TRUE, FALSE),
-                name = gsub("S ", "", name),
-                name = gsub("U ", "", name)) %>%
-  dplyr::group_by(name) %>%
+  dplyr::rename(id   = name,
+                long = coords.x1,
+                lat  = coords.x2) %>%
+  dplyr::mutate(id     = gsub("Berlin ", "", id),
+                id     = gsub("Berlin-", "", id),
+                id     = gsub(" *\\(.*?\\) *", "", id),
+                s_bahn = ifelse(startsWith(id, "S "), TRUE, FALSE),
+                u_bahn = ifelse(startsWith(id, "U "), TRUE, FALSE),
+                id     = gsub("S ", "", id),
+                id     = gsub("U ", "", id)) %>%
+  dplyr::group_by(id) %>%
   dplyr::summarize(long = mean(long), lat = mean(lat),
                   s_bahn = any(s_bahn), u_bahn = any(u_bahn))
   
 # Create DF with Ringbahn stations and their order
 # The initial station is repeated to have a full circle
-ringbahn_names_df <- base::data.frame(name = c("Südkreuz", "Schöneberg", "Innsbrucker Platz", "Bundesplatz",
+ringbahn_names_df <- base::data.frame(id = c("Südkreuz", "Schöneberg", "Innsbrucker Platz", "Bundesplatz",
                     "Heidelberger Platz", "Hohenzollerndamm", "Halensee", "Westkreuz",
                     "Messe Nord/ICC", "Westend", "Jungfernheide", "Beusselstraße",
                     "Westhafen", "Wedding", "Gesundbrunnen", "Schönhauser Allee",
@@ -125,10 +127,9 @@ ringbahn_names_df <- base::data.frame(name = c("Südkreuz", "Schöneberg", "Inns
 
 # Create the sf object for the VBB Areas
 vbb_AB_sf <- bahn_stations_df %>%
-  # Select from the list of all train/subway stations those whose name belongs to our Ringbahn names DF
-  dplyr::filter(name %in% ringbahn_names_df$name) %>%
-  # Rearrange according to the order we inserted before
-  dplyr::full_join(ringbahn_names_df, by = "name") %>%
+  # Right Join so only the stations in ringbahn_names_df remain
+  dplyr::right_join(ringbahn_names_df, by = "id") %>%
+  # Rearrange according to the order we inserted before (in case it doesn't work automatically in the join)
   dplyr::arrange(order) %>%
   dplyr::select(long, lat) %>%
   # Transform the points into a polygon
