@@ -7,6 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+p_load(Hmisc)
 ```
 
 ## Maps colored depending on aggregated data
@@ -15,17 +16,55 @@ I'm first trying this with the average price
 
 ```{r}
 # I don't like these colours
-pal_districts <- colorNumeric(palette = "Dark2", domain = listings_district_summary$price, n = 12, reverse = TRUE)
+pal_districts <- colorFactor(palette = "Dark2",
+                              levels = listings_area_summary %>%
+                                          filter(view == "Districts") %>%
+                                          select(price_range) %>%
+                                          unique(),
+                              # n = 12,
+                              reverse = TRUE)
+
+pal_districts <- colorQuantile(palette = "Dark2",
+                              domain = listings_area_summary %>%
+                                          filter(view == "Districts") %>%
+                                          select(price),
+                              probs = seq(0, 1, 0.2),
+                              reverse = TRUE)
+
+listings_area_summary <- listings_area_summary %>%
+  dplyr::summarize_if(is.numeric, funs(list(cut2(., g = 5)))) %>%
+  tidyr::unnest() %>%
+  dplyr::rename_all(function(x) paste(x, "range", sep = "_")) %>%
+  base::cbind(listings_area_summary)
+  
+
+  
+test <-  listings_area_summary %>%
+  select(-id, -group, -view) %>%
+  summarise_all(funs(list(quantile(., probs = c(0, 0.2, 0.4, 0.6, 0.8, 1.0))))) %>%
+  unnest() %>%
+  transpose() %>%
+  setNames(., c("0%", "20%", "40%", "60%", "80%", "100%")) %>%
+  map_df(unlist) %>%
+  bind_cols(data.frame(vars = names(listings_area_summary %>%
+                                    select(-id, -group, -view))), .) %>%
+  mutate_if(is.numeric, round) %>%
+  mutate("0%-20%"   = paste("(", `0%`, " - ", `20%`, ")", sep = ""),
+         "20%-40%"  = paste("(", `20%`, " - ", `40%`, ")", sep = ""),
+         "40%-60%"  = paste("(", `40%`, " - ", `60%`, ")", sep = ""),
+         "60%-80%"  = paste("(", `60%`, " - ", `80%`, ")", sep = ""),
+         "80%-100%" = paste("(", `80%`, " - ", `100%`, ")", sep = ""))
+
+
 leaflet() %>% 
   addTiles() %>%
-  addPolygons(data = berlin_district_sf,
-            stroke = FALSE,
-            fillColor = ~pal_districts(listings_district_summary$price)) %>%
-  addLabelOnlyMarkers(data = districts,
-                    lng = ~long, lat = ~lat, label = ~lapply(leaflet, htmltools::HTML),
-                    labelOptions = labelOptions(noHide = TRUE, direction = 'center', textOnly = TRUE)) %>%
-  addLegend(position = "bottomright", pal = pal_districts, values = listings_district_summary$price,
-          title = "Average $/night")
+  addPolygons(data = berlin_sf %>% filter(view == "Districts"), weight = 1, smoothFactor = 1, fillOpacity = 0.8,
+                    color = "grey", 
+                    fillColor = ~pal_districts(listings_area_summary[listings_area_summary$view == "Districts", "price_range"])) %>%
+        addLegend(position = "bottomleft", pal = pal_districts, 
+                  values = listings_area_summary[listings_area_summary$view == "Districts", "price_range"],
+                  labFormat = labelFormat(transform = function(x) sort(x, decreasing = TRUE)),
+                  title = "Price in districts")
 ```
 
 Percentage of the properties in the different districts

@@ -264,8 +264,8 @@ listings_calendar <- listings_calendar %>%
 
 # Availability per year_season
 listings_season_availability <- listings_calendar %>% 
-  group_by(id, year_season) %>% 
-  summarize(count = sum(available)) %>% 
+  dplyr::group_by(id, year_season) %>% 
+  dplyr::summarize(count = sum(available)) %>% 
   arrange(id, year_season) %>%
   ungroup() %>%
   mutate(season_av =  paste(year_season, "availability", sep = "_") %>%
@@ -277,21 +277,21 @@ listings_district_season_availability <- listings %>%
   select(id, district) %>%
   inner_join(listings_season_availability, by = "id") %>%
   group_by(district, season_av) %>%
-  summarize(count = mean(count) %>% round(0)) %>%
+  dplyr::summarize(count = mean(count) %>% round(0)) %>%
   spread(season_av, count)
 
 listings_vbb_season_availability <- listings %>%
   select(id, vbb_area) %>%
   inner_join(listings_season_availability, by = "id") %>%
   group_by(vbb_area, season_av) %>%
-  summarize(count = mean(count) %>% round(0)) %>%
+  dplyr::summarize(count = mean(count) %>% round(0)) %>%
   spread(season_av, count)
 
 listings_neighbourhood_season_availability <- listings %>%
   select(id, neighbourhood) %>%
   inner_join(listings_season_availability, by = "id") %>%
   group_by(neighbourhood, season_av) %>%
-  summarize(count = mean(count) %>% round(0)) %>%
+  dplyr::summarize(count = mean(count) %>% round(0)) %>%
   spread(season_av, count)
 
 listings_season_availability <- listings_season_availability %>%

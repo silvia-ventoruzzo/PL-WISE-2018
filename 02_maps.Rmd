@@ -56,24 +56,6 @@ stations <- raster::shapefile(file.path(getwd(), "berlin-latest-free", "gis_osm_
 
 # Create sf objects with districts and neighbourhoods
 ```{r}
-berlin_district_sf <- berlin %>%
-  st_as_sf() %>%
-  sf::st_set_crs(proj4string(berlin)) %>%
-  dplyr::rename(id = BEZNAME) %>%
-  dplyr::group_by(id) %>%
-  dplyr::summarize(do_union = TRUE) %>%
-  dplyr::mutate(group = id,
-                view  = "Districts")
-
-# ALTERNATIVE METHOD
-# berlin_district_sf <- maptools::unionSpatialPolygons(berlin, berlin$BEZNAME) %>% 
-#   # Join polygons according to district name
-#   sf::st_as_sf() %>% # Transform into sf Object
-#   sf::st_set_crs(sp::proj4string(berlin)) %>% # add Coordinate Reference System (CRM)
-#   dplyr::mutate(id    = berlin$BEZNAME %>% unique() %>% sort(),
-#                 group = id,
-#                 view = "Districts")
-
 # Object with the neightbourhoods (and respective district)
 berlin_neighbourhood_sf <- berlin %>%
   sf::st_as_sf() %>% # Transform into sf Object
@@ -85,20 +67,26 @@ berlin_neighbourhood_sf <- berlin %>%
   dplyr::mutate(view = "Neighbourhoods")
 
 # Buckow is composed of two separate parts, so we need to join them
-buckow_sf <- berlin_neighbourhood_sf %>%
-  dplyr::filter(id == "Buckow") %>%
-  sf::st_combine() %>%
-  sf::st_sf() %>%
-  dplyr::mutate(id    = "Buckow",
-                group = "Neukölln",
-                view  = "Neighbourhoods")
-
-# Object where Buckow appears only once
 berlin_neighbourhood_singlebuckow_sf <- berlin_neighbourhood_sf %>%
-  dplyr::filter(id != "Buckow") %>%
-  rbind(buckow_sf) 
-# %>%
-#   sf::st_cast(to = 'MULTIPOLYGON')
+  dplyr::group_by(id, group, view) %>%
+  dplyr::summarize(do_union = TRUE) %>%
+  dplyr::arrange(group)
+
+# Object with the districts: we need to group by "group" (BEZNAME)
+berlin_district_sf <- berlin_neighbourhood_sf %>%
+  dplyr::group_by(group, view) %>%
+  dplyr::summarize(do_union = TRUE) %>%
+  dplyr::mutate(id    = group,
+                view  = "Districts")
+
+# ALTERNATIVE METHOD
+# berlin_district_sf <- maptools::unionSpatialPolygons(berlin, berlin$BEZNAME) %>% 
+#   # Join polygons according to district name
+#   sf::st_as_sf() %>% # Transform into sf Object
+#   sf::st_set_crs(sp::proj4string(berlin)) %>% # add Coordinate Reference System (CRM)
+#   dplyr::mutate(id    = berlin$BEZNAME %>% unique() %>% sort(),
+#                 group = id,
+#                 view = "Districts")
 ```
 
 # Create polygons for VBB Areas
@@ -234,86 +222,86 @@ berlin_center <- methods::slot(berlin, "bbox") %>%
 ```{r}
 # leaflet
 # colorlist = list("blue", "green", "yellow", "orange", "pink", "brown", "purple", "grey", "black", "darkblue", "khaki", "magenta")
-leaflet() %>%
-  addTiles() %>%
-  addPolygons(data = berlin_sf %>% filter(view == "Districts"), weight = 1, smoothFactor = 1, fillOpacity = 0.8,
-              fillColor = rainbow_hcl(12), color = "grey") %>%
-  addLabelOnlyMarkers(data = berlin_names %>% filter(view == "Districts"),
-                    lng = ~long, lat = ~lat, label = ~lapply(leaflet, htmltools::HTML),
-                    labelOptions = labelOptions(noHide = TRUE, direction = 'center',
-                                                textOnly = TRUE, textsize = "20px"))
+# leaflet() %>%
+#   addTiles() %>%
+#   addPolygons(data = berlin_sf %>% filter(view == "Districts"), weight = 1, smoothFactor = 1, fillOpacity = 0.8,
+#               fillColor = rainbow_hcl(12), color = "grey") %>%
+#   addLabelOnlyMarkers(data = berlin_names %>% filter(view == "Districts"),
+#                     lng = ~long, lat = ~lat, label = ~lapply(leaflet, htmltools::HTML),
+#                     labelOptions = labelOptions(noHide = TRUE, direction = 'center',
+#                                                 textOnly = TRUE, textsize = "20px"))
 
 # Leaflet.markercluster
 # From: https://github.com/Leaflet/Leaflet.markercluster
 # https://rpubs.com/bhaskarvk/leaflet-marker-clusterming
 
 
-leaflet() %>%
-  addTiles() %>%
-  addPolygons(data = berlin_sf %>% filter(group == "Neukölln",
-                                          view == "Neighbourhoods"), 
-              weight = 1, smoothFactor = 1, fillOpacity = 0.8,
-              fillColor = rainbow_hcl(6), color = "grey") %>%
-  addLabelOnlyMarkers(data = berlin_names %>% filter(group == "Neukölln", view == "Neighbourhoods"),
-                    lng = ~long, lat = ~lat, label = ~lapply(leaflet, htmltools::HTML),
-                    labelOptions = labelOptions(noHide = TRUE, direction = 'center',
-                                                textOnly = TRUE, textsize = "20px")) %>%
-  addAwesomeMarkers(data = bahn_stations_df %>% filter(district == "Neukölln"),
-             lng = ~long, lat = ~lat,
-             icon = makeAwesomeIcon(icon = "subway", library = "fa", markerColor = "green", iconColor = "#FFFFFF"),
-             clusterId = "stations",
-             clusterOptions = markerClusterOptions(
-               iconCreateFunction=JS("function (cluster) {    
-    var childCount = cluster.getChildCount();  
-    if (childCount > 1) {  
-      c = 'rgba(181, 226, 140, 1.0);'
-    }    
-    return new L.DivIcon({ html: '<div style=\"background-color:'+c+'\"><span>' + childCount + '</span></div>', className: 'marker-cluster', iconSize: new L.Point(40, 40) });
-
-  }"),
-                        singleMarkerMode = FALSE)
-             ) %>%
-    addAwesomeMarkers(data = listings %>% filter(district == "Neukölln"),
-             lng = ~long, lat = ~lat,
-             icon = makeAwesomeIcon(icon = "home", markerColor = "red"),
-             clusterId = "properties",
-             clusterOptions = markerClusterOptions(iconCreateFunction=JS("function (cluster) {    
-    var childCount = cluster.getChildCount();  
-    if (childCount > 1) {  
-      c = 'rgba(235, 0, 0, 1);'
-    }    
-    return new L.DivIcon({ html: '<div style=\"background-color:'+c+'\"><span>' + childCount + '</span></div>', className: 'marker-cluster', iconSize: new L.Point(40, 40) });
-
-  }"),
-                        singleMarkerMode = FALSE)) %>%
-  addMiniMap(centerFixed = berlin_center %>% t() %>% c(),
-             zoomLevelFixed = 8,
-             zoomAnimation = FALSE) 
+# leaflet() %>%
+#   addTiles() %>%
+#   addPolygons(data = berlin_sf %>% filter(group == "Neukölln",
+#                                           view == "Neighbourhoods"), 
+#               weight = 1, smoothFactor = 1, fillOpacity = 0.8,
+#               fillColor = rainbow_hcl(6), color = "grey") %>%
+#   addLabelOnlyMarkers(data = berlin_names %>% filter(group == "Neukölln", view == "Neighbourhoods"),
+#                     lng = ~long, lat = ~lat, label = ~lapply(leaflet, htmltools::HTML),
+#                     labelOptions = labelOptions(noHide = TRUE, direction = 'center',
+#                                                 textOnly = TRUE, textsize = "20px")) %>%
+#   addAwesomeMarkers(data = bahn_stations_df %>% filter(district == "Neukölln"),
+#              lng = ~long, lat = ~lat,
+#              icon = makeAwesomeIcon(icon = "subway", library = "fa", markerColor = "green", iconColor = "#FFFFFF"),
+#              clusterId = "stations",
+#              clusterOptions = markerClusterOptions(
+#                iconCreateFunction=JS("function (cluster) {    
+#     var childCount = cluster.getChildCount();  
+#     if (childCount > 1) {  
+#       c = 'rgba(181, 226, 140, 1.0);'
+#     }    
+#     return new L.DivIcon({ html: '<div style=\"background-color:'+c+'\"><span>' + childCount + '</span></div>', className: 'marker-cluster', iconSize: new L.Point(40, 40) });
+# 
+#   }"),
+#                         singleMarkerMode = FALSE)
+#              ) %>%
+#     addAwesomeMarkers(data = listings %>% filter(district == "Neukölln"),
+#              lng = ~long, lat = ~lat,
+#              icon = makeAwesomeIcon(icon = "home", markerColor = "red"),
+#              clusterId = "properties",
+#              clusterOptions = markerClusterOptions(iconCreateFunction=JS("function (cluster) {    
+#     var childCount = cluster.getChildCount();  
+#     if (childCount > 1) {  
+#       c = 'rgba(235, 0, 0, 1);'
+#     }    
+#     return new L.DivIcon({ html: '<div style=\"background-color:'+c+'\"><span>' + childCount + '</span></div>', className: 'marker-cluster', iconSize: new L.Point(40, 40) });
+# 
+#   }"),
+#                         singleMarkerMode = FALSE)) %>%
+#   addMiniMap(centerFixed = berlin_center %>% t() %>% c(),
+#              zoomLevelFixed = 8,
+#              zoomAnimation = FALSE) 
   
 # ggplot
-ggplot() + 
-  geom_sf(data = berlin_district_sf, show.legend = FALSE) +
-  coord_sf(datum = NA) +
-  aes(fill = id) +
-  geom_text(data = districts, aes(x = long, y = lat, label = ggplot, hjust = "center"), size = 3.5) + 
-  theme_void()
+# ggplot() + 
+#   geom_sf(data = berlin_district_sf, show.legend = FALSE) +
+#   coord_sf(datum = NA) +
+#   aes(fill = id) +
+#   geom_text(data = districts, aes(x = long, y = lat, label = ggplot, hjust = "center"), size = 3.5) + 
+#   theme_void()
 ```
 
 # Map the VBB areas A and B with Leaflet
 ```{r}
-leaflet() %>%
-  addTiles() %>%
-  addPolygons(data = berlin_sf %>% filter(view == "VBB Areas"), weight = 1, fillColor = c("skyblue", "orange"), 
-              col = "grey",
-              opacity = 1.0, fillOpacity = 0.8) %>%
-  addLabelOnlyMarkers(data = berlin_names %>% filter(view == "VBB Areas"),
-                    lng = ~long, lat = ~lat, label = ~lapply(id, htmltools::HTML),
-                    labelOptions = labelOptions(noHide = TRUE, direction = 'center',
-                                                textOnly = TRUE, textsize = "25px")) %>%
-  setView(lng = berlin_center$long, lat = berlin_center$lat, zoom = 10)
+# leaflet() %>%
+#   addTiles() %>%
+#   addPolygons(data = berlin_sf %>% filter(view == "VBB Areas"), weight = 1, fillColor = c("skyblue", "orange"), 
+#               col = "grey",
+#               opacity = 1.0, fillOpacity = 0.8) %>%
+#   addLabelOnlyMarkers(data = berlin_names %>% filter(view == "VBB Areas"),
+#                     lng = ~long, lat = ~lat, label = ~lapply(id, htmltools::HTML),
+#                     labelOptions = labelOptions(noHide = TRUE, direction = 'center',
+#                                                 textOnly = TRUE, textsize = "25px")) %>%
+#   setView(lng = berlin_center$long, lat = berlin_center$lat, zoom = 10)
 ```
 
 ```{r}
-rm("ringbahn_names_df", "berlin", "stations", "buckow", "buckow_sf", "berlin_neighbourhood_singlebuckow_sf", 
+rm("ringbahn_names_df", "berlin", "stations", "buckow", "berlin_neighbourhood_singlebuckow_sf", 
    "vbb_B", "berlin_all_sf")
 ```

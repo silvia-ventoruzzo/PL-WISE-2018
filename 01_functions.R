@@ -164,7 +164,7 @@ summarize_df <- function(df, wrt = NULL, vars_mean, vars_count) {
     # Variables of which we calculate the mean
     for (var in vars_mean) {
       var_name <- sym(var)
-      mean_df <- df %>% summarize(!!var_name := mean(!!var_name))
+      mean_df <- df %>% dplyr::summarize(!!var_name := mean(!!var_name))
       summary_df <- c(summary_df,mean_df)
     }
     # Variables of which we count the unique values of the factors
@@ -185,7 +185,7 @@ summarize_df <- function(df, wrt = NULL, vars_mean, vars_count) {
       var_name <- sym(var)
       mean_df <- df %>%
         group_by(!!wrt_name) %>% 
-        summarize(!!var_name := mean(!!var_name))
+        dplyr::summarize(!!var_name := mean(!!var_name))
       summary_df <- c(summary_df,mean_df)
       summary_df[duplicated(summary_df)] <- NULL
     }
@@ -205,7 +205,7 @@ summarize_df <- function(df, wrt = NULL, vars_mean, vars_count) {
     # Percentage of the rows
     percentage_df <- df %>%
       group_by(!!wrt_name) %>%
-      summarize(percentage = round(n()/nrow(.)*100, 2))
+      dplyr::summarize(percentage = round(n()/nrow(.)*100, 2))
     summary_df <- summary_df %>% full_join(percentage_df, by = wrt)
   }
   return(summary_df)
