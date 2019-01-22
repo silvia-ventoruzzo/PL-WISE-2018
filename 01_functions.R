@@ -1,19 +1,3 @@
-## Function to load files
-load_listings <- function(file) {
-  df <- utils::read.csv(file, sep = ",", header = TRUE, stringsAsFactors = FALSE, encoding = "UTF-8",
-                        na.strings = c("NA", ""))
-  df <- df %>%
-    dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
-                           names(df)), funs(gsub("\\$", "", .))) %>%
-    dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
-                           names(df)), funs(gsub("\\,", "", .))) %>%
-    dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
-                           names(df)), funs(as.numeric(.)))
-  return(df)
-}
-
-
-
 ## Join dataframes and cleaning
 df_join_clean <- function(df1, df2) {
   df_joined <- full_join(df1, df2, by = c("id", "host_id", "room_type", "price",

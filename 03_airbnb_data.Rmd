@@ -16,17 +16,50 @@ source("01_functions.R")
 p_load(geosphere)
 p_load(lubridate)
 p_load(tidyr)
+p_load(readr)
 ```
 
 ## Dataframe with aggregated infos about AirBnB listings in Berlin
 
 # Load files with AirBnB listings in Berlin
 One has more detailed information, while the other has only summarized information
-The last one has the availability for each dy of the next year
+The last one available is from 7th November 2018, if new ones will be made available, they will be updated here
 ```{r, echo = FALSE, include = FALSE}
-listings_detailed <- load_listings(file.path(getwd(), "airbnb_data", "07.11_listings_detailed.csv", fsep="/"))
-listings_summarized <- load_listings(file.path(getwd(), "airbnb_data", "07.11_listings_summary.csv", fsep="/"))
-listings_calendar <- read.csv(file.path(getwd(), "airbnb_data", "07.11_listings_calendar.csv", fsep="/"))
+# If files are not zipped
+# listings_detailed <- read.csv(file.path(getwd(), "airbnb_data", "07.11_listings_detailed.csv", fsep="/"),
+#                               sep = ",", header = TRUE, stringsAsFactors = FALSE, encoding = "UTF-8",
+#                               na.strings = c("NA", ""))
+# listings_summarized <- read.csv(file.path(getwd(), "airbnb_data", "07.11_listings_summary.csv", fsep="/"),
+#                                 sep = ",", header = TRUE, stringsAsFactors = FALSE, encoding = "UTF-8",
+#                                 na.strings = c("NA", ""))
+# listings_calendar <- read.csv(file.path(getwd(), "airbnb_data", "07.11_listings_calendar.csv", fsep="/"),
+#                               sep = ",", header = TRUE, stringsAsFactors = FALSE, encoding = "UTF-8",
+#                               na.strings = c("NA", ""))
+
+# If files are zipped
+# This is the case, because the files are too big to be uploaded to GitHub otherwise
+listings_summarized <- read_csv(file.path(getwd(), "airbnb_data", "07.11_listings_summary.csv.zip", fsep="/"),
+                                na = c("NA", ""), locale = locale(encoding = "UTF-8"))
+listings_detailed <- read_csv(file.path(getwd(), "airbnb_data", "07.11_listings_detailed.csv.zip", fsep="/"),
+                              na = c("NA", ""), locale = locale(encoding = "UTF-8"))
+listings_calendar <- read_csv(file.path(getwd(), "airbnb_data", "07.11_listings_calendar.csv.zip", fsep="/"),
+                              na = c("NA", ""), locale = locale(encoding = "UTF-8"))
+
+# Clean columns
+listings_detailed <- listings_detailed %>%
+  dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
+                        names(listings_detailed)), funs(gsub("\\$", "", .))) %>%
+  dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
+                        names(listings_detailed)), funs(gsub("\\,", "", .))) %>%
+  dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
+                        names(listings_detailed)), funs(as.numeric(.)))
+listings_summarized <- listings_summarized %>%
+  dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
+                        names(listings_summarized)), funs(gsub("\\$", "", .))) %>%
+  dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
+                        names(listings_summarized)), funs(gsub("\\,", "", .))) %>%
+  dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
+                        names(listings_summarized)), funs(as.numeric(.)))
 ```
 
 # Join the dataframes and clean columns of interest
