@@ -26,7 +26,7 @@ The last one has the availability for each dy of the next year
 ```{r, echo = FALSE, include = FALSE}
 listings_detailed <- load_listings(file.path(getwd(), "airbnb_data", "07.11_listings_detailed.csv", fsep="/"))
 listings_summarized <- load_listings(file.path(getwd(), "airbnb_data", "07.11_listings_summary.csv", fsep="/"))
-listings_calendar <- read.csv(file.path(getwd(), "airbnb_data", "calendar.csv", fsep="/"))
+listings_calendar <- read.csv(file.path(getwd(), "airbnb_data", "07.11_listings_calendar.csv", fsep="/"))
 ```
 
 # Join the dataframes and clean columns of interest
