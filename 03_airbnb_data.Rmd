@@ -198,18 +198,8 @@ listings <- listings %>%
 # Distance from stations
 Firstly we need to extract all subway (U-Bahn) and railway (S-Bahn, Regio, Long-distance) stations
 ```{r}
-# The DF stations_df is created in 02_maps.Rmd
-# If U-Bahn and S-Bahn station have different coordinates, find the middle point
-bahn_stations_df <- stations_df %>%
-  dplyr::filter(fclass %like% "railway") %>%
-  dplyr::mutate(s_bahn = ifelse(startsWith(name, "S "), TRUE, FALSE),
-                u_bahn = ifelse(startsWith(name, "U "), TRUE, FALSE),
-                # name = replace(name = values("^[[:alpha:]](?=\\s)", "",name)), )
-                name = gsub("S ", "", name),
-                name = gsub("U ", "", name)) %>%
-  dplyr::group_by(name) %>%
-  dplyr::summarize(long = mean(long), lat = mean(lat),
-                  s_bahn = any(s_bahn), u_bahn = any(u_bahn)) %>% 
+# The dataframe bahn_stations_df is created in 02_spatial_data.Rmd
+bahn_stations_df <- bahn_stations_df %>%
   rename(id = name)
 
 bahn_stations_df <- point_in_polygons(points_df = bahn_stations_df,

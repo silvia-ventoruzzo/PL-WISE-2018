@@ -19,8 +19,8 @@ p_load(dplyr)
 p_load(sp)
 # p_load(rgdal)
 # To avoid issue Error in unionSpatialPolygons(berlin, berlin$BEZNAME) : isTRUE(gpclibPermitStatus()) is not TRUE, install rgeos, and ensure that it was attached prior to attaching maptools
-p_load(rgeos)
-p_load(maptools)
+# p_load(rgeos)
+# p_load(maptools)
 p_load(sf)
 # p_load(DescTools)
 p_load(data.table)
@@ -78,15 +78,6 @@ berlin_district_sf <- berlin_neighbourhood_sf %>%
   dplyr::summarize(do_union = TRUE) %>%
   dplyr::mutate(id    = group,
                 view  = "Districts")
-
-# ALTERNATIVE METHOD
-# berlin_district_sf <- maptools::unionSpatialPolygons(berlin, berlin$BEZNAME) %>% 
-#   # Join polygons according to district name
-#   sf::st_as_sf() %>% # Transform into sf Object
-#   sf::st_set_crs(sp::proj4string(berlin)) %>% # add Coordinate Reference System (CRM)
-#   dplyr::mutate(id    = berlin$BEZNAME %>% unique() %>% sort(),
-#                 group = id,
-#                 view = "Districts")
 ```
 
 # Create polygons for VBB Areas
@@ -102,13 +93,21 @@ berlin_all_sf <- raster::aggregate(berlin, dissolve=TRUE) %>%
   sf::st_as_sf() %>%
   sf::st_set_crs(proj4string(berlin))
 
-# Create DF out of SpatialPointsDataFrame
-stations_df <- base::data.frame(stations) %>% 
+# Create dataframe of train/subway stations out of SpatialPointsDataFrame
+bahn_stations_df <- stations %>%
+  base::data.frame(stations) %>% 
+  dplyr::filter(fclass %like% "railway") %>%
   dplyr::rename(long = coords.x1, lat = coords.x2) %>%
   dplyr::mutate(name = gsub("Berlin ", "", name),
-        name = gsub("Berlin-", "", name),
-        name = gsub(" *\\(.*?\\) *", "", name)) %>%
-  dplyr::select(fclass, name, long, lat)
+                name = gsub("Berlin-", "", name),
+                name = gsub(" *\\(.*?\\) *", "", name),
+                s_bahn = ifelse(startsWith(name, "S "), TRUE, FALSE),
+                u_bahn = ifelse(startsWith(name, "U "), TRUE, FALSE),
+                name = gsub("S ", "", name),
+                name = gsub("U ", "", name)) %>%
+  dplyr::group_by(name) %>%
+  dplyr::summarize(long = mean(long), lat = mean(lat),
+                  s_bahn = any(s_bahn), u_bahn = any(u_bahn))
   
 # Create DF with Ringbahn stations and their order
 # The initial station is repeated to have a full circle
@@ -125,14 +124,9 @@ ringbahn_names_df <- base::data.frame(name = c("Südkreuz", "Schöneberg", "Inns
   dplyr::mutate(order = as.numeric(order))
 
 # Create the sf object for the VBB Areas
-vbb_AB_sf <- stations_df %>%
-  dplyr::mutate(name = gsub("S ", "", name),
-                name = gsub("U ", "", name)) %>%
-  # Select from the list of all stations those that are railway and whose name belongs to our Ringbahn names DF
-  dplyr::filter(fclass %like% "railway" & name %in% ringbahn_names_df$name) %>%
-  dplyr::group_by(name) %>%
-  dplyr::summarize(long = mean(long), 
-                   lat  = mean(lat)) %>%
+vbb_AB_sf <- bahn_stations_df %>%
+  # Select from the list of all train/subway stations those whose name belongs to our Ringbahn names DF
+  dplyr::filter(name %in% ringbahn_names_df$name) %>%
   # Rearrange according to the order we inserted before
   dplyr::full_join(ringbahn_names_df, by = "name") %>%
   dplyr::arrange(order) %>%
