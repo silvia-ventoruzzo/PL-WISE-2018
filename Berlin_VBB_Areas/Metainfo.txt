@@ -1,0 +1,21 @@
+Name of Quantlet: berlin_vbb_areas_sf
+
+Published in: 'Statistical programming languages - Student Project on SPL_WISE_18/19’
+
+Description: It produces an sf object with the VBB Areas of Berlin transportation system.
+
+Keywords: Berlin, transport, spatial, sf
+
+Author: Silvia Ventoruzzo
+
+See also: 
+
+Submitted: Tue, January 29 2019 by Silvia Ventoruzzo
+
+Datafile: Berlin-Ortsteile-polygon.cpg, Berlin-Ortsteile-polygon.dbf, Berlin-Ortsteile-polygon.prj, Berlin-Ortsteile-polygon.shp, gis_osm_transport_free_1.shx, gis_osm_transport_free_1.cpg, gis_osm_transport_free_1.dbf, gis_osm_transport_free_1.prj, gis_osm_transport_free_1.shp, gis_osm_transport_free_1.shx
+
+Input: (optional - delete if not used)
+
+Output:  (optional - delete if not used)
+
+Example: berlin_vbb_areas_leaflet, berlin_vbb_areas_ggplot
