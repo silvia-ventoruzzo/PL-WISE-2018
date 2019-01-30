@@ -43,7 +43,7 @@ berlin_vbb_A_sf <- stations %>%
   base::list() %>%
   sf::st_polygon() %>%
   st_sfc() %>%
-  st_sf(crs = st_crs(berlin)) 
+  st_sf(crs = sf::st_crs(berlin)) 
 
 # Create sf object of entire Berlin
 berlin_sf <- berlin %>%

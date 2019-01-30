@@ -1,5 +1,8 @@
 # Calculate midpoint from a sf point object
-points_midpoint <- function(points_sf, point_name = id) {
+points_midpoint <- function(points_sf, point_name = "id") {
+  
+  # Create symbol version of point_name
+  point_name <- sym(point_name)
   
   # Get coordinates from sf point objects
   coordinates <- st_coordinates(points_sf) %>%
@@ -12,9 +15,9 @@ points_midpoint <- function(points_sf, point_name = id) {
     base::as.data.frame() %>%
     dplyr::select(-geometry) %>%
     base::cbind(coordinates) %>%
-    dplyr::group_by(id) %>%
+    dplyr::group_by(!!point_name) %>%
     dplyr::summarize(lat  = mean(lat),
-              long = mean(long))
+                     long = mean(long))
   
   return(midpoints_df)
   
