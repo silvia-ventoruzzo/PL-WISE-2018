@@ -11,7 +11,7 @@ setwd(dirname(sys.frame(1)$ofile)) # This works when sourcing
 # setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # This works when running the code directly
 
 # Load helpers
-source("helpers.R")
+source(file.path(getwd(), "Helpers", "points_midpoint.R", fsep="/"))
 
 # Load shapefiles
 berlin <- sf::st_read(file.path(getwd(), "spatial_data", "Berlin-Ortsteile-polygon.shp", fsep="/"))
