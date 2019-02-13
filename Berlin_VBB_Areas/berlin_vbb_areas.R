@@ -1,13 +1,17 @@
 # Load packages
 needed_packages <- c("dplyr", "data.table", "sf", "tibble")
 for (package in needed_packages) {
-  if (package %in% rownames(installed.packages()))
-  install.packages(package)
-do.call("library", list(package))
+  if (!require(package, character.only=TRUE)) {install.packages(package, character.only=TRUE)}
+  library(package, character.only=TRUE)
 }
+rm("needed_packages", "package")
+
+# Set working directory to the one where the file is located
+setwd(dirname(sys.frame(1)$ofile)) # This works when sourcing
+# setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # This works when running the code directly
 
 # Load helpers
-source(file.path(getwd(), "Berlin_VBB_Areas", "helpers.R", fsep="/"))
+source("helpers.R")
 
 # Load shapefiles
 berlin <- sf::st_read(file.path(getwd(), "spatial_data", "Berlin-Ortsteile-polygon.shp", fsep="/"))
@@ -79,5 +83,5 @@ berlin_vbb_AB_names <- berlin_vbb_A_names %>%
   rbind(berlin_vbb_B_names)
 
 # Remove not needed data
-rm("needed_packages", "berlin", "berlin_sf", "ringbahn_names_df", "stations", "berlin_vbb_A_sf", 
+rm("berlin", "berlin_sf", "ringbahn_names_df", "stations", "berlin_vbb_A_sf", 
    "points_midpoint", "berlin_vbb_A_names", "berlin_vbb_B_names")

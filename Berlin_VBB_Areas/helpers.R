@@ -5,7 +5,7 @@ points_midpoint <- function(points_sf, point_name = "id") {
   point_name <- sym(point_name)
   
   # Get coordinates from sf point objects
-  coordinates <- st_coordinates(points_sf) %>%
+  coordinates <- sf::st_coordinates(points_sf) %>%
     base::as.data.frame() %>%
     dplyr::rename(lat  = Y,
                   long = X)

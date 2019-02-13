@@ -53,7 +53,7 @@ server <- function(input, output) {
   title_main_table_change <- reactive({
     
     if (gsub(" ", "_", input$variable1) == "none") {
-      paste("Neighbourhoods in Berlin's", input$view, sep = " ")
+      paste("Areas in Berlin's", input$view, sep = " ")
     } else {
       capwords(input$variable1) %>%
         paste("Values of", ., sep = " ") %>%
@@ -178,7 +178,10 @@ server <- function(input, output) {
 
         if (gsub(" ", "_", input$variable1) == "none") {
 
-          listings_summary
+          listings_area_summary %>%
+            dplyr::filter(view  == input$view) %>%
+            dplyr::select(id) %>%
+            dplyr::rename(areas = id)
 
         }  else {
 
