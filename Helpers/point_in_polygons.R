@@ -6,7 +6,7 @@ point_in_polygons <- function(points_df, polys_sf, var_name)  {
   # Extract coordinates of the polygons
   coordinates <- as.data.frame(st_coordinates(polys_sf))
   # Extract names of the polygons
-  name <- polys_sf$id
+  name <- as.character(polys_sf$id)
   # For all polygons check if the points are inside of them
   for (k in 1:nrow(polys_sf)) {
     is_in[,k] <- sp::point.in.polygon(point.x = points_df$long,

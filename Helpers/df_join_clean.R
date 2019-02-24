@@ -1,12 +1,21 @@
 # Join dataframes and cleaning
 df_join_clean <- function(df1, df2) {
-  df_joined <- full_join(df1, df2, by = c("id", "host_id", "room_type", "price",
+  
+  df_joined <- full_join(df1, df2, by = c("id", "host_id", "room_type",
                                           "minimum_nights",
                                           "number_of_reviews", 
                                           "latitude", "longitude",
                                           "availability_365", "neighbourhood_cleansed" = "neighbourhood")) %>% 
     rename(lat  = latitude,
            long = longitude) %>%
+    
+    # price and fee columns
+    dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
+                           names(.)), funs(gsub("\\$", "", .))) %>%
+    dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
+                           names(.)), funs(gsub("\\,", "", .))) %>%
+    dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
+                           names(.)), funs(as.numeric(.))) %>%
     
     # neighbourhood_group
     mutate(neighbourhood_group = gsub("\\ ", "", neighbourhood_group),

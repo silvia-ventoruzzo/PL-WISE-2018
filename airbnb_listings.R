@@ -2,7 +2,9 @@
 needed_packages <- c("tidyverse",
                      "geosphere",
                      "readr",
-                     "rstudioapi")
+                     "rstudioapi",
+                     "R.utils",
+                     "Jmisc")
 for (package in needed_packages) {
   if (!require(package, character.only=TRUE)) {install.packages(package, character.only=TRUE)}
   library(package, character.only=TRUE)
@@ -10,15 +12,16 @@ for (package in needed_packages) {
 rm("needed_packages", "package")
 
 # Set working directory to the one where the file is located
-# setwd(dirname(sys.frame(1)$ofile)) # This works when sourcing
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # This works when running the code directly
+setwd(dirname(sys.frame(1)$ofile)) # This works when sourcing
+# setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # This works when running the code directly
 
 # Load helper functions and other scripts
 source(file.path(getwd(), "Berlin_VBB_Areas", "berlin_vbb_areas.R", fsep="/"),
        chdir = TRUE)
 source(file.path(getwd(), "Berlin_Districts_Neighbourhoods", "berlin_districts_neighbourhoods.R", fsep="/"),
        chdir = TRUE)
-source("01_functions.R")
+#R.utils::sourceDirectory(file.path(getwd(), "Helpers", fsep="/"))
+Jmisc::sourceAll(file.path(getwd(), "Helpers", fsep="/"))
 
 # Load shapefile
 stations <- sf::st_read(file.path(getwd(), "spatial_data", "gis_osm_transport_free_1.shp", fsep="/"))
@@ -33,21 +36,7 @@ listings_detailed <- read_csv(file.path(getwd(), "airbnb_data", "07.11_listings_
 listings_calendar <- read_csv(file.path(getwd(), "airbnb_data", "07.11_listings_calendar.csv.zip", fsep="/"),
                               na = c("NA", ""), locale = locale(encoding = "UTF-8"))
 
-# Clean columns
-listings_detailed <- listings_detailed %>%
-  dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
-                         names(listings_detailed)), funs(gsub("\\$", "", .))) %>%
-  dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
-                         names(listings_detailed)), funs(gsub("\\,", "", .))) %>%
-  dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
-                         names(listings_detailed)), funs(as.numeric(.)))
-listings_summarized <- listings_summarized %>%
-  dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
-                         names(listings_summarized)), funs(gsub("\\$", "", .))) %>%
-  dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
-                         names(listings_summarized)), funs(gsub("\\,", "", .))) %>%
-  dplyr::mutate_if(grepl("price|cleaning|deposit|people" , 
-                         names(listings_summarized)), funs(as.numeric(.)))
+
 
 # Join dataframes, first clean and keep only variables of interest
 listings <- df_join_clean(df1 = listings_detailed, df2 = listings_summarized)
@@ -109,6 +98,7 @@ listings <- listings %>%
                 bedrooms = ifelse(beds == 1 & is.na(bedrooms), 1, bedrooms))
 
 listings <- listings %>%
+  dplyr::rename(price = price.x) %>%
   # Keep only columns of interest
   dplyr::select(id, long, lat, price, property_type, room_type,
                 security_deposit_yn, cleaning_fee_yn,
@@ -138,6 +128,7 @@ listings <- point_in_polygons(points_df = listings,
 # For the sake of consistency, we will delete these listings
 listings <- listings %>%
   filter(!is.na(district) & !is.na(vbb_area))
+rm("berlin_neighbourhood_sf")
 
 # Stations
 railway_stations_df <- stations %>%
