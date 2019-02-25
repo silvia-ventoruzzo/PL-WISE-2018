@@ -53,8 +53,6 @@ berlin_vbb_A_sf = stations %>%
 
 # Create sf object of entire Berlin
 berlin_sf = berlin %>%
-    sf::st_as_sf() %>%
-    sf::st_set_crs(st_crs(berlin)) %>%
     dplyr::summarize(do_union = TRUE)
 
 # Bind and intersect to create sf object with both VBB Areas (A and B)
