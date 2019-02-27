@@ -1,6 +1,3 @@
-p_load(colorspace)
-p_load(htmltools)
-
 server <- function(input, output) {
   
   ### TAB1

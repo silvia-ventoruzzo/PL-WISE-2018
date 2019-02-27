@@ -1,8 +1,3 @@
-p_load(shiny)
-p_load(shinydashboard)
-p_load(leaflet)
-p_load(shinyWidgets)
-
 ui <- dashboardPage(
   skin = "red",
 dashboardHeader(title = "Airbnb listings in Berlin"
