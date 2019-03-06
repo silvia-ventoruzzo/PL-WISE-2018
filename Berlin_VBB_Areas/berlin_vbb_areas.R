@@ -80,7 +80,8 @@ berlin_vbb_B_names = berlin_sf %>%
                    lat  = (3*ymax + ymin)/4) %>%
     dplyr::mutate(id = "B")
 berlin_vbb_AB_names = berlin_vbb_A_names %>%
-    rbind(berlin_vbb_B_names)
+    rbind(berlin_vbb_B_names) %>%
+    dplyr::mutate(name = gsub("-", "-/n", id))
 
 # Remove not needed data
 rm("berlin", "berlin_sf", "ringbahn_names_df", "stations", "berlin_vbb_A_sf", 

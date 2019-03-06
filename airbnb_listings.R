@@ -1,9 +1,8 @@
 # Install and load needed packages
-needed_packages <- c("tidyverse",
+needed_packages = c("tidyverse",
                      "geosphere",
                      "readr",
                      "rstudioapi",
-                     "R.utils",
                      "Jmisc")
 for (package in needed_packages) {
   if (!require(package, character.only=TRUE)) {install.packages(package, character.only=TRUE)}
@@ -16,30 +15,29 @@ setwd(dirname(sys.frame(1)$ofile)) # This works when sourcing
 # setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # This works when running the code directly
 
 # Load helper functions and other scripts
-source(file.path(getwd(), "Berlin_VBB_Areas", "berlin_vbb_areas.R", fsep="/"),
-       chdir = TRUE)
-source(file.path(getwd(), "Berlin_Districts_Neighbourhoods", "berlin_districts_neighbourhoods.R", fsep="/"),
-       chdir = TRUE)
-#R.utils::sourceDirectory(file.path(getwd(), "Helpers", fsep="/"))
+source(file.path(getwd(), "Berlin_VBB_Areas", "berlin_vbb_areas.R", fsep="/"), chdir = TRUE)
+source(file.path(getwd(), "Berlin_Districts_Neighbourhoods", "berlin_districts_neighbourhoods.R", fsep="/"), chdir = TRUE)
 Jmisc::sourceAll(file.path(getwd(), "Helpers", fsep="/"))
 
 # Load shapefile
-stations <- sf::st_read(file.path(getwd(), "spatial_data", "gis_osm_transport_free_1.shp", fsep="/"))
+stations = sf::st_read(file.path(getwd(), "Data", "spatial_data", "gis_osm_transport_free_1.shp", fsep="/"))
+
+print("Finished loading spatial data.")
 
 # Load dataframes
 # If files are zipped
 # This is the case, because the files are too big to be uploaded to GitHub otherwise
-listings_summarized <- read_csv(file.path(getwd(), "airbnb_data", "07.11_listings_summary.csv.zip", fsep="/"),
+listings_summarized = read_csv(file.path(getwd(), "Data", "airbnb_data", "07.11_listings_summary.csv.zip", fsep="/"),
                                 na = c("NA", ""), locale = locale(encoding = "UTF-8"))
-listings_detailed <- read_csv(file.path(getwd(), "airbnb_data", "07.11_listings_detailed.csv.zip", fsep="/"),
+listings_detailed = read_csv(file.path(getwd(), "Data", "airbnb_data", "07.11_listings_detailed.csv.zip", fsep="/"),
                               na = c("NA", ""), locale = locale(encoding = "UTF-8"))
-listings_calendar <- read_csv(file.path(getwd(), "airbnb_data", "07.11_listings_calendar.csv.zip", fsep="/"),
+listings_calendar = read_csv(file.path(getwd(), "Data", "airbnb_data", "07.11_listings_calendar.csv.zip", fsep="/"),
                               na = c("NA", ""), locale = locale(encoding = "UTF-8"))
 
-
+print("Finished uploading airbnb datasets.")
 
 # Join dataframes, first clean and keep only variables of interest
-listings <- df_join_clean(df1 = listings_detailed, df2 = listings_summarized)
+listings = df_join_clean(df1 = listings_detailed, df2 = listings_summarized)
 rm("listings_detailed", "listings_summarized")
 
 # Check if there are missing values
@@ -50,7 +48,7 @@ apply(listings, 2, function(x) any(is.na(x)))
 listings %>%
   filter(is.na(host_is_superhost)) # 26
 
-listings <- listings %>%
+listings = listings %>%
   dplyr::mutate(host_is_superhost = ifelse(is.na(host_is_superhost), 0, host_is_superhost))
 
 # review_scores_rating
@@ -58,7 +56,7 @@ listings %>%
   filter(is.na(review_scores_rating)) %>%
   dplyr::select(id, review_scores_rating, number_of_reviews) # 4,389
 # If the number_of_reviews is zero, we set the review_scores_value to 0 meanwhile creating a variable to keep track that the listing has not been reviewed yet
-listings <- listings %>%
+listings = listings %>%
   dplyr::mutate(review_scores_rating = ifelse(number_of_reviews == 0, 0, review_scores_rating),
                 reviewed_yn = ifelse(number_of_reviews == 0, 0, 1))
 # For the rest, we insert the average of the review_scores_rating
@@ -75,7 +73,7 @@ listings %>%
                    mode = getmode(review_scores_rating)) %>%
   round(0)
 # mean might be influenced by outliers, being it so different from median and mode, and mode is too high, so I will substitute the missing values with the median
-listings <- listings %>%
+listings = listings %>%
   mutate(review_scores_rating = ifelse(is.na(review_scores_rating), 
                                        median(review_scores_rating, na.rm = TRUE),
                                        review_scores_rating))
@@ -87,7 +85,7 @@ listings %>%
   dplyr::select(id, accommodates, bedrooms, beds) # 57
 
 # Being the amount of missing values in these features relative small, we can derive their value from the other variables:
-listings <- listings %>%
+listings = listings %>%
   # If beds is NA, but bedrooms has a valid value, we set beds with the number of bedrooms
   dplyr::mutate(beds = ifelse(is.na(beds) & !is.na(bedrooms), bedrooms, beds),
                 # If bedrooms is NA, but beds has a valid value, we set bedrooms with the number of beds
@@ -97,7 +95,7 @@ listings <- listings %>%
                 beds = ifelse(is.na(beds) & is.na(bedrooms), 1, beds),
                 bedrooms = ifelse(beds == 1 & is.na(bedrooms), 1, bedrooms))
 
-listings <- listings %>%
+listings = listings %>%
   dplyr::rename(price = price.x) %>%
   # Keep only columns of interest
   dplyr::select(id, long, lat, price, property_type, room_type,
@@ -110,28 +108,30 @@ listings <- listings %>%
 # Check if there are missing values
 apply(listings, 2, function(x) any(is.na(x)))
 
+print("Finished cleaning missing values.")
+
 ## New variables
 
 # Areas: Not doing this with berlin_sf because the polys_sf need to have geometry sfc_POLYGON
 # district
-listings <- point_in_polygons(points_df = listings,
+listings = point_in_polygons(points_df = listings,
                               polys_sf  = berlin_district_sf,
                               var_name  = "district")
 # vbb_area
-listings <- point_in_polygons(points_df = listings,
+listings = point_in_polygons(points_df = listings,
                               polys_sf  = berlin_vbb_AB_sf,
                               var_name  = "vbb_area")
 # neighbourhood
-listings <- point_in_polygons(points_df = listings,
+listings = point_in_polygons(points_df = listings,
                               polys_sf = berlin_neighbourhood_sf,
                               var_name = "neighbourhood")
 # For the sake of consistency, we will delete these listings
-listings <- listings %>%
+listings = listings %>%
   filter(!is.na(district) & !is.na(vbb_area))
 rm("berlin_neighbourhood_sf")
 
 # Stations
-railway_stations_df <- stations %>%
+railway_stations_df = stations %>%
   dplyr::filter(fclass %like% "railway") %>%
   dplyr::rename(id     = name) %>%
   dplyr::mutate(id     = gsub("Berlin ", "", id),
@@ -142,17 +142,17 @@ railway_stations_df <- stations %>%
                 id     = gsub("S ", "", id),
                 id     = gsub("U ", "", id)) %>%
   points_midpoint()
-railway_stations_df <- point_in_polygons(points_df = railway_stations_df,
+railway_stations_df = point_in_polygons(points_df = railway_stations_df,
                                          polys_sf  = berlin_district_sf,
                                          var_name  = "district")
-railway_stations_df <- railway_stations_df %>%
+railway_stations_df = railway_stations_df %>%
   filter(!is.na(district))
-listings <- distance_count(main = listings, reference = railway_stations_df,
+listings = distance_count(main = listings, reference = railway_stations_df,
                            var_name = "station", distance = 1000)
 rm("stations")
 
 # (Top 10) attractions
-attractions_df <- data.frame(
+attractions_df = data.frame(
   id   = c("Reichstag", "Brandenburger Tor", "Fernsehturm", "Gendarmenmarkt",
            "Berliner Dom", "Kurfürstendamm", "Schloss Charlottenburg", "Museuminsel",
            "Gedenkstätte Berliner Mauer", "Potsdamer Platz"),
@@ -160,14 +160,14 @@ attractions_df <- data.frame(
            52.500833, 52.521111, 52.520556, 52.535, 52.509444),
   long = c(13.376111, 13.377778, 13.40945, 13.393056, 13.401111,
            13.312778, 13.295833, 13.397222, 13.389722, 13.375833))
-attractions_df <- point_in_polygons(points_df = attractions_df,
+attractions_df = point_in_polygons(points_df = attractions_df,
                                     polys_sf  = berlin_district_sf,
                                     var_name  = "district")
-listings <- distance_count(main = listings, reference = attractions_df,
+listings = distance_count(main = listings, reference = attractions_df,
                            var_name = "attraction", distance = 2000)
 
 # season availability
-listings_calendar <- listings_calendar %>%
+listings_calendar = listings_calendar %>%
   rename(id = listing_id) %>%
   mutate(date        = as.Date(date),
          # if loading the csv use recode, if loading the zip there is no need
@@ -191,7 +191,7 @@ listings_calendar <- listings_calendar %>%
   dplyr::select(-price)
 
 # Availability per year_season
-listings_season_availability <- listings_calendar %>% 
+listings_season_availability = listings_calendar %>% 
   dplyr::group_by(id, year_season) %>% 
   # if loading the csv use sum(available)
   # dplyr::summarize(count = sum(available)) %>% 
@@ -204,32 +204,34 @@ listings_season_availability <- listings_calendar %>%
            factor(levels = unique(tolower(paste(year_season, "availability", sep = "_"))))) %>%
   dplyr::select(-year_season) 
 
-listings_district_season_availability <- listings %>%
+listings_district_season_availability = listings %>%
   select(id, district) %>%
   inner_join(listings_season_availability, by = "id") %>%
   group_by(district, season_av) %>%
   dplyr::summarize(count = mean(count) %>% round(0)) %>%
   spread(season_av, count)
 
-listings_vbb_season_availability <- listings %>%
+listings_vbb_season_availability = listings %>%
   select(id, vbb_area) %>%
   inner_join(listings_season_availability, by = "id") %>%
   group_by(vbb_area, season_av) %>%
   dplyr::summarize(count = mean(count) %>% round(0)) %>%
   spread(season_av, count)
 
-listings_neighbourhood_season_availability <- listings %>%
+listings_neighbourhood_season_availability = listings %>%
   select(id, neighbourhood) %>%
   inner_join(listings_season_availability, by = "id") %>%
   group_by(neighbourhood, season_av) %>%
   dplyr::summarize(count = mean(count) %>% round(0)) %>%
   spread(season_av, count)
 
-listings_season_availability <- listings_season_availability %>%
+listings_season_availability = listings_season_availability %>%
   spread(season_av, count)
 
+print("Finished creating new variables.")
+
 # Join to the listings
-listings <- listings %>%
+listings = listings %>%
   left_join(listings_season_availability, by = "id") %>%
   replace(is.na(.), 0)
 

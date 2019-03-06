@@ -40,7 +40,8 @@ berlin_neighbourhoods_names = berlin_neighbourhood_sf %>%
     dplyr::rename(long = X,
                   lat  = Y) %>%
     dplyr::mutate(id    = berlin_neighbourhood_sf$id,
-                  group = berlin_neighbourhood_sf$group)
+                  group = berlin_neighbourhood_sf$group,
+                  name  = gsub("-", "-/n", berlin_neighbourhood_sf$id))
 
 # Districts
 berlin_districts_names = berlin_district_sf %>%
@@ -50,7 +51,8 @@ berlin_districts_names = berlin_district_sf %>%
     dplyr::rename(long = X,
                   lat  = Y) %>%
     dplyr::mutate(id    = berlin_district_sf$id,
-                  group = berlin_district_sf$group)
+                  group = berlin_district_sf$group,
+                  name  = gsub("-", "-/n", berlin_district_sf$id))
 
 # Remove not needed data
 rm("berlin")

@@ -1,14 +1,18 @@
 # Load packages
-needed_packages = c("leaflet", "ggplot2")
+needed_packages = c("leaflet", "ggplot2", "htmltools", "mapview")
 for (package in needed_packages) {
-    if (package %in% rownames(installed.packages()))
-        install.packages(package)
-    do.call("library", list(package))
+  if (!require(package, character.only=TRUE))
+      {install.packages(package, character.only=TRUE)}
+  library(package, character.only=TRUE)
 }
 rm("needed_packages")
 
+# Set working directory to the one where the file is located
+# setwd(dirname(sys.frame(1)$ofile)) # This works when sourcing
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # This works when running the code directly
+
 # Load file where the sf object is created
-source(file.path(getwd(), "Berlin_VBB_Areas", "berlin_vbb_areas.R", fsep="/"))
+source("berlin_vbb_areas.R", chdir = TRUE)
 
 # Leaflet map
 berlin_vbb_areas_leaflet = leaflet() %>%
@@ -17,11 +21,10 @@ berlin_vbb_areas_leaflet = leaflet() %>%
                 weight = 1, smoothFactor = 1, fillOpacity = 0.8,
                 fillColor = c("cadetblue", "darkorange"), color = "black") %>%
     addLabelOnlyMarkers(data = berlin_vbb_AB_names,
-                      lng = ~long, lat = ~lat, label = ~id,
+                      lng = ~long, lat = ~lat, label = ~lapply(name, htmltools::HTML),
                       labelOptions = labelOptions(noHide = TRUE, direction = 'center',
                                                   textOnly = TRUE, textsize = "20px"))
 berlin_vbb_areas_leaflet
-library(mapview)
 mapview::mapshot(berlin_vbb_areas_leaflet, file = "berlin_vbb_areas_leaflet.png")
 
 # ggplot map

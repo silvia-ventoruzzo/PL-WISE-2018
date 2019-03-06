@@ -63,6 +63,8 @@ listings_neighbourhood_summary <- berlin_neighbourhoods_names %>%
   dplyr::mutate(view = "Neighbourhoods") %>%
   replace(is.na(.), 0)
 
+print("Finished producing summaries of airbnb properties.")
+
 # Remove objects not further needed
 rm("listings_vbb_season_availability", "listings_district_season_availability", "listings_neighbourhood_season_availability")
 rm(list=lsf.str()) # All functions
