@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.17)  5 MAR 2019 18:12
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.17)  8 MAR 2019 15:35
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -249,18 +249,8 @@ Package: natbib 2010/09/13 8.31b (PWD, AO)
 LaTeX Info: Redefining \cite on input line 694.
 \c@NAT@ctr=\count110
 )
-(/usr/local/texlive/2018/texmf-dist/tex/latex/caption/caption2.sty
-Package: caption2 2015/09/15 v2.2-100 Customising captions (AR)
-
-
-Package caption2 Warning: ****************************************************
-(caption2)                THIS PACKAGE IS OBSOLETE:
-(caption2)                This package attempts to provide an `caption2'
-(caption2)                package v2.0/2.1 author environment so that OLD
-(caption2)                documents can be successfully processed. It should
-(caption2)                NOT be used for NEW documents! New documents should
-(caption2)                use the regular `caption' package v3.x instead.
-(caption2)                ****************************************************
+(/usr/local/texlive/2018/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2016/02/21 v3.3-144 Customizing captions (AR)
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/caption/caption3.sty
 Package: caption3 2016/05/22 v1.7-166 caption3 kernel (AR)
@@ -273,10 +263,8 @@ Package caption3 Info: TeX engine: e-TeX on input line 67.
 \caption@parindent=\dimen123
 \caption@hangindent=\dimen124
 )
-Package caption2 Info: Running in caption2 v2.0 compatibility mode on input lin
-e 221.
-\captionlinewidth=\dimen125
-\realcaptionwidth=\dimen126
+\c@ContinuedFloat=\count111
+Package caption Info: hyperref package is loaded.
 )
 (/usr/local/texlive/2018/texmf-dist/tex/latex/base/inputenc.sty
 Package: inputenc 2018/04/06 v1.3b Input encoding file
@@ -301,34 +289,34 @@ Language: english 2017/06/06 v3.3r English support from the babel system
 
 (/usr/local/texlive/2018/texmf-dist/tex/generic/babel/babel.def
 File: babel.def 2018/02/14 3.18 Babel common definitions
-\babel@savecnt=\count111
-\U@D=\dimen127
+\babel@savecnt=\count112
+\U@D=\dimen125
 
 (/usr/local/texlive/2018/texmf-dist/tex/generic/babel/txtbabel.def)
-\bbl@dirlevel=\count112
+\bbl@dirlevel=\count113
 )
 \l@canadian = a dialect from \language\l@american 
 \l@australian = a dialect from \language\l@british 
 \l@newzealand = a dialect from \language\l@british 
 ))
 (/usr/local/texlive/2018/texmf-dist/tex/latex/listings/listings.sty
-\lst@mode=\count113
+\lst@mode=\count114
 \lst@gtempboxa=\box28
 \lst@token=\toks28
-\lst@length=\count114
-\lst@currlwidth=\dimen128
-\lst@column=\count115
-\lst@pos=\count116
-\lst@lostspace=\dimen129
-\lst@width=\dimen130
-\lst@newlines=\count117
-\lst@lineno=\count118
-\lst@maxwidth=\dimen131
+\lst@length=\count115
+\lst@currlwidth=\dimen126
+\lst@column=\count116
+\lst@pos=\count117
+\lst@lostspace=\dimen127
+\lst@width=\dimen128
+\lst@newlines=\count118
+\lst@lineno=\count119
+\lst@maxwidth=\dimen129
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2015/06/04 1.6 (Carsten Heinz)
-\c@lstnumber=\count119
-\lst@skipnumbers=\count120
+\c@lstnumber=\count120
+\lst@skipnumbers=\count121
 \lst@framebox=\box29
 )
 (/usr/local/texlive/2018/texmf-dist/tex/latex/listings/listings.cfg
@@ -363,29 +351,29 @@ Package: mathrsfs 1996/01/01 Math RSFS package v1.0 (jk)
 (/usr/local/texlive/2018/texmf-dist/tex/latex/multirow/multirow.sty
 Package: multirow 2016/11/25 v2.2 Span multiple rows of a table
 \multirow@colwidth=\skip52
-\multirow@cntb=\count121
+\multirow@cntb=\count122
 \multirow@dima=\skip53
-\bigstrutjot=\dimen132
+\bigstrutjot=\dimen130
 )
 (/usr/local/texlive/2018/texmf-dist/tex/latex/booktabs/booktabs.sty
 Package: booktabs 2016/04/27 v1.618033 publication quality tables
-\heavyrulewidth=\dimen133
-\lightrulewidth=\dimen134
-\cmidrulewidth=\dimen135
-\belowrulesep=\dimen136
-\belowbottomsep=\dimen137
-\aboverulesep=\dimen138
-\abovetopsep=\dimen139
-\cmidrulesep=\dimen140
-\cmidrulekern=\dimen141
-\defaultaddspace=\dimen142
-\@cmidla=\count122
-\@cmidlb=\count123
-\@aboverulesep=\dimen143
-\@belowrulesep=\dimen144
-\@thisruleclass=\count124
-\@lastruleclass=\count125
-\@thisrulewidth=\dimen145
+\heavyrulewidth=\dimen131
+\lightrulewidth=\dimen132
+\cmidrulewidth=\dimen133
+\belowrulesep=\dimen134
+\belowbottomsep=\dimen135
+\aboverulesep=\dimen136
+\abovetopsep=\dimen137
+\cmidrulesep=\dimen138
+\cmidrulekern=\dimen139
+\defaultaddspace=\dimen140
+\@cmidla=\count123
+\@cmidlb=\count124
+\@aboverulesep=\dimen141
+\@belowrulesep=\dimen142
+\@thisruleclass=\count125
+\@lastruleclass=\count126
+\@thisrulewidth=\dimen143
 )
 (/usr/local/texlive/2018/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty
 (/usr/local/texlive/2018/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty
@@ -393,8 +381,8 @@ Package: booktabs 2016/04/27 v1.618033 publication quality tables
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.te
 x
 \pgfutil@everybye=\toks29
-\pgfutil@tempdima=\dimen146
-\pgfutil@tempdimb=\dimen147
+\pgfutil@tempdima=\dimen144
+\pgfutil@tempdimb=\dimen145
 
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/utilities/pgfutil-common-li
 sts.tex))
@@ -419,20 +407,20 @@ Package: pgfsys 2014/07/09 v3.0.1a (rcs-revision 1.48)
 ode.tex
 \pgfkeys@tmptoks=\toks32
 ))
-\pgf@x=\dimen148
-\pgf@y=\dimen149
-\pgf@xa=\dimen150
-\pgf@ya=\dimen151
-\pgf@xb=\dimen152
-\pgf@yb=\dimen153
-\pgf@xc=\dimen154
-\pgf@yc=\dimen155
+\pgf@x=\dimen146
+\pgf@y=\dimen147
+\pgf@xa=\dimen148
+\pgf@ya=\dimen149
+\pgf@xb=\dimen150
+\pgf@yb=\dimen151
+\pgf@xc=\dimen152
+\pgf@yc=\dimen153
 \w@pgf@writea=\write3
 \r@pgf@reada=\read1
-\c@pgf@counta=\count126
-\c@pgf@countb=\count127
-\c@pgf@countc=\count128
-\c@pgf@countd=\count129
+\c@pgf@counta=\count127
+\c@pgf@countb=\count128
+\c@pgf@countc=\count129
+\c@pgf@countd=\count130
 \t@pgf@toka=\toks33
 \t@pgf@tokb=\toks34
 \t@pgf@tokc=\toks35
@@ -453,8 +441,8 @@ File: pgfsys-common-pdf.def 2013/10/10  (rcs-revision 1.13)
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.
 code.tex
 File: pgfsyssoftpath.code.tex 2013/09/09  (rcs-revision 1.9)
-\pgfsyssoftpath@smallbuffer@items=\count130
-\pgfsyssoftpath@bigbuffer@items=\count131
+\pgfsyssoftpath@smallbuffer@items=\count131
+\pgfsyssoftpath@bigbuffer@items=\count132
 )
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.
 code.tex
@@ -466,8 +454,8 @@ Package: pgfcore 2010/04/11 v3.0.1a (rcs-revision 1.7)
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex)
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex
-\pgfmath@dimen=\dimen156
-\pgfmath@count=\count132
+\pgfmath@dimen=\dimen154
+\pgfmath@count=\count133
 \pgfmath@box=\box31
 \pgfmath@toks=\toks36
 \pgfmath@stack@operand=\toks37
@@ -492,37 +480,37 @@ code.tex)
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.integ
 erarithmetics.code.tex)))
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex
-\c@pgfmathroundto@lastzeros=\count133
+\c@pgfmathroundto@lastzeros=\count134
 ))
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.co
 de.tex
 File: pgfcorepoints.code.tex 2013/10/07  (rcs-revision 1.27)
-\pgf@picminx=\dimen157
-\pgf@picmaxx=\dimen158
-\pgf@picminy=\dimen159
-\pgf@picmaxy=\dimen160
-\pgf@pathminx=\dimen161
-\pgf@pathmaxx=\dimen162
-\pgf@pathminy=\dimen163
-\pgf@pathmaxy=\dimen164
-\pgf@xx=\dimen165
-\pgf@xy=\dimen166
-\pgf@yx=\dimen167
-\pgf@yy=\dimen168
-\pgf@zx=\dimen169
-\pgf@zy=\dimen170
+\pgf@picminx=\dimen155
+\pgf@picmaxx=\dimen156
+\pgf@picminy=\dimen157
+\pgf@picmaxy=\dimen158
+\pgf@pathminx=\dimen159
+\pgf@pathmaxx=\dimen160
+\pgf@pathminy=\dimen161
+\pgf@pathmaxy=\dimen162
+\pgf@xx=\dimen163
+\pgf@xy=\dimen164
+\pgf@yx=\dimen165
+\pgf@yy=\dimen166
+\pgf@zx=\dimen167
+\pgf@zy=\dimen168
 )
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconst
 ruct.code.tex
 File: pgfcorepathconstruct.code.tex 2013/10/07  (rcs-revision 1.29)
-\pgf@path@lastx=\dimen171
-\pgf@path@lasty=\dimen172
+\pgf@path@lastx=\dimen169
+\pgf@path@lasty=\dimen170
 )
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage
 .code.tex
 File: pgfcorepathusage.code.tex 2014/11/02  (rcs-revision 1.24)
-\pgf@shorten@end@additional=\dimen173
-\pgf@shorten@start@additional=\dimen174
+\pgf@shorten@end@additional=\dimen171
+\pgf@shorten@start@additional=\dimen172
 )
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.co
 de.tex
@@ -530,19 +518,19 @@ File: pgfcorescopes.code.tex 2015/05/08  (rcs-revision 1.46)
 \pgfpic=\box32
 \pgf@hbox=\box33
 \pgf@layerbox@main=\box34
-\pgf@picture@serial@count=\count134
+\pgf@picture@serial@count=\count135
 )
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicst
 ate.code.tex
 File: pgfcoregraphicstate.code.tex 2014/11/02  (rcs-revision 1.12)
-\pgflinewidth=\dimen175
+\pgflinewidth=\dimen173
 )
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransform
 ations.code.tex
 File: pgfcoretransformations.code.tex 2015/08/07  (rcs-revision 1.20)
-\pgf@pt@x=\dimen176
-\pgf@pt@y=\dimen177
-\pgf@pt@temp=\dimen178
+\pgf@pt@x=\dimen174
+\pgf@pt@y=\dimen175
+\pgf@pt@temp=\dimen176
 )
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.cod
 e.tex
@@ -559,13 +547,13 @@ File: pgfcorepathprocessing.code.tex 2013/09/09  (rcs-revision 1.9)
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.co
 de.tex
 File: pgfcorearrows.code.tex 2015/05/14  (rcs-revision 1.43)
-\pgfarrowsep=\dimen179
+\pgfarrowsep=\dimen177
 )
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.cod
 e.tex
 File: pgfcoreshade.code.tex 2013/07/15  (rcs-revision 1.15)
-\pgf@max=\dimen180
-\pgf@sys@shading@range@num=\count135
+\pgf@max=\dimen178
+\pgf@sys@shading@range@num=\count136
 )
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.cod
 e.tex
@@ -600,8 +588,8 @@ File: pgfmoduleplot.code.tex 2015/08/03  (rcs-revision 1.13)
 (/usr/local/texlive/2018/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version
 -0-65.sty
 Package: pgfcomp-version-0-65 2007/07/03 v3.0.1a (rcs-revision 1.7)
-\pgf@nodesepstart=\dimen181
-\pgf@nodesepend=\dimen182
+\pgf@nodesepstart=\dimen179
+\pgf@nodesepend=\dimen180
 )
 (/usr/local/texlive/2018/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version
 -1-18.sty
@@ -616,8 +604,8 @@ Package: pgfcomp-version-1-18 2007/07/23 v3.0.1a (rcs-revision 1.1)
 Package: pgffor 2013/12/13 v3.0.1a (rcs-revision 1.25)
 
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex)
-\pgffor@iter=\dimen183
-\pgffor@skip=\dimen184
+\pgffor@iter=\dimen181
+\pgffor@skip=\dimen182
 \pgffor@stack=\toks39
 \pgffor@toks=\toks40
 ))
@@ -628,32 +616,32 @@ Package: tikz 2015/08/07 v3.0.1a (rcs-revision 1.151)
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothan
 dlers.code.tex
 File: pgflibraryplothandlers.code.tex 2013/08/31 v3.0.1a (rcs-revision 1.20)
-\pgf@plot@mark@count=\count136
-\pgfplotmarksize=\dimen185
+\pgf@plot@mark@count=\count137
+\pgfplotmarksize=\dimen183
 )
-\tikz@lastx=\dimen186
-\tikz@lasty=\dimen187
-\tikz@lastxsaved=\dimen188
-\tikz@lastysaved=\dimen189
-\tikzleveldistance=\dimen190
-\tikzsiblingdistance=\dimen191
+\tikz@lastx=\dimen184
+\tikz@lasty=\dimen185
+\tikz@lastxsaved=\dimen186
+\tikz@lastysaved=\dimen187
+\tikzleveldistance=\dimen188
+\tikzsiblingdistance=\dimen189
 \tikz@figbox=\box37
 \tikz@figbox@bg=\box38
 \tikz@tempbox=\box39
 \tikz@tempbox@bg=\box40
-\tikztreelevel=\count137
-\tikznumberofchildren=\count138
-\tikznumberofcurrentchild=\count139
-\tikz@fig@count=\count140
+\tikztreelevel=\count138
+\tikznumberofchildren=\count139
+\tikznumberofcurrentchild=\count140
+\tikz@fig@count=\count141
 
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.cod
 e.tex
 File: pgfmodulematrix.code.tex 2013/09/17  (rcs-revision 1.8)
-\pgfmatrixcurrentrow=\count141
-\pgfmatrixcurrentcolumn=\count142
-\pgf@matrix@numberofcolumns=\count143
+\pgfmatrixcurrentrow=\count142
+\pgfmatrixcurrentcolumn=\count143
+\pgf@matrix@numberofcolumns=\count144
 )
-\tikz@expandcount=\count144
+\tikz@expandcount=\count145
 
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/frontendlayer/tikz/librarie
 s/tikzlibrarytopaths.code.tex
@@ -665,12 +653,28 @@ Package: cooltooltips 2006/03/07 v1.0 Cool PDF tooltips
 )
 (./colordef.sty) (/usr/local/texlive/2018/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count145
+\c@float@type=\count146
 \float@exts=\toks41
 \float@box=\box42
 \@float@everytoks=\toks42
 \@floatcapt=\box43
-) (/usr/local/texlive/2018/texmf-dist/tex/latex/koma-script/scrpage2.sty
+) (/usr/local/texlive/2018/texmf-dist/tex/latex/subfig/subfig.sty
+Package: subfig 2005/06/28 ver: 1.3 subfig package
+\c@KVtest=\count147
+\sf@farskip=\skip54
+\sf@captopadj=\dimen190
+\sf@capskip=\skip55
+\sf@nearskip=\skip56
+\c@subfigure=\count148
+\c@subfigure@save=\count149
+\c@lofdepth=\count150
+\c@subtable=\count151
+\c@subtable@save=\count152
+\c@lotdepth=\count153
+\sf@top=\skip57
+\sf@bottom=\skip58
+)
+(/usr/local/texlive/2018/texmf-dist/tex/latex/koma-script/scrpage2.sty
 Package: scrpage2 2018/03/30 v3.25 KOMA-Script package (page head and foot)
 
 
@@ -683,33 +687,33 @@ Package scrpage2 Warning: usage of obsolete package!
 ) (./seminar_paper.aux)
 \openout1 = `seminar_paper.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 98.
-LaTeX Font Info:    ... okay on input line 98.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 98.
-LaTeX Font Info:    ... okay on input line 98.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 98.
-LaTeX Font Info:    ... okay on input line 98.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 98.
-LaTeX Font Info:    ... okay on input line 98.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 98.
-LaTeX Font Info:    ... okay on input line 98.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 98.
-LaTeX Font Info:    ... okay on input line 98.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 98.
-LaTeX Font Info:    ... okay on input line 98.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 99.
+LaTeX Font Info:    ... okay on input line 99.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 99.
+LaTeX Font Info:    ... okay on input line 99.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 99.
+LaTeX Font Info:    ... okay on input line 99.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 99.
+LaTeX Font Info:    ... okay on input line 99.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 99.
+LaTeX Font Info:    ... okay on input line 99.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 99.
+LaTeX Font Info:    ... okay on input line 99.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 99.
+LaTeX Font Info:    ... okay on input line 99.
 
 (/usr/local/texlive/2018/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count146
-\scratchdimen=\dimen192
+\scratchcounter=\count154
+\scratchdimen=\dimen191
 \scratchbox=\box44
-\nofMPsegments=\count147
-\nofMParguments=\count148
+\nofMPsegments=\count155
+\nofMParguments=\count156
 \everyMPshowfont=\toks43
-\MPscratchCnt=\count149
-\MPscratchDim=\dimen193
-\MPnumerator=\count150
-\makeMPintoPDFobject=\count151
+\MPscratchCnt=\count157
+\MPscratchDim=\dimen192
+\MPnumerator=\count158
+\makeMPintoPDFobject=\count159
 \everyMPtoPDFconversion=\toks44
 ) (/usr/local/texlive/2018/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
@@ -729,7 +733,7 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 \AtBeginShipoutBox=\box45
-Package hyperref Info: Link coloring OFF on input line 98.
+Package hyperref Info: Link coloring OFF on input line 99.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -737,19 +741,22 @@ Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 (/usr/local/texlive/2018/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count152
+\c@section@level=\count160
 )
-LaTeX Info: Redefining \ref on input line 98.
-LaTeX Info: Redefining \pageref on input line 98.
-LaTeX Info: Redefining \nameref on input line 98.
+LaTeX Info: Redefining \ref on input line 99.
+LaTeX Info: Redefining \pageref on input line 99.
+LaTeX Info: Redefining \nameref on input line 99.
 
 (./seminar_paper.out) (./seminar_paper.out)
 \@outlinefile=\write4
 \openout4 = `seminar_paper.out'.
 
 Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: subfig package v1.3 is loaded.
+Package caption Info: float package is loaded.
+Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
-\c@lstlisting=\count153
+\c@lstlisting=\count161
 
 ABD: EveryShipout initializing macros
 
@@ -828,7 +835,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.156 \newpage
+l.157 \newpage
                [1] (./data.tex) (./data_preparation.tex
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
@@ -838,7 +845,7 @@ been already used, duplicate ignored
                    \relax 
 l.119 
        [2]
-Overfull \vbox (1342.21855pt too high) has occurred while \output is active []
+Overfull \vbox (1351.93324pt too high) has occurred while \output is active []
 
 
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
@@ -848,13 +855,7 @@ been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.119 
-       [3pdfTeX warning (ext4): destination with the same identifier (name{tabl
-e.1}) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.119 
-      ]
+       [3]
 LaTeX Font Info:    Try loading font information for T1+cmtt on input line 120.
 
  (/usr/local/texlive/2018/texmf-dist/tex/latex/base/t1cmtt.fd
@@ -874,75 +875,102 @@ nput line 122.
 
 (../Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R)
 (../Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R)
-(../Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 pdfTeX warning (ext4): destination with the same identifier (name{page.4}) has 
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.29 berlin_
-            district_sf = berlin_neighbourhood_sf %>% [4])
-<S_und_U-Bahnnetz_mit_Regionalbahn_Innenstadt.pdf, id=167, 1195.01462pt x 845.0
+l.150 ...rhoods/berlin_districts_neighbourhoods.R}
+                                                   [4]
+(../Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R)
+<berlin_district_leaflet.pdf, id=174, 995.72pt x 746.79pt>
+File: berlin_district_leaflet.pdf Graphic file (type pdf)
+<use berlin_district_leaflet.pdf>
+Package pdftex.def Info: berlin_district_leaflet.pdf  used on input line 157.
+(pdftex.def)             Requested size: 173.44835pt x 130.08621pt.
+<berlin_district_ggplot.pdf, id=175, 514.92375pt x 495.8525pt>
+File: berlin_district_ggplot.pdf Graphic file (type pdf)
+<use berlin_district_ggplot.pdf>
+Package pdftex.def Info: berlin_district_ggplot.pdf  used on input line 158.
+(pdftex.def)             Requested size: 135.087pt x 130.08621pt.
+<qletlogo.pdf, id=176, 198.49156pt x 205.26688pt>
+File: qletlogo.pdf Graphic file (type pdf)
+<use qletlogo.pdf>
+Package pdftex.def Info: qletlogo.pdf  used on input line 159.
+(pdftex.def)             Requested size: 9.92516pt x 10.26393pt.
+File: qletlogo.pdf Graphic file (type pdf)
+<use qletlogo.pdf>
+Package pdftex.def Info: qletlogo.pdf  used on input line 159.
+(pdftex.def)             Requested size: 9.92516pt x 10.26393pt.
+<S_und_U-Bahnnetz_mit_Regionalbahn_Innenstadt.pdf, id=180, 1195.01462pt x 845.0
 471pt>
 File: S_und_U-Bahnnetz_mit_Regionalbahn_Innenstadt.pdf Graphic file (type pdf)
 <use S_und_U-Bahnnetz_mit_Regionalbahn_Innenstadt.pdf>
 Package pdftex.def Info: S_und_U-Bahnnetz_mit_Regionalbahn_Innenstadt.pdf  used
- on input line 160.
+ on input line 169.
 (pdftex.def)             Requested size: 352.8155pt x 249.49304pt.
 
-(../Berlin_VBB_Areas/berlin_vbb_areas.R
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 pdfTeX warning (ext4): destination with the same identifier (name{page.5}) has 
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.19 stations 
-              = sf::st_read(file.path(getwd(), "spatial_data", "gis_osm_tran...
-[5pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) 
-has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.19 stations 
-              = sf::st_read(file.path(getwd(), "spatial_data", "gis_osm_tran...
- <./S_und_U-Bahnnetz_mit_Regionalbahn_Innenstadt.pdf>])
-(../Berlin_VBB_Areas/berlin_vbb_areas.R)
-(../Berlin_VBB_Areas/berlin_vbb_areas.R
+l.173 
+       [5 <./berlin_district_leaflet.pdf> <./berlin_district_ggplot.pdf> <./qle
+tlogo.pdf>] (../Berlin_VBB_Zones/berlin_vbb_zones.R)
+(../Berlin_VBB_Zones/berlin_vbb_zones.R
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[6]) (../Berlin_VBB_Areas/berlin_vbb_areas.R)
-(../Berlin_VBB_Areas/berlin_vbb_areas.R)
-(../Berlin_VBB_Areas/berlin_vbb_areas.R)
+[6 <./S_und_U-Bahnnetz_mit_Regionalbahn_Innenstadt.pdf>])
+(../Berlin_VBB_Zones/berlin_vbb_zones.R)
+(../Berlin_VBB_Zones/berlin_vbb_zones.R)
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[7] (../Berlin_VBB_Areas/Helpers/points_midpoint.R)
-(../Helpers/point_in_polygons.R
+[7] (../Berlin_VBB_Zones/berlin_vbb_zones.R)
+(../Berlin_VBB_Zones/berlin_vbb_zones.R)
+(../Berlin_VBB_Zones/Helpers/points_midpoint.R
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[8]) (../Helpers/distance_count.R
+[8])
+<berlin_vbb_zones_leaflet.pdf, id=384, 995.72pt x 746.79pt>
+File: berlin_vbb_zones_leaflet.pdf Graphic file (type pdf)
+<use berlin_vbb_zones_leaflet.pdf>
+Package pdftex.def Info: berlin_vbb_zones_leaflet.pdf  used on input line 212.
+(pdftex.def)             Requested size: 173.44835pt x 130.08621pt.
+<berlin_vbb_zones_ggplot.pdf, id=385, 514.92375pt x 495.8525pt>
+File: berlin_vbb_zones_ggplot.pdf Graphic file (type pdf)
+<use berlin_vbb_zones_ggplot.pdf>
+Package pdftex.def Info: berlin_vbb_zones_ggplot.pdf  used on input line 213.
+(pdftex.def)             Requested size: 135.087pt x 130.08621pt.
+ (../Helpers/point_in_polygons.R
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[9])
+[9 <./berlin_vbb_zones_leaflet.pdf> <./berlin_vbb_zones_ggplot.pdf>])
+(../Helpers/distance_count.R
+Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
-Package natbib Warning: Citation `haversine:2013' on page 10 undefined on input
- line 226.
+
+[10])
+
+Package natbib Warning: Citation `haversine:2013' on page 11 undefined on input
+ line 241.
 
 ) (./methods.tex
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[10])
+[11])
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[11] (./results.tex
-<graph.pdf, id=430, 361.35pt x 303.1325pt>
+[12] (./results.tex
+<graph.pdf, id=541, 361.35pt x 303.1325pt>
 File: graph.pdf Graphic file (type pdf)
 <use graph.pdf>
 Package pdftex.def Info: graph.pdf  used on input line 20.
@@ -951,46 +979,36 @@ Package pdftex.def Info: graph.pdf  used on input line 20.
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[12pdfTeX warning (ext4): destination with the same identifier (name{figure.2})
- has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.47 \newpage
-              <./graph.pdf>]) (./conc.tex)
+[13 <./graph.pdf>]) (./conc.tex)
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[13] (./seminar_paper.bbl)
+[14] (./seminar_paper.bbl)
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[14] (./authorship.tex)
+[15] (./authorship.tex)
 
 Package natbib Warning: There were undefined citations.
 
-[15]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 187.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 187.
+[16]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 188.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 188.
  (./seminar_paper.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 187.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 187.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 188.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 188.
 Package rerunfilecheck Info: File `seminar_paper.out' has not changed.
 (rerunfilecheck)             Checksum: E65787393195C8934530B8B4791428BF;701.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 187.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 188.
  ) 
 Here is how much of TeX's memory you used:
- 20789 strings out of 492649
- 365648 string characters out of 6129621
- 725015 words of memory out of 5000000
- 24038 multiletter control sequences out of 15000+600000
- 22972 words of font info for 57 fonts, out of 8000000 for 9000
+ 21272 strings out of 492649
+ 374732 string characters out of 6129621
+ 739184 words of memory out of 5000000
+ 24505 multiletter control sequences out of 15000+600000
+ 23748 words of font info for 58 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 55i,11n,54p,15177b,1940s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 55i,11n,54p,15177b,1930s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}
 </usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
 /usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></
@@ -999,29 +1017,31 @@ r/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/
 local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/loc
 al/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/loca
 l/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/
-texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx1095.pfb></usr/local/te
-xlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texl
-ive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texliv
-e/2018/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb></usr/local/texlive/
-2018/texmf-dist/fonts/type1/public/cm-super/sfcc1095.pfb></usr/local/texlive/20
-18/texmf-dist/fonts/type1/public/cm-super/sfcc1200.pfb></usr/local/texlive/2018
-/texmf-dist/fonts/type1/public/cm-super/sfcc1440.pfb></usr/local/texlive/2018/t
-exmf-dist/fonts/type1/public/cm-super/sfcc1728.pfb></usr/local/texlive/2018/tex
-mf-dist/fonts/type1/public/cm-super/sfit0900.pfb></usr/local/texlive/2018/texmf
--dist/fonts/type1/public/cm-super/sfit1095.pfb></usr/local/texlive/2018/texmf-d
-ist/fonts/type1/public/cm-super/sfrm1095.pfb></usr/local/texlive/2018/texmf-dis
-t/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2018/texmf-dist/
-fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2018/texmf-dist/fo
-nts/type1/public/cm-super/sfsl1095.pfb></usr/local/texlive/2018/texmf-dist/font
-s/type1/public/cm-super/sfti1095.pfb></usr/local/texlive/2018/texmf-dist/fonts/
-type1/public/cm-super/sfti1440.pfb></usr/local/texlive/2018/texmf-dist/fonts/ty
-pe1/public/cm-super/sftt0800.pfb></usr/local/texlive/2018/texmf-dist/fonts/type
-1/public/cm-super/sftt0900.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/
-public/cm-super/sftt1095.pfb>
-Output written on seminar_paper.pdf (20 pages, 594786 bytes).
+texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx0900.pfb></usr/local/te
+xlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx1095.pfb></usr/local/texl
+ive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texliv
+e/2018/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/
+2018/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb></usr/local/texlive/20
+18/texmf-dist/fonts/type1/public/cm-super/sfcc1095.pfb></usr/local/texlive/2018
+/texmf-dist/fonts/type1/public/cm-super/sfcc1200.pfb></usr/local/texlive/2018/t
+exmf-dist/fonts/type1/public/cm-super/sfcc1440.pfb></usr/local/texlive/2018/tex
+mf-dist/fonts/type1/public/cm-super/sfcc1728.pfb></usr/local/texlive/2018/texmf
+-dist/fonts/type1/public/cm-super/sfit0900.pfb></usr/local/texlive/2018/texmf-d
+ist/fonts/type1/public/cm-super/sfit1095.pfb></usr/local/texlive/2018/texmf-dis
+t/fonts/type1/public/cm-super/sfrm0900.pfb></usr/local/texlive/2018/texmf-dist/
+fonts/type1/public/cm-super/sfrm1095.pfb></usr/local/texlive/2018/texmf-dist/fo
+nts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2018/texmf-dist/font
+s/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2018/texmf-dist/fonts/
+type1/public/cm-super/sfsl1095.pfb></usr/local/texlive/2018/texmf-dist/fonts/ty
+pe1/public/cm-super/sfti1095.pfb></usr/local/texlive/2018/texmf-dist/fonts/type
+1/public/cm-super/sfti1440.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/
+public/cm-super/sftt0800.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/pu
+blic/cm-super/sftt0900.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/publ
+ic/cm-super/sftt1095.pfb>
+Output written on seminar_paper.pdf (21 pages, 1420574 bytes).
 PDF statistics:
- 586 PDF objects out of 1000 (max. 8388607)
- 515 compressed objects within 6 object streams
- 183 named destinations out of 1000 (max. 500000)
- 142 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 703 PDF objects out of 1000 (max. 8388607)
+ 583 compressed objects within 6 object streams
+ 190 named destinations out of 1000 (max. 500000)
+ 167 words of extra memory for PDF output out of 10000 (max. 10000000)
 

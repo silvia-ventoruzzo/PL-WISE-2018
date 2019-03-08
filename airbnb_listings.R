@@ -11,18 +11,24 @@ for (package in needed_packages) {
 rm("needed_packages", "package")
 
 # Set working directory to the one where the file is located
-setwd(dirname(sys.frame(1)$ofile)) # This works when sourcing
-# setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # This works when running the code directly
+
+  # This works when run directly
+  # setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) 
+  
+  # This works when sourced
+  setwd(dirname(sys.frame(1)$ofile))
 
 # Load helper functions and other scripts
-source(file.path(getwd(), "Berlin_VBB_Areas", "berlin_vbb_areas.R", fsep="/"), chdir = TRUE)
+source(file.path(getwd(), "Berlin_VBB_Zones", "berlin_vbb_zones.R", fsep="/"), chdir = TRUE)
 source(file.path(getwd(), "Berlin_Districts_Neighbourhoods", "berlin_districts_neighbourhoods.R", fsep="/"), chdir = TRUE)
 Jmisc::sourceAll(file.path(getwd(), "Helpers", fsep="/"))
 
 # Load shapefile
 stations = sf::st_read(file.path(getwd(), "Data", "spatial_data", "gis_osm_transport_free_1.shp", fsep="/"))
 
-print("Finished loading spatial data.")
+# Print code development
+print("Spatial data loaded.")
+
 
 # Load dataframes
 # If files are zipped
@@ -34,44 +40,51 @@ listings_detailed = read_csv(file.path(getwd(), "Data", "airbnb_data", "07.11_li
 listings_calendar = read_csv(file.path(getwd(), "Data", "airbnb_data", "07.11_listings_calendar.csv.zip", fsep="/"),
                               na = c("NA", ""), locale = locale(encoding = "UTF-8"))
 
-print("Finished uploading airbnb datasets.")
+# Print code development
+print("Airbnb datasets uploaded.")
 
 # Join dataframes, first clean and keep only variables of interest
 listings = df_join_clean(df1 = listings_detailed, df2 = listings_summarized)
-rm("listings_detailed", "listings_summarized")
 
 # Check if there are missing values
-apply(listings, 2, function(x) any(is.na(x)))
+if (!interactive()) {
+  apply(listings, 2, function(x) any(is.na(x)))
+}
 
 # host_is_superhost
 # According to airbnb: https://www.airbnb.com/help/article/828
-listings %>%
-  filter(is.na(host_is_superhost)) # 26
+if (!interactive()) {
+  listings %>%
+    dplyr::filter(is.na(host_is_superhost)) # 26
+}
 
 listings = listings %>%
   dplyr::mutate(host_is_superhost = ifelse(is.na(host_is_superhost), 0, host_is_superhost))
 
 # review_scores_rating
-listings %>%
-  filter(is.na(review_scores_rating)) %>%
-  dplyr::select(id, review_scores_rating, number_of_reviews) # 4,389
+if (!interactive()) {
+  listings %>%
+    dplyr::filter(is.na(review_scores_rating)) %>%
+    dplyr::select(id, review_scores_rating, number_of_reviews) # 4,389
+}
 # If the number_of_reviews is zero, we set the review_scores_value to 0 meanwhile creating a variable to keep track that the listing has not been reviewed yet
 listings = listings %>%
   dplyr::mutate(review_scores_rating = ifelse(number_of_reviews == 0, 0, review_scores_rating),
                 reviewed_yn = ifelse(number_of_reviews == 0, 0, 1))
 # For the rest, we insert the average of the review_scores_rating
-listings %>%
-  filter(is.na(review_scores_rating)) %>%
-  dplyr::select(id, review_scores_accuracy, review_scores_value,
-                review_scores_cleanliness, review_scores_checkin, review_scores_communication,
-                review_scores_location, review_scores_rating,
-                number_of_reviews) # 499
-
-listings %>% 
-  dplyr::summarize(mean = mean(review_scores_rating, na.rm = TRUE),
-                   median = median(review_scores_rating, na.rm = TRUE),
-                   mode = getmode(review_scores_rating)) %>%
-  round(0)
+if (!interactive()) {
+  listings %>%
+    dplyr::filter(is.na(review_scores_rating)) %>%
+    dplyr::select(id, review_scores_accuracy, review_scores_value,
+                  review_scores_cleanliness, review_scores_checkin, review_scores_communication,
+                  review_scores_location, review_scores_rating,
+                  number_of_reviews) # 499
+  listings %>% 
+    dplyr::summarize(mean = mean(review_scores_rating, na.rm = TRUE),
+                    median = median(review_scores_rating, na.rm = TRUE),
+                    mode = getmode(review_scores_rating)) %>%
+    round(0)
+}
 # mean might be influenced by outliers, being it so different from median and mode, and mode is too high, so I will substitute the missing values with the median
 listings = listings %>%
   mutate(review_scores_rating = ifelse(is.na(review_scores_rating), 
@@ -79,11 +92,12 @@ listings = listings %>%
                                        review_scores_rating))
 
 # bedrooms and beds
-listings %>%
-  filter(is.na(bedrooms) | 
-           is.na(beds)) %>%
+if (!interactive()) {
+  listings %>%
+  dplyr::filter(is.na(bedrooms) | 
+                is.na(beds)) %>%
   dplyr::select(id, accommodates, bedrooms, beds) # 57
-
+}
 # Being the amount of missing values in these features relative small, we can derive their value from the other variables:
 listings = listings %>%
   # If beds is NA, but bedrooms has a valid value, we set beds with the number of bedrooms
@@ -106,9 +120,12 @@ listings = listings %>%
                 listing_url)
 
 # Check if there are missing values
-apply(listings, 2, function(x) any(is.na(x)))
+if (!interactive()) {
+  apply(listings, 2, function(x) any(is.na(x)))
+}
 
-print("Finished cleaning missing values.")
+# Print code development
+print("Missing values cleaned.")
 
 ## New variables
 
@@ -117,18 +134,17 @@ print("Finished cleaning missing values.")
 listings = point_in_polygons(points_df = listings,
                               polys_sf  = berlin_district_sf,
                               var_name  = "district")
-# vbb_area
+# vbb_zone
 listings = point_in_polygons(points_df = listings,
                               polys_sf  = berlin_vbb_AB_sf,
-                              var_name  = "vbb_area")
+                              var_name  = "vbb_zone")
 # neighbourhood
 listings = point_in_polygons(points_df = listings,
                               polys_sf = berlin_neighbourhood_sf,
                               var_name = "neighbourhood")
 # For the sake of consistency, we will delete these listings
 listings = listings %>%
-  filter(!is.na(district) & !is.na(vbb_area))
-rm("berlin_neighbourhood_sf")
+  filter(!is.na(district) & !is.na(vbb_zone))
 
 # Stations
 railway_stations_df = stations %>%
@@ -149,7 +165,6 @@ railway_stations_df = railway_stations_df %>%
   filter(!is.na(district))
 listings = distance_count(main = listings, reference = railway_stations_df,
                            var_name = "station", distance = 1000)
-rm("stations")
 
 # (Top 10) attractions
 attractions_df = data.frame(
@@ -212,9 +227,9 @@ listings_district_season_availability = listings %>%
   spread(season_av, count)
 
 listings_vbb_season_availability = listings %>%
-  select(id, vbb_area) %>%
+  select(id, vbb_zone) %>%
   inner_join(listings_season_availability, by = "id") %>%
-  group_by(vbb_area, season_av) %>%
+  group_by(vbb_zone, season_av) %>%
   dplyr::summarize(count = mean(count) %>% round(0)) %>%
   spread(season_av, count)
 
@@ -228,13 +243,85 @@ listings_neighbourhood_season_availability = listings %>%
 listings_season_availability = listings_season_availability %>%
   spread(season_av, count)
 
-print("Finished creating new variables.")
+# Print code development
+print("New variables created.")
 
 # Join to the listings
 listings = listings %>%
   left_join(listings_season_availability, by = "id") %>%
   replace(is.na(.), 0)
 
+# Plot numeric variables
+if (interactive()) {
+  
+  numvar_plot = listings %>%
+    transmute(var    = price,
+              median = median(price),
+              mean   = mean(price),
+              `1Q`   = quantile(price, probs = 0.25),
+              `3Q`   = quantile(price, probs = 0.75),
+              `95P`  = quantile(price, probs = 0.95),
+              count  = sum(price > unique(`95P`)))
+  
+  numvar_plot %>%
+    ggplot() +
+    geom_density(aes(x = var), fill = "green") +
+    geom_vline(aes(xintercept = unique(median)),
+               color = "blue", linetype = "dashed") +
+    annotate(geom = "text", x = (unique(numvar_plot$median) + 2.6), y = 0,
+             label = "Median",
+             colour = "blue",
+             angle = 90, hjust = 0) +
+    geom_vline(aes(xintercept = unique(mean)),
+               color = "black", linetype = "dashed") +
+    annotate(geom = "text", x = (unique(numvar_plot$mean) + 2.6), y = 0,
+             label = "Mean",
+             colour = "black",
+             angle = 90, hjust = 0) +
+    geom_vline(aes(xintercept = `1Q`),
+               color = "red", linetype = "dashed") +
+    annotate(geom = "text", x = (unique(numvar_plot$`1Q`) + 2.6), y = 0,
+             label = "1st Quantile",
+             colour = "red",
+             angle = 90, hjust = 0) +
+    geom_vline(aes(xintercept = `3Q`),
+               color = "red", linetype = "dashed") +
+    annotate(geom = "text", x = (unique(numvar_plot$`3Q`) + 2.6), y = 0,
+             label = "3rd Quantile",
+             colour = "red",
+             angle = 90, hjust = 0) +
+    scale_x_continuous(limits = c(min(numvar_plot$var), unique(numvar_plot$`95P`))) +
+    labs(caption = paste("Left limit set to 95% percentile:", unique(numvar_plot$count), "values not displayed", sep = " "),
+         title = "Distribution of the variable price",
+         subtitle = "1st, 2nd, 3rd Quantiles and Mean also displayed",
+         x = "price") +
+    theme_bw() +
+    theme(axis.text.x = element_text(size = rel(1.5)))
+  
+  dev.copy2pdf(file = "./SeminarPaper/price_distribution.pdf")
+  
+}
+
+# Plot factor variables
+if (interactive()) {
+  
+  factvar_plot = listings %>%
+    dplyr::rename(var = room_type) %>%
+    dplyr::group_by(var) %>%
+    dplyr::summarize(count = n()) 
+  
+  ggplot(factvar_plot) +
+    geom_bar(aes(x = var, y = count), fill = "green", stat = "identity") +
+    labs(x = "room_type",
+         title = "Histogram of the variable room_type") +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, size = rel(1.5)))
+  
+  dev.copy2pdf(file = "./SeminarPaper/room_type_distribution.pdf")
+  
+}
+
 # Remove unnecessary objects
-rm("listings_calendar", "listings_season_availability")
+rm("listings_calendar", "listings_season_availability", "stations", "berlin_neighbourhood_sf",
+   "numvar_plot", "factvar_plot", "listings_detailed", "listings_summarized")
 rm(list=lsf.str()) # All functions

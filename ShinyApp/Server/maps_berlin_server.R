@@ -329,9 +329,9 @@ maps_berlin_server = function(input, output, session) {
         variable = var_table_plot() %>% sym()
         
         df = listings %>%
-          group_by(!!variable) %>%
-          summarize(count = n()) %>%
-          rename(var = !!variable)
+          rename(var = !!variable) %>%
+          group_by(var) %>%
+          summarize(count = n())
         
       } else {
         

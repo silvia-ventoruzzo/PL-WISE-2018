@@ -9,8 +9,12 @@ for (package in needed_packages) {
 rm("needed_packages", "package")
 
 # Set working directory to the one where the file is located
-# setwd(dirname(sys.frame(1)$ofile)) # This works when sourcing
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # This works when running the code directly
+
+  # This works when run directly
+  setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) 
+  
+  # This works when sourced
+  # setwd(dirname(sys.frame(1)$ofile))
 
 # Load scripts
 source("clustering.R", chdir = TRUE)
@@ -35,7 +39,7 @@ berlin_district_sf = berlin_district_sf %>%
 berlin_neighbourhood_singlebuckow_sf = berlin_neighbourhood_singlebuckow_sf %>%
   dplyr::mutate(view = "Neighbourhoods")
 berlin_vbb_AB_sf = berlin_vbb_AB_sf %>%
-  dplyr::mutate(view  = "VBB Areas",
+  dplyr::mutate(view  = "VBB Zones",
                 group = id)
 berlin_sf = rbind(berlin_district_sf, berlin_neighbourhood_singlebuckow_sf, berlin_vbb_AB_sf)
 
@@ -45,7 +49,7 @@ berlin_districts_names = berlin_districts_names %>%
 berlin_neighbourhoods_names = berlin_neighbourhoods_names %>%
   dplyr::mutate(view = "Neighbourhoods")
 berlin_vbb_AB_names = berlin_vbb_AB_names %>%
-  dplyr::mutate(view  = "VBB Areas",
+  dplyr::mutate(view  = "VBB Zones",
                 group = id)
 berlin_names = rbind(berlin_districts_names, berlin_neighbourhoods_names, berlin_vbb_AB_names)
 

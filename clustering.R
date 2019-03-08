@@ -10,8 +10,12 @@ for (package in needed_packages) {
 rm("needed_packages", "package")
 
 # Set working directory to the one where the file is located
-# setwd(dirname(sys.frame(1)$ofile)) # This works when sourcing
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # This works when running the code directly
+
+  # This works when run directly
+  # setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) 
+  
+  # This works when sourced
+  setwd(dirname(sys.frame(1)$ofile))
 
 # Load helper functions and other scripts
 source("price.R", chdir = TRUE)
@@ -25,7 +29,7 @@ listings_scaled = listings %>%
   recode_all("room_type") %>% from_row_to_col("room_type") %>%
   recode_all("property_type") %>% from_row_to_col("property_type") %>%
   recode_all("cancellation_policy") %>% from_row_to_col("cancellation_policy") %>%
-  dplyr::select(-id, -lat, -long, -listing_url, - district, -vbb_area, -neighbourhood) %>%
+  dplyr::select(-id, -lat, -long, -listing_url, - district, -vbb_zone, -neighbourhood) %>%
   scale()
 
 # Total variance explained

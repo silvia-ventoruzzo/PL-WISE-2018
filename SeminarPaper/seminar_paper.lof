@@ -1,0 +1,9 @@
+\babel@toc {english}{}
+\contentsline {figure}{\numberline {1}{\ignorespaces Maps of the Berlin Districts \includegraphics [scale=0.05]{qletlogo.pdf} {\href {https://github.com/thsis/SPL_WS1718/blob/master/CART/cart_modell_fin.R}{cart\_modell\_fin.R}}\relax }}{5}{figure.caption.7}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {With \texttt {leaflet}}}}{5}{subfigure.1.1}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {With \texttt {ggplot}}}}{5}{subfigure.1.2}
+\contentsline {figure}{\numberline {2}{\ignorespaces Network Map of Berlin Areas A and B (from \href {https://www.vbb.de/en/timetables/network-maps}{VBB Website})\relax }}{6}{figure.caption.8}
+\contentsline {figure}{\numberline {3}{\ignorespaces Maps of the Berlin VBB Zones\relax }}{9}{figure.caption.9}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {With \texttt {leaflet}}}}{9}{subfigure.3.1}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {With \texttt {ggplot}}}}{9}{subfigure.3.2}
+\contentsline {figure}{\numberline {4}{\ignorespaces Estimated residuals from model XXX. ...\relax }}{13}{figure.caption.10}

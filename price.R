@@ -8,8 +8,12 @@ for (package in needed_packages) {
 rm("needed_packages", "package")
 
 # Set working directory to the one where the file is located
-setwd(dirname(sys.frame(1)$ofile)) # This works when sourcing
-# setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # This works when running the code directly
+
+  # This works when run directly
+  # setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) 
+  
+  # This works when sourced
+  setwd(dirname(sys.frame(1)$ofile))
 
 # Load helper functions and other scripts
 source("airbnb_listings_summaries.R", chdir = TRUE)
@@ -24,7 +28,7 @@ listings_price <- listings %>%
   recode_all("property_type") %>% from_row_to_col("property_type") %>%
   recode_all("cancellation_policy") %>% from_row_to_col("cancellation_policy") %>%
   recode_all("district") %>% from_row_to_col("district") %>%
-  recode_all("vbb_area") %>% from_row_to_col("vbb_area") %>%
+  recode_all("vbb_zone") %>% from_row_to_col("vbb_zone") %>%
   dplyr::select(-id, -lat, -long, -listing_url, -neighbourhood)
 
 # Create dataframe with price correlations

@@ -7,8 +7,8 @@
 \contentsline {section}{\numberline {3}Data Preparation}{2}{section.3}
 \contentsline {subsection}{\numberline {3.1}Berlin neighbourhoods and districts}{2}{subsection.3.1}
 \contentsline {subsection}{\numberline {3.2}Berlin VBB Areas}{5}{subsection.3.2}
-\contentsline {subsection}{\numberline {3.3}airbnb listings' attributes}{8}{subsection.3.3}
-\contentsline {section}{\numberline {4}Functions}{10}{section.4}
-\contentsline {section}{\numberline {5}Results}{12}{section.5}
-\contentsline {section}{\numberline {6}Conclusions}{13}{section.6}
-\contentsline {section}{References}{14}{section.6}
+\contentsline {subsection}{\numberline {3.3}airbnb listings' attributes}{9}{subsection.3.3}
+\contentsline {section}{\numberline {4}Functions}{11}{section.4}
+\contentsline {section}{\numberline {5}Results}{13}{section.5}
+\contentsline {section}{\numberline {6}Conclusions}{14}{section.6}
+\contentsline {section}{References}{15}{section.6}

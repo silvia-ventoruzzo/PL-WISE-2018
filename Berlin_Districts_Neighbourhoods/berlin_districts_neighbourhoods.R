@@ -7,11 +7,16 @@ for (package in needed_packages) {
 rm("needed_packages", "package")
 
 # Set working directory to the one where the file is located
-setwd(dirname(sys.frame(1)$ofile)) # This works when sourcing
-# setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # This works when running the code directly
+
+  # This works when run directly
+  # setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) 
+
+  # This works when sourced
+  setwd(dirname(sys.frame(1)$ofile))
+
 
 # Load shapefiles
-berlin = sf::st_read(file.path(getwd(), "spatial_data", "Berlin-Ortsteile-polygon.shp", fsep="/"))
+berlin = sf::st_read(file.path(getwd(), "Data", "Berlin-Ortsteile-polygon.shp", fsep="/"))
 
 # Object with the neightbourhoods (and respective district)
 berlin_neighbourhood_sf = berlin %>%
@@ -41,7 +46,7 @@ berlin_neighbourhoods_names = berlin_neighbourhood_sf %>%
                   lat  = Y) %>%
     dplyr::mutate(id    = berlin_neighbourhood_sf$id,
                   group = berlin_neighbourhood_sf$group,
-                  name  = gsub("-", "-/n", berlin_neighbourhood_sf$id))
+                  name  = gsub("-", "-<br>", berlin_neighbourhood_sf$id))
 
 # Districts
 berlin_districts_names = berlin_district_sf %>%
@@ -52,7 +57,7 @@ berlin_districts_names = berlin_district_sf %>%
                   lat  = Y) %>%
     dplyr::mutate(id    = berlin_district_sf$id,
                   group = berlin_district_sf$group,
-                  name  = gsub("-", "-/n", berlin_district_sf$id))
+                  name  = gsub("-", "-<br>", berlin_district_sf$id))
 
 # Remove not needed data
 rm("berlin")

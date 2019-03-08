@@ -8,15 +8,20 @@ for (package in needed_packages) {
 rm("needed_packages", "package")
 
 # Set working directory to the one where the file is located
-setwd(dirname(sys.frame(1)$ofile)) # This works when sourcing
-# setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # This works when running the code directly
+
+  # This works when run directly
+  # setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) 
+
+  # This works when sourced
+  setwd(dirname(sys.frame(1)$ofile))
+
 
 # Load helpers
 source(file.path(getwd(), "Helpers", "points_midpoint.R", fsep="/"))
 
 # Load shapefiles
-berlin = sf::st_read(file.path(getwd(), "spatial_data", "Berlin-Ortsteile-polygon.shp", fsep="/"))
-stations = sf::st_read(file.path(getwd(), "spatial_data", "gis_osm_transport_free_1.shp", fsep="/"))
+berlin = sf::st_read(file.path(getwd(), "Data", "Berlin-Ortsteile-polygon.shp", fsep="/"))
+stations = sf::st_read(file.path(getwd(), "Data", "gis_osm_transport_free_1.shp", fsep="/"))
 
 # Create dataframe with names of stations on the Ringbahn (delimits Area A)
 ringbahn_names_df = base::data.frame(
@@ -55,7 +60,7 @@ berlin_vbb_A_sf = stations %>%
 berlin_sf = berlin %>%
     dplyr::summarize(do_union = TRUE)
 
-# Bind and intersect to create sf object with both VBB Areas (A and B)
+# Bind and intersect to create sf object with both VBB Zones (A and B)
 berlin_vbb_AB_sf = berlin_vbb_A_sf %>%
     base::rbind(berlin_sf) %>%
     sf::st_intersection() %>% 
@@ -63,7 +68,7 @@ berlin_vbb_AB_sf = berlin_vbb_A_sf %>%
     dplyr::select(-n.overlaps, -origins) %>%
     dplyr::arrange(desc(id))
 
-# Create dataframes with coordinates where to show areas' names on map
+# Create dataframes with coordinates where to show zones' names on map
 berlin_vbb_A_names = berlin_vbb_A_sf %>%
     sf::st_centroid() %>%
     sf::st_coordinates() %>%
@@ -77,11 +82,11 @@ berlin_vbb_B_names = berlin_sf %>%
     base::t() %>%
     as.data.frame() %>%
     dplyr::transmute(long = (xmax + xmin)/2,
-                   lat  = (3*ymax + ymin)/4) %>%
+                     lat  = (3*ymax + ymin)/4) %>%
     dplyr::mutate(id = "B")
 berlin_vbb_AB_names = berlin_vbb_A_names %>%
     rbind(berlin_vbb_B_names) %>%
-    dplyr::mutate(name = gsub("-", "-/n", id))
+    dplyr::mutate(name = gsub("-", "-<br>", id))
 
 # Remove not needed data
 rm("berlin", "berlin_sf", "ringbahn_names_df", "stations", "berlin_vbb_A_sf", 
