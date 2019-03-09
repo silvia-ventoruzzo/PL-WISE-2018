@@ -20,15 +20,15 @@ maps_district_server = function(input, output, session) {
     
     factor_vars <- c("room_type", "property_type", "room_type")
     
-    if (gsub(" ", "_", input$variable2) == "none") {
+    if (variable2() == "none") {
       
       paste("Map of", input$district, sep = " ") %>%
         paste("'s", sep = "") %>%
         paste("Neighbourhoods", sep = " ")
       
-    } else if (grepl(paste(factor_vars, collapse = "|"), gsub(" ", "_", input$variable2))) {
+    } else if (grepl(paste(factor_vars, collapse = "|"), variable2())) {
       
-      variable = stringr::str_match(gsub(" ", "_", input$variable2), paste(factor_vars, collapse = "|")) %>% 
+      variable = stringr::str_match(variable2(), paste(factor_vars, collapse = "|")) %>% 
         c() %>% gsub("_", " ", .) %>% capwords()
       
       variable %>%
@@ -69,12 +69,20 @@ maps_district_server = function(input, output, session) {
                               as.numeric())
   })
   
+  # Rename variable2
+  variable2 = reactive({
+    
+    gsub(" ", "_", input$variable2)
+    
+  })
+  
+  
   # When choosing a variable (input$variable2), the color should represent the variable'distribution
   neighbourhood_colors_var = reactive({leaflet::colorNumeric(palette = "Dark2",
                                                              domain = listings_area_summary %>%
                                                                filter(view == "Neighbourhoods",
                                                                       group == input$district) %>%
-                                                               select(gsub(" ", "_", input$variable2)),
+                                                               select(variable2()),
                                                              n = berlin_names %>%
                                                                filter(view  == "Neighbourhoods",
                                                                       group == input$district) %>%
@@ -101,14 +109,14 @@ maps_district_server = function(input, output, session) {
       # addPolygons(data = neighbourhoods(),
       #             fillColor = ~neighbourhood_colors_vars(listings_area_summary[listings_area_summary$view  == "Neighbourhoods" &
       #                                                                            listings_area_summary$group == input$district, 
-      #                                                                          gsub(" ", "_", input$variable2)]),
+      #                                                                          variable2()]),
       #             group = "variables") %>%
       # addLegend(position = "bottomleft", pal = neighbourhood_colors_var(), 
       #           values = listings_area_summary[listings_area_summary$view  == "Neighbourhoods" &
       #                                            listings_area_summary$group == input$district, 
-    #                                          gsub(" ", "_", input$variable2)],
+    #                                          variable2()],
     #           labFormat = labelFormat(transform = function(x) sort(x, decreasing = TRUE)),
-    #           title = gsub(" ", "_", input$variable2),
+    #           title = variable2(),
     #           group = "variables") %>%
     addLabelOnlyMarkers(data = neighbourhood_names(),
                         lng = ~long, lat = ~lat, label = ~lapply(name, htmltools::HTML),
@@ -174,7 +182,7 @@ maps_district_server = function(input, output, session) {
     #           lat = berlin_names[berlin_names$view == "Districts" & berlin_names$group == input$district, "lat"], 
     #           zoom = 11.5)
     
-    if (gsub(" ", "_", input$variable2) == "none") {
+    if (variable2() == "none") {
       
       secondary_map %>%
         addPolygons(data = neighbourhoods(), weight = 1, smoothFactor = 1, fillOpacity = 0.8,
@@ -189,13 +197,13 @@ maps_district_server = function(input, output, session) {
                     color = "grey",
                     fillColor = ~neighbourhood_colors_vars(listings_area_summary[listings_area_summary$view  == "Neighbourhoods" &
                                                                                    listings_area_summary$group == input$district,
-                                                                                 gsub(" ", "_", input$variable2)])) %>%
+                                                                                 variable2()])) %>%
         addLegend(position = "bottomleft", pal = neighbourhood_colors_var(),
                   values = listings_area_summary[listings_area_summary$view  == "Neighbourhoods" &
                                                    listings_area_summary$group == input$district,
-                                                 gsub(" ", "_", input$variable2)],
+                                                 variable2()],
                   labFormat = labelFormat(transform = function(x) sort(x, decreasing = TRUE)),
-                  title = gsub(" ", "_", input$variable2))
+                  title = variable2())
       
     }
     })
@@ -222,13 +230,16 @@ maps_district_server = function(input, output, session) {
 
   title_secondary_table_change = reactive({
     
-    factor_vars <- c("room_type", "property_type", "room_type")
+    factor_vars = listings %>%
+      dplyr::select(-id, -listing_url, -long, -lat, -vbb_zone, -district, -neighbourhood) %>%
+      dplyr::select_if(function(x) is.character(x) | is.factor(x) | is.logical(x)) %>%
+      names()
     
-    if (gsub(" ", "_", input$variable2) == "none") { return() }
+    if (variable2() == "none") { return() }
     
-    if (grepl(paste(factor_vars, collapse = "|"), gsub(" ", "_", input$variable2))) {
+    if (grepl(paste(factor_vars, collapse = "|"), variable2())) {
       
-      variable = stringr::str_match(gsub(" ", "_", input$variable2), paste(factor_vars, collapse = "|")) %>% 
+      variable = stringr::str_match(variable2(), paste(factor_vars, collapse = "|")) %>% 
         c() %>% gsub("_", " ", .) %>% capwords()
       
     } else {
@@ -251,15 +262,15 @@ maps_district_server = function(input, output, session) {
     
     factor_vars <- c("room_type", "property_type", "room_type")
     
-    if (gsub(" ", "_", input$variable2) == "none") { return() }
+    if (variable2() == "none") { return() }
     
-    if (grepl(paste(factor_vars, collapse = "|"), gsub(" ", "_", input$variable2))) {
+    if (grepl(paste(factor_vars, collapse = "|"), variable2())) {
       
-      variable = stringr::str_match(gsub(" ", "_", input$variable2), paste(factor_vars, collapse = "|")) %>% c()
+      variable = stringr::str_match(variable2(), paste(factor_vars, collapse = "|")) %>% c()
       
     } else {
       
-      variable = gsub(" ", "_", input$variable2)
+      variable = variable2()
       
     }
     
@@ -273,11 +284,11 @@ maps_district_server = function(input, output, session) {
     
     factor_vars <- c("room_type", "property_type", "room_type")
     
-    if (gsub(" ", "_", input$variable2) == "none") { return() }
+    if (variable2() == "none") { return() }
     
-    if (grepl(paste(factor_vars, collapse = "|"), gsub(" ", "_", input$variable2))) {
+    if (grepl(paste(factor_vars, collapse = "|"), variable2())) {
       
-      variable = stringr::str_match(gsub(" ", "_", input$variable2), paste(factor_vars, collapse = "|")) %>% c()
+      variable = stringr::str_match(variable2(), paste(factor_vars, collapse = "|")) %>% c()
       
       secondary_df  = summary_stat_fact(df               = listings,
                                         var              = variable,
@@ -286,7 +297,7 @@ maps_district_server = function(input, output, session) {
       
     } else {
       
-      variable = gsub(" ", "_", input$variable2)
+      variable = variable2()
       
       secondary_df  = summary_stat_num(df               = listings,
                                        var              = variable,
@@ -305,11 +316,11 @@ maps_district_server = function(input, output, session) {
     
     factor_vars <- c("room_type", "property_type", "room_type")
     
-    if (gsub(" ", "_", input$variable2) == "none") { return() }
+    if (variable2() == "none") { return() }
     
-    if (grepl(paste(factor_vars, collapse = "|"), gsub(" ", "_", input$variable2))) {
+    if (grepl(paste(factor_vars, collapse = "|"), variable2())) {
       
-      variable = stringr::str_match(gsub(" ", "_", input$variable2), paste(factor_vars, collapse = "|")) %>% 
+      variable = stringr::str_match(variable2(), paste(factor_vars, collapse = "|")) %>% 
         c() %>% gsub("_", " ", .) %>% capwords()
       
     } else {
@@ -333,11 +344,11 @@ maps_district_server = function(input, output, session) {
     
     factor_vars <- c("room_type", "property_type", "room_type")
     
-    if (gsub(" ", "_", input$variable2) == "none") { 
+    if (variable2() == "none") { 
       
       return() 
       
-    } else if (grepl(paste(factor_vars, collapse = "|"), gsub(" ", "_", input$variable2))) {
+    } else if (grepl(paste(factor_vars, collapse = "|"), variable2())) {
       
       variable = var_table_plot2() %>% sym()
       
@@ -372,11 +383,11 @@ maps_district_server = function(input, output, session) {
     
     factor_vars <- c("room_type", "property_type", "room_type")
     
-    if (gsub(" ", "_", input$variable2) == "none") { 
+    if (variable2() == "none") { 
       
       return() 
       
-    } else if (grepl(paste(factor_vars, collapse = "|"), gsub(" ", "_", input$variable2))) {
+    } else if (grepl(paste(factor_vars, collapse = "|"), variable2())) {
       
       ggplot(plot_df()) +
         geom_bar(aes(x = var, y = count), fill = "green", stat = "identity") +

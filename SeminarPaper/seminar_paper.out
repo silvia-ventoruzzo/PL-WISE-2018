@@ -1,13 +1,15 @@
-\BOOKMARK [1][-]{section*.1}{List of Abbreviations}{}% 1
-\BOOKMARK [1][-]{section*.2}{List of Figures}{}% 2
-\BOOKMARK [1][-]{section*.3}{List of Tables}{}% 3
-\BOOKMARK [1][-]{section.1}{Introduction}{}% 4
-\BOOKMARK [1][-]{section.2}{Data}{}% 5
-\BOOKMARK [1][-]{section.3}{Data Preparation}{}% 6
-\BOOKMARK [2][-]{subsection.3.1}{Berlin neighbourhoods and districts}{section.3}% 7
-\BOOKMARK [2][-]{subsection.3.2}{Berlin VBB Areas}{section.3}% 8
-\BOOKMARK [2][-]{subsection.3.3}{airbnb listings' attributes}{section.3}% 9
-\BOOKMARK [1][-]{section.4}{Functions}{}% 10
-\BOOKMARK [1][-]{section.5}{Results}{}% 11
-\BOOKMARK [1][-]{section.6}{Conclusions}{}% 12
-\BOOKMARK [1][-]{section.6}{References}{}% 13
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Data Preparation}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Berlin neighbourhoods and districts}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Berlin VBB Areas}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Airbnb listings' attributes}{section.2}% 5
+\BOOKMARK [1][-]{section.3}{Exploratory Data Analysis}{}% 6
+\BOOKMARK [2][-]{subsection.3.1}{Descriptive statistics}{section.3}% 7
+\BOOKMARK [2][-]{subsection.3.2}{Distribution plots}{section.3}% 8
+\BOOKMARK [1][-]{section.4}{Price analysis}{}% 9
+\BOOKMARK [2][-]{subsection.4.1}{Correlation with price}{section.4}% 10
+\BOOKMARK [2][-]{subsection.4.2}{Linear regression on price}{section.4}% 11
+\BOOKMARK [1][-]{section.5}{Clustering}{}% 12
+\BOOKMARK [1][-]{section.6}{ShinyApp}{}% 13
+\BOOKMARK [1][-]{section.7}{Results and Conclusions}{}% 14
+\BOOKMARK [1][-]{section.7}{References}{}% 15

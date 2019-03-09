@@ -1,6 +1,7 @@
 # Install and load needed packages
 needed_packages <- c("tidyverse",
-                     "rstudioapi")
+                     "rstudioapi",
+                     "corrplot")
 for (package in needed_packages) {
   if (!require(package, character.only=TRUE)) {install.packages(package, character.only=TRUE)}
   library(package, character.only=TRUE)
@@ -16,7 +17,7 @@ rm("needed_packages", "package")
   setwd(dirname(sys.frame(1)$ofile))
 
 # Load helper functions and other scripts
-source("airbnb_listings_summaries.R", chdir = TRUE)
+source("exploratory_data_analysis.R", chdir = TRUE)
 source(file.path(getwd(), "Helpers", "from_row_to_col.R", fsep="/"))
 source(file.path(getwd(), "Helpers", "recode_all.R", fsep="/"))
 
@@ -27,6 +28,9 @@ listings_price <- listings %>%
   recode_all("room_type") %>% from_row_to_col("room_type") %>%
   recode_all("property_type") %>% from_row_to_col("property_type") %>%
   recode_all("cancellation_policy") %>% from_row_to_col("cancellation_policy") %>%
+  recode_all("security_deposit_yn") %>% from_row_to_col("security_deposit_yn") %>%
+  recode_all("cleaning_fee_yn") %>% from_row_to_col("cleaning_fee_yn") %>%
+  recode_all("reviewed_yn") %>% from_row_to_col("reviewed_yn") %>%
   recode_all("district") %>% from_row_to_col("district") %>%
   recode_all("vbb_zone") %>% from_row_to_col("vbb_zone") %>%
   dplyr::select(-id, -lat, -long, -listing_url, -neighbourhood)
@@ -40,27 +44,36 @@ listings_price_correlation = cor(listings_price$price, listings_price) %>%
   dplyr::filter(variable != "price") %>%
   dplyr::mutate(sign = ifelse(corr > 0, "positive",
                               ifelse(corr < 0, "negative",
-                                     "null")))
+                                     "null"))) %>%
+  dplyr::arrange(variable)
 
 print("Finished calculating price correlation.")
 
 # Plot correlation
+# Example corrplot
+listings %>%
+  dplyr::select(price, accommodates, bedrooms, beds, minimum_nights, 
+                attraction_count, attraction_dist, station_count, station_dist) %>%
+  cor() %>%
+  corrplot(method = "circle", type = "upper")
+dev.copy2pdf(file = "./SeminarPaper/corrplot.pdf")
+dev.off()
+
+# Correlation with price plot
 listings_price_correlation %>%
   dplyr::mutate(corr = abs(corr)) %>%
   ggplot(aes(x = variable, y = corr, fill = sign)) +
   geom_bar(stat="identity") +
   scale_fill_manual("sign", values = c("positive" = "green4", "negative" = "red1", "null" = "blue3")) +
-  # coord_flip() +
-  labs(x = "variables", y = "correlation with price") +
+  coord_flip() +
+  labs(x = "variables", y = "correlation", title = "Correlation with price") +
   theme_bw() +
   # coord_fixed(ylim = length(unique(listings_price_correlation$variable))) +
   # expand_limits(x = 3*ncol(listings_price_correlation)) +
-  theme(axis.text.x     = element_text(colour = ifelse(listings_price_correlation$corr > 0, "green4",
-                                                ifelse(listings_price_correlation$corr < 0, "red1",
-                                                                                            "blue3")),
-                                   size = rel(1.5),
-                                   angle = 90, hjust = 1),
-        axis.text.y     = element_text(size = rel(1.5)),
+  theme(axis.text.y     = element_text(color = ifelse(listings_price_correlation$sign == "positive", "green4",
+                                              ifelse(listings_price_correlation$sign == "negative", "red1",
+                                                                                            "blue3"))),
+        axis.text.x     = element_text(size = rel(1.5)),
         axis.title.x    = element_text(size = rel(1.5)),
         axis.title.y    = element_text(size = rel(1.5)),
         legend.text     = element_text(size = rel(1.2)),
@@ -70,6 +83,8 @@ listings_price_correlation %>%
         legend.position = "bottom") +
   scale_y_continuous(expand = expand_scale(mult = c(0, 0.05))) 
   
+dev.copy2pdf(file = "./SeminarPaper/price_correlation.pdf")
+dev.off()
 
 ## Linear regression
 

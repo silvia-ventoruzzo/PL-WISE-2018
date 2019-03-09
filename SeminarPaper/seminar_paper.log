@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.17)  8 MAR 2019 15:45
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.17)  9 MAR 2019 17:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -684,7 +684,14 @@ Package scrpage2 Warning: usage of obsolete package!
 (scrpage2)                You should replace usage of package `scrpage2'
 (scrpage2)                by `scrlayer-scrpage' on input line 52.
 
-) (./seminar_paper.aux)
+) (./seminar_paper.aux
+
+LaTeX Warning: Label `figure:room_type' multiply defined.
+
+
+LaTeX Warning: Label `figure:room_type' multiply defined.
+
+)
 \openout1 = `seminar_paper.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 99.
@@ -701,8 +708,7 @@ LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 99.
 LaTeX Font Info:    ... okay on input line 99.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 99.
 LaTeX Font Info:    ... okay on input line 99.
-
-(/usr/local/texlive/2018/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+ (/usr/local/texlive/2018/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count154
 \scratchdimen=\dimen191
@@ -768,7 +774,7 @@ Package scrpage2 Warning: seems you are using a very small headheight.
 (scrpage2)                A better solution would be to use typearea package.
 
 (./titlepage.tex
-<hulogo.pdf, id=60, 130.88197pt x 130.88197pt>
+<hulogo.pdf, id=68, 130.88197pt x 130.88197pt>
 File: hulogo.pdf Graphic file (type pdf)
 <use hulogo.pdf>
 Package pdftex.def Info: hulogo.pdf  used on input line 3.
@@ -777,17 +783,17 @@ Package pdftex.def Info: hulogo.pdf  used on input line 3.
 
 {/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./hulog
 o.pdf>] (./seminar_paper.toc
-LaTeX Font Info:    Try loading font information for U+msa on input line 8.
+LaTeX Font Info:    Try loading font information for U+msa on input line 4.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 8.
+LaTeX Font Info:    Try loading font information for U+msb on input line 4.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for U+rsfs on input line 8.
+LaTeX Font Info:    Try loading font information for U+rsfs on input line 4.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/jknapltx/ursfs.fd
 File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
@@ -799,35 +805,20 @@ File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[2] (./abbreviations.tex)
-Overfull \vbox (6.78236pt too high) has occurred while \output is active []
-
-
-[3
-
-] (./seminar_paper.lof)
-\tf@lof=\write6
-\openout6 = `seminar_paper.lof'.
-
-
-Overfull \vbox (6.78236pt too high) has occurred while \output is active []
-
-
-[4] (./seminar_paper.lot)
-\tf@lot=\write7
-\openout7 = `seminar_paper.lot'.
-
-
-Overfull \vbox (6.78236pt too high) has occurred while \output is active []
-
-
-[5] (./intro.tex
+[2] (./intro.tex
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 5.
  (/usr/local/texlive/2018/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 5.
+
+
+LaTeX Warning: Reference `Sec:Data' on page 1 undefined on input line 22.
+
+
+LaTeX Warning: Reference `Sec:Results' on page 1 undefined on input line 23.
+
 )
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
@@ -835,30 +826,13 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.157 \newpage
-               [1] (./data.tex) (./data_preparation.tex
-Overfull \vbox (6.78236pt too high) has occurred while \output is active []
+l.129 \newpage
+               [1
 
-pdfTeX warning (ext4): destination with the same identifier (name{page.2}) has 
-been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.119 
-       [2]
-Overfull \vbox (1351.93324pt too high) has occurred while \output is active []
+] (./data_preparation.tex
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 16.
 
-
-Overfull \vbox (6.78236pt too high) has occurred while \output is active []
-
-pdfTeX warning (ext4): destination with the same identifier (name{page.3}) has 
-been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.119 
-       [3]
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 120.
-
- (/usr/local/texlive/2018/texmf-dist/tex/latex/base/t1cmtt.fd
+(/usr/local/texlive/2018/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 (/usr/local/texlive/2018/texmf-dist/tex/latex/listings/lstlang1.sty
@@ -871,144 +845,257 @@ File: lstlang2.sty 2015/06/04 1.6 listings language file
 File: lstlang3.sty 2015/06/04 1.6 listings language file
 )
 Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
-nput line 122.
+nput line 18.
 
-(../Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R)
 (../Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R)
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
-pdfTeX warning (ext4): destination with the same identifier (name{page.4}) has 
+pdfTeX warning (ext4): destination with the same identifier (name{page.2}) has 
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.150 ...rhoods/berlin_districts_neighbourhoods.R}
-                                                   [4]
+l.42 ...urhoods/berlin_districts_neighbourhoods.R}
+                                                   [2]
 (../Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R)
-<berlin_district_leaflet.pdf, id=174, 995.72pt x 746.79pt>
+(../Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R)
+<berlin_district_leaflet.pdf, id=139, 995.72pt x 746.79pt>
 File: berlin_district_leaflet.pdf Graphic file (type pdf)
 <use berlin_district_leaflet.pdf>
-Package pdftex.def Info: berlin_district_leaflet.pdf  used on input line 157.
+Package pdftex.def Info: berlin_district_leaflet.pdf  used on input line 54.
 (pdftex.def)             Requested size: 173.44835pt x 130.08621pt.
-<berlin_district_ggplot.pdf, id=175, 514.92375pt x 495.8525pt>
+<berlin_district_ggplot.pdf, id=140, 514.92375pt x 495.8525pt>
 File: berlin_district_ggplot.pdf Graphic file (type pdf)
 <use berlin_district_ggplot.pdf>
-Package pdftex.def Info: berlin_district_ggplot.pdf  used on input line 158.
+Package pdftex.def Info: berlin_district_ggplot.pdf  used on input line 55.
 (pdftex.def)             Requested size: 135.087pt x 130.08621pt.
-<qletlogo.pdf, id=176, 198.49156pt x 205.26688pt>
+<qletlogo.pdf, id=141, 198.49156pt x 205.26688pt>
 File: qletlogo.pdf Graphic file (type pdf)
 <use qletlogo.pdf>
-Package pdftex.def Info: qletlogo.pdf  used on input line 159.
+Package pdftex.def Info: qletlogo.pdf  used on input line 56.
 (pdftex.def)             Requested size: 9.92516pt x 10.26393pt.
 File: qletlogo.pdf Graphic file (type pdf)
 <use qletlogo.pdf>
-Package pdftex.def Info: qletlogo.pdf  used on input line 159.
+Package pdftex.def Info: qletlogo.pdf  used on input line 56.
 (pdftex.def)             Requested size: 9.92516pt x 10.26393pt.
-<S_und_U-Bahnnetz_mit_Regionalbahn_Innenstadt.pdf, id=180, 1195.01462pt x 845.0
+
+Overfull \vbox (6.78236pt too high) has occurred while \output is active []
+
+
+[3 <./berlin_district_leaflet.pdf> <./berlin_district_ggplot.pdf> <./qletlogo.p
+df>]
+<S_und_U-Bahnnetz_mit_Regionalbahn_Innenstadt.pdf, id=190, 1195.01462pt x 845.0
 471pt>
 File: S_und_U-Bahnnetz_mit_Regionalbahn_Innenstadt.pdf Graphic file (type pdf)
 <use S_und_U-Bahnnetz_mit_Regionalbahn_Innenstadt.pdf>
 Package pdftex.def Info: S_und_U-Bahnnetz_mit_Regionalbahn_Innenstadt.pdf  used
- on input line 169.
+ on input line 66.
 (pdftex.def)             Requested size: 352.8155pt x 249.49304pt.
-
+ (../Berlin_VBB_Zones/berlin_vbb_zones.R)
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
-pdfTeX warning (ext4): destination with the same identifier (name{page.5}) has 
-been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.173 
-       [5 <./berlin_district_leaflet.pdf> <./berlin_district_ggplot.pdf> <./qle
-tlogo.pdf>] (../Berlin_VBB_Zones/berlin_vbb_zones.R)
+
+[4 <./S_und_U-Bahnnetz_mit_Regionalbahn_Innenstadt.pdf>]
+(../Berlin_VBB_Zones/berlin_vbb_zones.R)
+(../Berlin_VBB_Zones/berlin_vbb_zones.R)
 (../Berlin_VBB_Zones/berlin_vbb_zones.R
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[6 <./S_und_U-Bahnnetz_mit_Regionalbahn_Innenstadt.pdf>])
-(../Berlin_VBB_Zones/berlin_vbb_zones.R)
-(../Berlin_VBB_Zones/berlin_vbb_zones.R)
-Overfull \vbox (6.78236pt too high) has occurred while \output is active []
-
-
-[7] (../Berlin_VBB_Zones/berlin_vbb_zones.R)
+[5]) (../Berlin_VBB_Zones/berlin_vbb_zones.R)
 (../Berlin_VBB_Zones/berlin_vbb_zones.R)
 (../Berlin_VBB_Zones/Helpers/points_midpoint.R
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[8])
-<berlin_vbb_zones_leaflet.pdf, id=384, 995.72pt x 746.79pt>
+[6])
+<berlin_vbb_zones_leaflet.pdf, id=357, 995.72pt x 746.79pt>
 File: berlin_vbb_zones_leaflet.pdf Graphic file (type pdf)
 <use berlin_vbb_zones_leaflet.pdf>
-Package pdftex.def Info: berlin_vbb_zones_leaflet.pdf  used on input line 212.
+Package pdftex.def Info: berlin_vbb_zones_leaflet.pdf  used on input line 109.
 (pdftex.def)             Requested size: 173.44835pt x 130.08621pt.
-<berlin_vbb_zones_ggplot.pdf, id=385, 514.92375pt x 495.8525pt>
+<berlin_vbb_zones_ggplot.pdf, id=358, 514.92375pt x 495.8525pt>
 File: berlin_vbb_zones_ggplot.pdf Graphic file (type pdf)
 <use berlin_vbb_zones_ggplot.pdf>
-Package pdftex.def Info: berlin_vbb_zones_ggplot.pdf  used on input line 213.
+Package pdftex.def Info: berlin_vbb_zones_ggplot.pdf  used on input line 110.
 (pdftex.def)             Requested size: 135.087pt x 130.08621pt.
- (../Helpers/point_in_polygons.R
-Overfull \vbox (6.78236pt too high) has occurred while \output is active []
-
-
-[9 <./berlin_vbb_zones_leaflet.pdf> <./berlin_vbb_zones_ggplot.pdf>])
-(../Helpers/distance_count.R
-Overfull \vbox (6.78236pt too high) has occurred while \output is active []
-
-
-[10])
-
-Package natbib Warning: Citation `haversine:2013' on page 11 undefined on input
- line 241.
-
-) (./methods.tex
-Overfull \vbox (6.78236pt too high) has occurred while \output is active []
-
-
-[11])
-Overfull \vbox (6.78236pt too high) has occurred while \output is active []
-
-
-[12] (./results.tex
-<graph.pdf, id=541, 361.35pt x 303.1325pt>
-File: graph.pdf Graphic file (type pdf)
-<use graph.pdf>
-Package pdftex.def Info: graph.pdf  used on input line 20.
-(pdftex.def)             Requested size: 180.67456pt x 151.56587pt.
+File: qletlogo.pdf Graphic file (type pdf)
+<use qletlogo.pdf>
+Package pdftex.def Info: qletlogo.pdf  used on input line 111.
+(pdftex.def)             Requested size: 9.92516pt x 10.26393pt.
+File: qletlogo.pdf Graphic file (type pdf)
+<use qletlogo.pdf>
+Package pdftex.def Info: qletlogo.pdf  used on input line 111.
+(pdftex.def)             Requested size: 9.92516pt x 10.26393pt.
 
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[13 <./graph.pdf>]) (./conc.tex)
+[7 <./berlin_vbb_zones_leaflet.pdf> <./berlin_vbb_zones_ggplot.pdf>]
+(../Helpers/point_in_polygons.R)
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[14] (./seminar_paper.bbl)
+[8] (../Helpers/distance_count.R)
+
+Package natbib Warning: Citation `haversine:2013' on page 9 undefined on input 
+line 138.
+
+) (./eda.tex
+
+LaTeX Warning: Reference `corr' on page 9 undefined on input line 3.
+
+
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[15] (./authorship.tex)
+[9]
+
+Package natbib Warning: Citation `descrstat:2014' on page 10 undefined on input
+ line 7.
+
+
+Package natbib Warning: Citation `descrstat:2014' on page 10 undefined on input
+ line 9.
+
+
+LaTeX Warning: Reference `distrplots' on page 10 undefined on input line 17.
+
+(../Helpers/getmode.R)
+Overfull \vbox (6.78236pt too high) has occurred while \output is active []
+
+
+[10] (../Helpers/getmode.R)
+<price_distribution_complete.pdf, id=534, 514.92375pt x 414.54875pt>
+File: price_distribution_complete.pdf Graphic file (type pdf)
+<use price_distribution_complete.pdf>
+Package pdftex.def Info: price_distribution_complete.pdf  used on input line 67
+.
+(pdftex.def)             Requested size: 247.38844pt x 199.16928pt.
+<price_distribution_nooutliers.pdf, id=535, 514.92375pt x 414.54875pt>
+File: price_distribution_nooutliers.pdf Graphic file (type pdf)
+<use price_distribution_nooutliers.pdf>
+Package pdftex.def Info: price_distribution_nooutliers.pdf  used on input line 
+68.
+(pdftex.def)             Requested size: 247.38844pt x 199.16928pt.
+
+Overfull \hbox (53.75917pt too wide) in paragraph at lines 67--69
+ [][][][] 
+ []
+
+File: qletlogo.pdf Graphic file (type pdf)
+<use qletlogo.pdf>
+Package pdftex.def Info: qletlogo.pdf  used on input line 69.
+(pdftex.def)             Requested size: 9.92516pt x 10.26393pt.
+File: qletlogo.pdf Graphic file (type pdf)
+<use qletlogo.pdf>
+Package pdftex.def Info: qletlogo.pdf  used on input line 69.
+(pdftex.def)             Requested size: 9.92516pt x 10.26393pt.
+
+Overfull \vbox (6.78236pt too high) has occurred while \output is active []
+
+
+[11]
+<room_type_distribution.pdf, id=555, 514.92375pt x 414.54875pt>
+File: room_type_distribution.pdf Graphic file (type pdf)
+<use room_type_distribution.pdf>
+Package pdftex.def Info: room_type_distribution.pdf  used on input line 80.
+(pdftex.def)             Requested size: 220.50885pt x 177.51872pt.
+File: qletlogo.pdf Graphic file (type pdf)
+<use qletlogo.pdf>
+Package pdftex.def Info: qletlogo.pdf  used on input line 81.
+(pdftex.def)             Requested size: 9.92516pt x 10.26393pt.
+File: qletlogo.pdf Graphic file (type pdf)
+<use qletlogo.pdf>
+Package pdftex.def Info: qletlogo.pdf  used on input line 81.
+(pdftex.def)             Requested size: 9.92516pt x 10.26393pt.
+<price_map_distr.pdf, id=558, 995.72pt x 746.79pt>
+File: price_map_distr.pdf Graphic file (type pdf)
+<use price_map_distr.pdf>
+Package pdftex.def Info: price_map_distr.pdf  used on input line 90.
+(pdftex.def)             Requested size: 220.50885pt x 165.37683pt.
+)
+Overfull \vbox (6.78236pt too high) has occurred while \output is active []
+
+
+[12 <./price_distribution_complete.pdf> <./price_distribution_nooutliers.pdf> <
+./room_type_distribution.pdf>]
+Overfull \vbox (6.78236pt too high) has occurred while \output is active []
+
+
+[13 <./price_map_distr.pdf>] (./price.tex
+<corrplot.pdf, id=713, 514.92375pt x 414.54875pt>
+File: corrplot.pdf Graphic file (type pdf)
+<use corrplot.pdf>
+Package pdftex.def Info: corrplot.pdf  used on input line 17.
+(pdftex.def)             Requested size: 220.50885pt x 177.51872pt.
+<price_correlation.pdf, id=714, 514.92375pt x 495.8525pt>
+File: price_correlation.pdf Graphic file (type pdf)
+<use price_correlation.pdf>
+Package pdftex.def Info: price_correlation.pdf  used on input line 30.
+(pdftex.def)             Requested size: 352.8155pt x 339.75528pt.
+
+Overfull \vbox (6.78236pt too high) has occurred while \output is active []
+
+
+[14 <./corrplot.pdf>])
+Overfull \vbox (6.78236pt too high) has occurred while \output is active []
+
+
+[15 <./price_correlation.pdf>] (./cluster.tex)
+Overfull \vbox (6.78236pt too high) has occurred while \output is active []
+
+
+[16] (./shiny.tex
+<shiny_example.png, id=740, 909.3975pt x 451.6875pt>
+File: shiny_example.png Graphic file (type png)
+<use shiny_example.png>
+Package pdftex.def Info: shiny_example.png  used on input line 43.
+(pdftex.def)             Requested size: 264.61331pt x 131.42711pt.
+
+Overfull \vbox (6.78236pt too high) has occurred while \output is active []
+
+
+[17])
+Overfull \vbox (6.78236pt too high) has occurred while \output is active []
+
+
+[18 <./shiny_example.png>] (./conc.tex)
+Overfull \vbox (6.78236pt too high) has occurred while \output is active []
+
+
+[19] (./seminar_paper.bbl)
+Overfull \vbox (6.78236pt too high) has occurred while \output is active []
+
+
+[20] (./authorship.tex)
 
 Package natbib Warning: There were undefined citations.
 
-[16]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 188.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 188.
+[21]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 164.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 164.
  (./seminar_paper.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 188.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 188.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 164.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 164.
 Package rerunfilecheck Info: File `seminar_paper.out' has not changed.
-(rerunfilecheck)             Checksum: E65787393195C8934530B8B4791428BF;701.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 188.
+(rerunfilecheck)             Checksum: 43BBED2359F98BB9D73132F4828C0FA0;913.
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 164.
  ) 
 Here is how much of TeX's memory you used:
- 21272 strings out of 492649
- 374732 string characters out of 6129621
- 739184 words of memory out of 5000000
- 24505 multiletter control sequences out of 15000+600000
- 23748 words of font info for 58 fonts, out of 8000000 for 9000
+ 21389 strings out of 492649
+ 376874 string characters out of 6129621
+ 733184 words of memory out of 5000000
+ 24569 multiletter control sequences out of 15000+600000
+ 23432 words of font info for 57 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 55i,11n,54p,15177b,1930s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 55i,11n,54p,15177b,1928s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}
 </usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
 /usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></
@@ -1016,32 +1103,30 @@ usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></us
 r/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/
 local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/loc
 al/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/loca
-l/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/
-texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx0900.pfb></usr/local/te
-xlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx1095.pfb></usr/local/texl
-ive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texliv
-e/2018/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/
-2018/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb></usr/local/texlive/20
-18/texmf-dist/fonts/type1/public/cm-super/sfcc1095.pfb></usr/local/texlive/2018
-/texmf-dist/fonts/type1/public/cm-super/sfcc1200.pfb></usr/local/texlive/2018/t
-exmf-dist/fonts/type1/public/cm-super/sfcc1440.pfb></usr/local/texlive/2018/tex
-mf-dist/fonts/type1/public/cm-super/sfcc1728.pfb></usr/local/texlive/2018/texmf
--dist/fonts/type1/public/cm-super/sfit0900.pfb></usr/local/texlive/2018/texmf-d
-ist/fonts/type1/public/cm-super/sfit1095.pfb></usr/local/texlive/2018/texmf-dis
-t/fonts/type1/public/cm-super/sfrm0900.pfb></usr/local/texlive/2018/texmf-dist/
-fonts/type1/public/cm-super/sfrm1095.pfb></usr/local/texlive/2018/texmf-dist/fo
-nts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2018/texmf-dist/font
-s/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2018/texmf-dist/fonts/
-type1/public/cm-super/sfsl1095.pfb></usr/local/texlive/2018/texmf-dist/fonts/ty
-pe1/public/cm-super/sfti1095.pfb></usr/local/texlive/2018/texmf-dist/fonts/type
-1/public/cm-super/sfti1440.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/
-public/cm-super/sftt0800.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/pu
-blic/cm-super/sftt0900.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/publ
-ic/cm-super/sftt1095.pfb>
-Output written on seminar_paper.pdf (21 pages, 1420574 bytes).
+l/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx0900.pfb></usr/local/
+texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx1095.pfb></usr/local/te
+xlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texl
+ive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texliv
+e/2018/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb></usr/local/texlive/
+2018/texmf-dist/fonts/type1/public/cm-super/sfcc1095.pfb></usr/local/texlive/20
+18/texmf-dist/fonts/type1/public/cm-super/sfcc1200.pfb></usr/local/texlive/2018
+/texmf-dist/fonts/type1/public/cm-super/sfcc1440.pfb></usr/local/texlive/2018/t
+exmf-dist/fonts/type1/public/cm-super/sfcc1728.pfb></usr/local/texlive/2018/tex
+mf-dist/fonts/type1/public/cm-super/sfit0900.pfb></usr/local/texlive/2018/texmf
+-dist/fonts/type1/public/cm-super/sfrm0900.pfb></usr/local/texlive/2018/texmf-d
+ist/fonts/type1/public/cm-super/sfrm1095.pfb></usr/local/texlive/2018/texmf-dis
+t/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2018/texmf-dist/
+fonts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2018/texmf-dist/fo
+nts/type1/public/cm-super/sfsl1095.pfb></usr/local/texlive/2018/texmf-dist/font
+s/type1/public/cm-super/sfti1095.pfb></usr/local/texlive/2018/texmf-dist/fonts/
+type1/public/cm-super/sfti1440.pfb></usr/local/texlive/2018/texmf-dist/fonts/ty
+pe1/public/cm-super/sftt0800.pfb></usr/local/texlive/2018/texmf-dist/fonts/type
+1/public/cm-super/sftt0900.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/
+public/cm-super/sftt1095.pfb>
+Output written on seminar_paper.pdf (23 pages, 2136833 bytes).
 PDF statistics:
- 703 PDF objects out of 1000 (max. 8388607)
- 583 compressed objects within 6 object streams
- 190 named destinations out of 1000 (max. 500000)
- 167 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 925 PDF objects out of 1000 (max. 8388607)
+ 735 compressed objects within 8 object streams
+ 237 named destinations out of 1000 (max. 500000)
+ 213 words of extra memory for PDF output out of 10000 (max. 10000000)
 

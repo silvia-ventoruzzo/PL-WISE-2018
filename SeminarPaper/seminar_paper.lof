@@ -1,9 +1,16 @@
 \babel@toc {english}{}
-\contentsline {figure}{\numberline {1}{\ignorespaces Maps of the Berlin Districts \includegraphics [scale=0.05]{qletlogo.pdf} {\href {https://github.com/thsis/SPL_WS1718/blob/master/CART/cart_modell_fin.R}{cart\_modell\_fin.R}}\relax }}{5}{figure.caption.7}
-\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {With \texttt {leaflet}}}}{5}{subfigure.1.1}
-\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {With \texttt {ggplot}}}}{5}{subfigure.1.2}
-\contentsline {figure}{\numberline {2}{\ignorespaces Network Map of Berlin Areas A and B (from \href {https://www.vbb.de/en/timetables/network-maps}{VBB Website})\relax }}{6}{figure.caption.8}
-\contentsline {figure}{\numberline {3}{\ignorespaces Maps of the Berlin VBB Zones\relax }}{9}{figure.caption.9}
-\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {With \texttt {leaflet}}}}{9}{subfigure.3.1}
-\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {With \texttt {ggplot}}}}{9}{subfigure.3.2}
-\contentsline {figure}{\numberline {4}{\ignorespaces Estimated residuals from model XXX. ...\relax }}{13}{figure.caption.10}
+\contentsline {figure}{\numberline {1}{\ignorespaces Maps of the Berlin Districts \includegraphics [scale=0.05]{qletlogo.pdf} {\href {https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods_maps.R}{berlin\_districts\_neighbourhoods\_maps.R}}\relax }}{3}{figure.caption.6}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {With \texttt {leaflet}}}}{3}{subfigure.1.1}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {With \texttt {ggplot}}}}{3}{subfigure.1.2}
+\contentsline {figure}{\numberline {2}{\ignorespaces Network Map of Berlin Areas A and B (from \href {https://www.vbb.de/en/timetables/network-maps}{VBB Website})\relax }}{4}{figure.caption.7}
+\contentsline {figure}{\numberline {3}{\ignorespaces Maps of the Berlin VBB Zones \includegraphics [scale=0.05]{qletlogo.pdf} {\href {https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_VBB_Zones/berlin_vbb_zones_maps.R}{berlin\_vbb\_zones\_maps.R}}\relax }}{7}{figure.caption.8}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {With \texttt {leaflet}}}}{7}{subfigure.3.1}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {With \texttt {ggplot}}}}{7}{subfigure.3.2}
+\contentsline {figure}{\numberline {4}{\ignorespaces Distribution of the variable price \includegraphics [scale=0.05]{qletlogo.pdf} {\href {https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/exploratory_data_analysis.R}{exploratory\_data\_analysis.R}}\relax }}{12}{figure.caption.10}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Complete}}}{12}{subfigure.4.1}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Without outliers}}}{12}{subfigure.4.2}
+\contentsline {figure}{\numberline {5}{\ignorespaces Distribution of the variable room\_type \includegraphics [scale=0.05]{qletlogo.pdf} {\href {https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/exploratory_data_analysis.R}{exploratory\_data\_analysis.R}}\relax }}{12}{figure.caption.11}
+\contentsline {figure}{\numberline {6}{\ignorespaces Distribution of the average of price across Berlin's districts\relax }}{13}{figure.caption.12}
+\contentsline {figure}{\numberline {7}{\ignorespaces Correlation plot with the function \textit {corrplot} from the package \textit {corrplot} \relax }}{14}{figure.caption.13}
+\contentsline {figure}{\numberline {8}{\ignorespaces Plot of correlation with price\relax }}{15}{figure.caption.14}
+\contentsline {figure}{\numberline {9}{\ignorespaces Example of simple ShinyApp from website\relax }}{18}{figure.caption.15}

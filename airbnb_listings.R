@@ -70,7 +70,7 @@ if (!interactive()) {
 # If the number_of_reviews is zero, we set the review_scores_value to 0 meanwhile creating a variable to keep track that the listing has not been reviewed yet
 listings = listings %>%
   dplyr::mutate(review_scores_rating = ifelse(number_of_reviews == 0, 0, review_scores_rating),
-                reviewed_yn = ifelse(number_of_reviews == 0, 0, 1))
+                reviewed_yn = ifelse(number_of_reviews == 0, FALSE, TRUE))
 # For the rest, we insert the average of the review_scores_rating
 if (!interactive()) {
   listings %>%
@@ -212,36 +212,13 @@ listings_season_availability = listings_calendar %>%
   # dplyr::summarize(count = sum(available)) %>% 
   # if loading the zip use sum(available == TRUE)
   dplyr::summarize(count = sum(available == TRUE)) %>%   
-  arrange(id, year_season) %>%
-  ungroup() %>%
-  mutate(season_av =  paste(year_season, "availability", sep = "_") %>%
+  dplyr::arrange(id, year_season) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(season_av =  paste(year_season, "availability", sep = "_") %>%
            tolower() %>%
            factor(levels = unique(tolower(paste(year_season, "availability", sep = "_"))))) %>%
-  dplyr::select(-year_season) 
-
-listings_district_season_availability = listings %>%
-  select(id, district) %>%
-  inner_join(listings_season_availability, by = "id") %>%
-  group_by(district, season_av) %>%
-  dplyr::summarize(count = mean(count) %>% round(0)) %>%
-  spread(season_av, count)
-
-listings_vbb_season_availability = listings %>%
-  select(id, vbb_zone) %>%
-  inner_join(listings_season_availability, by = "id") %>%
-  group_by(vbb_zone, season_av) %>%
-  dplyr::summarize(count = mean(count) %>% round(0)) %>%
-  spread(season_av, count)
-
-listings_neighbourhood_season_availability = listings %>%
-  select(id, neighbourhood) %>%
-  inner_join(listings_season_availability, by = "id") %>%
-  group_by(neighbourhood, season_av) %>%
-  dplyr::summarize(count = mean(count) %>% round(0)) %>%
-  spread(season_av, count)
-
-listings_season_availability = listings_season_availability %>%
-  spread(season_av, count)
+  dplyr::select(-year_season) %>%
+  tidyr::spread(season_av, count)
 
 # Print code development
 print("New variables created.")
@@ -251,77 +228,7 @@ listings = listings %>%
   left_join(listings_season_availability, by = "id") %>%
   replace(is.na(.), 0)
 
-# Plot numeric variables
-if (interactive()) {
-  
-  numvar_plot = listings %>%
-    transmute(var    = price,
-              median = median(price),
-              mean   = mean(price),
-              `1Q`   = quantile(price, probs = 0.25),
-              `3Q`   = quantile(price, probs = 0.75),
-              `95P`  = quantile(price, probs = 0.95),
-              count  = sum(price > unique(`95P`)))
-  
-  numvar_plot %>%
-    ggplot() +
-    geom_density(aes(x = var), fill = "green") +
-    geom_vline(aes(xintercept = unique(median)),
-               color = "blue", linetype = "dashed") +
-    annotate(geom = "text", x = (unique(numvar_plot$median) + 2.6), y = 0,
-             label = "Median",
-             colour = "blue",
-             angle = 90, hjust = 0) +
-    geom_vline(aes(xintercept = unique(mean)),
-               color = "black", linetype = "dashed") +
-    annotate(geom = "text", x = (unique(numvar_plot$mean) + 2.6), y = 0,
-             label = "Mean",
-             colour = "black",
-             angle = 90, hjust = 0) +
-    geom_vline(aes(xintercept = `1Q`),
-               color = "red", linetype = "dashed") +
-    annotate(geom = "text", x = (unique(numvar_plot$`1Q`) + 2.6), y = 0,
-             label = "1st Quantile",
-             colour = "red",
-             angle = 90, hjust = 0) +
-    geom_vline(aes(xintercept = `3Q`),
-               color = "red", linetype = "dashed") +
-    annotate(geom = "text", x = (unique(numvar_plot$`3Q`) + 2.6), y = 0,
-             label = "3rd Quantile",
-             colour = "red",
-             angle = 90, hjust = 0) +
-    scale_x_continuous(limits = c(min(numvar_plot$var), unique(numvar_plot$`95P`))) +
-    labs(caption = paste("Left limit set to 95% percentile:", unique(numvar_plot$count), "values not displayed", sep = " "),
-         title = "Distribution of the variable price",
-         subtitle = "1st, 2nd, 3rd Quantiles and Mean also displayed",
-         x = "price") +
-    theme_bw() +
-    theme(axis.text.x = element_text(size = rel(1.5)))
-  
-  dev.copy2pdf(file = "./SeminarPaper/price_distribution.pdf")
-  
-}
-
-# Plot factor variables
-if (interactive()) {
-  
-  factvar_plot = listings %>%
-    dplyr::rename(var = room_type) %>%
-    dplyr::group_by(var) %>%
-    dplyr::summarize(count = n()) 
-  
-  ggplot(factvar_plot) +
-    geom_bar(aes(x = var, y = count), fill = "green", stat = "identity") +
-    labs(x = "room_type",
-         title = "Histogram of the variable room_type") +
-    theme_bw() +
-    theme(axis.text.x = element_text(angle = 90, hjust = 1, size = rel(1.5)))
-  
-  dev.copy2pdf(file = "./SeminarPaper/room_type_distribution.pdf")
-  
-}
-
 # Remove unnecessary objects
 rm("listings_calendar", "listings_season_availability", "stations", "berlin_neighbourhood_sf",
-   "numvar_plot", "factvar_plot", "listings_detailed", "listings_summarized")
+   "listings_detailed", "listings_summarized")
 rm(list=lsf.str()) # All functions

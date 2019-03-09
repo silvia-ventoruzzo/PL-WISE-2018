@@ -115,37 +115,9 @@
 \clearpage
 
 
-% ----------------------------------------------------
-% --- frontmatter: List of Abbreviations (not mandatory) ---
-% ----------------------------------------------------
-\newpage
-\addcontentsline{toc}{section}{List of Abbreviations}
-\ohead[]{LIST OF ABBREVIATIONS}
-\input{abbreviations}
-
-
-
-% ----------------------------------------------------
-% --- frontmatter: List of Figures (not mandatory) ---
-% ----------------------------------------------------
-\newpage
-\addcontentsline{toc}{section}{List of Figures}
-\ohead[]{\rightmark}
-\listoffigures
-
-
-
-% ---------------------------------------------------
-% --- frontmatter: List of Tables (not mandatory) ---
-% ---------------------------------------------------
-\newpage
-\addcontentsline{toc}{section}{List of Tables}
-\listoftables
-
-
 
 % -------------------------------
-% --- main body of the thesis ---
+% --- main body of the paper ---
 % -------------------------------
 \newpage
 \pagestyle{plain}
@@ -155,11 +127,15 @@
 
 \input{intro}
 \newpage
-\input{data}
 \input{data_preparation}
-\input{methods}
+\input{eda}
 \newpage
-\input{results}
+\input{price}
+\newpage
+\input{cluster}
+\newpage
+\input{shiny}
+\newpage
 \input{conc}
 
 

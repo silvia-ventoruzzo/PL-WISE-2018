@@ -44,14 +44,9 @@
         \pi]$ is the frequency and the $\gamma_j$ are the autocovariances
         of $y_t$.}
 
-\newpage
-
     \item Discuss results:
         \begin{itemize}
             \item Do the results support or do they contradict economic theory ?
-            \item What does the reader learn from the results?
-            \item Try to give an intuition for your results.
-            \item Provide robustness checks.
             \item Compare to previous research.
         \end{itemize}
 \end{itemize}

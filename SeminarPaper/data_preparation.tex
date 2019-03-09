@@ -1,5 +1,9 @@
 \section{Data Preparation}\label{Sec:Data Preparation}
 
+For the analysis explained in this paper data was downloaded for a website independent from airbnb itself. insideairbnb (\href{http://insideairbnb.com/}{insideairbnb.com}) scrapes (????) airbnb to get its data and posts it online for the public to use on own analysis, while also providing some analysis of its own.
+\\
+The data is divided according to cities and for each there is general information about the city's properties and their availability for the next year. The variables that are being kept for this analysis are listing on table 1. (HOW TO MAKE IT CHANGE NUMBER???).
+
 Even though the scraped data has already been partially .... from ...., not all information is necessary for our analysis and some feature engineering is needed.
 
 Moreover, the spatial data from the downloaded shapefiles also requires to be reprocessed.
@@ -8,114 +12,6 @@ Moreover, the spatial data from the downloaded shapefiles also requires to be re
 
 
 Berlin consists of 96 neighbourhoods (Ortsteile), which are grouped into 12 districts (Bezirke).
-
-\begin{table}[H]
-\centering
-\begin{tabular}{ll}
-  \hline \hline
-Neighbourhood & District \\ 
-  \hline
-Charlottenburg & Charlottenburg-Wilmersdorf \\ 
-  Wilmersdorf & Charlottenburg-Wilmersdorf \\ 
-  Grunewald & Charlottenburg-Wilmersdorf \\ 
-  Westend & Charlottenburg-Wilmersdorf \\ 
-  Schmargendorf & Charlottenburg-Wilmersdorf \\ 
-  Charlottenburg-Nord & Charlottenburg-Wilmersdorf \\ 
-  Halensee & Charlottenburg-Wilmersdorf \\ 
-  Friedrichshain & Friedrichshain-Kreuzberg \\ 
-  Kreuzberg & Friedrichshain-Kreuzberg \\ 
-  Friedrichsfelde & Lichtenberg \\ 
-  Karlshorst & Lichtenberg \\ 
-  Malchow & Lichtenberg \\ 
-  Wartenberg & Lichtenberg \\ 
-  Falkenberg & Lichtenberg \\ 
-  Fennpfuhl & Lichtenberg \\ 
-  Lichtenberg & Lichtenberg \\ 
-  Neu-Hohenschönhausen & Lichtenberg \\ 
-  Alt-Hohenschönhausen & Lichtenberg \\ 
-  Rummelsburg & Lichtenberg \\ 
-  Marzahn & Marzahn-Hellersdorf \\ 
-  Biesdorf & Marzahn-Hellersdorf \\ 
-  Kaulsdorf & Marzahn-Hellersdorf \\ 
-  Mahlsdorf & Marzahn-Hellersdorf \\ 
-  Hellersdorf & Marzahn-Hellersdorf \\ 
-  Mitte & Mitte \\ 
-  Moabit & Mitte \\ 
-  Hansaviertel & Mitte \\ 
-  Gesundbrunnen & Mitte \\ 
-  Tiergarten & Mitte \\ 
-  Wedding & Mitte \\ 
-  Buckow & Neukölln \\ 
-  Buckow & Neukölln \\ 
-  Gropiusstadt & Neukölln \\ 
-  Neukölln & Neukölln \\ 
-  Britz & Neukölln \\ 
-  Rudow & Neukölln \\ 
-  Blankenfelde & Pankow \\ 
-  Buch & Pankow \\ 
-  Wilhelmsruh & Pankow \\ 
-  Prenzlauer Berg & Pankow \\ 
-  Weißensee & Pankow \\ 
-  Blankenburg & Pankow \\ 
-  Heinersdorf & Pankow \\ 
-  Karow & Pankow \\ 
-  Stadtrandsiedlung Malchow & Pankow \\ 
-  Pankow & Pankow \\ 
-  Französisch Buchholz & Pankow \\ 
-  Niederschönhausen & Pankow \\ 
-  Rosenthal & Pankow \\ 
-  Konradshöhe & Reinickendorf \\ 
-  Tegel & Reinickendorf \\ 
-  Märkisches Viertel & Reinickendorf \\ 
-  Hermsdorf & Reinickendorf \\ 
-  Borsigwalde & Reinickendorf \\ 
-  Lübars & Reinickendorf \\ 
-  Reinickendorf & Reinickendorf \\ 
-  Heiligensee & Reinickendorf \\ 
-  Frohnau & Reinickendorf \\ 
-  Waidmannslust & Reinickendorf \\ 
-  Wittenau & Reinickendorf \\ 
-  Gatow & Spandau \\ 
-  Kladow & Spandau \\ 
-  Falkenhagener Feld & Spandau \\ 
-  Wilhelmstadt & Spandau \\ 
-  Spandau & Spandau \\ 
-  Haselhorst & Spandau \\ 
-  Siemensstadt & Spandau \\ 
-  Staaken & Spandau \\ 
-  Hakenfelde & Spandau \\ 
-  Steglitz & Steglitz-Zehlendorf \\ 
-  Lichterfelde & Steglitz-Zehlendorf \\ 
-  Lankwitz & Steglitz-Zehlendorf \\ 
-  Zehlendorf & Steglitz-Zehlendorf \\ 
-  Dahlem & Steglitz-Zehlendorf \\ 
-  Nikolassee & Steglitz-Zehlendorf \\ 
-  Wannsee & Steglitz-Zehlendorf \\ 
-  Friedenau & Tempelhof-Schöneberg \\ 
-  Schöneberg & Tempelhof-Schöneberg \\ 
-  Tempelhof & Tempelhof-Schöneberg \\ 
-  Mariendorf & Tempelhof-Schöneberg \\ 
-  Marienfelde & Tempelhof-Schöneberg \\ 
-  Lichtenrade & Tempelhof-Schöneberg \\ 
-  Alt-Treptow & Treptow-Köpenick \\ 
-  Plänterwald & Treptow-Köpenick \\ 
-  Johannisthal & Treptow-Köpenick \\ 
-  Adlershof & Treptow-Köpenick \\ 
-  Köpenick & Treptow-Köpenick \\ 
-  Rahnsdorf & Treptow-Köpenick \\ 
-  Müggelheim & Treptow-Köpenick \\ 
-  Schmöckwitz & Treptow-Köpenick \\ 
-  Bohnsdorf & Treptow-Köpenick \\ 
-  Baumschulenweg & Treptow-Köpenick \\ 
-  Niederschöneweide & Treptow-Köpenick \\ 
-  Altglienicke & Treptow-Köpenick \\ 
-  Oberschöneweide & Treptow-Köpenick \\ 
-  Friedrichshagen & Treptow-Köpenick \\ 
-  Grünau & Treptow-Köpenick \\ 
-   \hline \hline
-\end{tabular}
-\caption{Berlin's Neighbourhoods and Districts}
-\end{table}
 
 The polygons to plot them are extracted from the relative shapefile which is loaded with the function \texttt{st\_read} from the \texttt{sf} package to have it already as a sf polygon. 
 
@@ -138,6 +34,7 @@ Buckow              : 2   & Treptow-Köpenick          :15   & POLYGON      :97 
   (Other)             :90   & (Other)                   :32   &  \\ 
    \hline \hline
 \end{tabular}
+\caption{Summary of Berlin's \texttt{sf} object}
 \end{table}
 
 Since the polygons represent the neighbourhoods, we do not need to perform any transformation on this object. Here we keep only the variables of interest, rename them and reorder the rows.
@@ -156,7 +53,7 @@ For the districts we perform the same procedure, but this time we unite the poly
 \centering
 \subfloat[With \texttt{leaflet}]{\includegraphics[height=1.8in]{berlin_district_leaflet.pdf}}
 \subfloat[With \texttt{ggplot}]{\includegraphics[height=1.8in]{berlin_district_ggplot.pdf}}
-\caption{Maps of the Berlin Districts \protect\includegraphics[scale=0.05]{qletlogo.pdf} {\href{https://github.com/thsis/SPL_WS1718/blob/master/CART/cart_modell_fin.R}{cart\_modell\_fin.R}}}
+\caption{Maps of the Berlin Districts \protect\includegraphics[scale=0.05]{qletlogo.pdf} {\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods_maps.R}{berlin\_districts\_neighbourhoods\_maps.R}}}
 \centering
 \end{figure}
 
@@ -211,11 +108,11 @@ This sf object can be used to map the VBB zones using \texttt{leaflet} or \textt
 \centering
 \subfloat[With \texttt{leaflet}]{\includegraphics[height=1.8in]{berlin_vbb_zones_leaflet.pdf}}
 \subfloat[With \texttt{ggplot}]{\includegraphics[height=1.8in]{berlin_vbb_zones_ggplot.pdf}}
-\caption{Maps of the Berlin VBB Zones}
+\caption{Maps of the Berlin VBB Zones \protect\includegraphics[scale=0.05]{qletlogo.pdf} {\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_VBB_Zones/berlin_vbb_zones_maps.R}{berlin\_vbb\_zones\_maps.R}}}
 \centering
 \end{figure}
 
-\subsection{airbnb listings' attributes}
+\subsection{Airbnb listings' attributes}
 
 The first part of cleaning the airbnb datasets consists in joining the two containing general information according to their common variables and correcting some string values.
 Secondly, we proceed in checking for missing values and deriving that information from other correlated variables.

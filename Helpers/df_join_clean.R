@@ -31,12 +31,12 @@ df_join_clean <- function(df1, df2) {
                                             "Other", property_type))) %>%
     # security_deposit
     mutate(security_deposit_yn = ifelse(security_deposit == 0 |
-                                        is.na(security_deposit), 0, 1),
+                                        is.na(security_deposit), FALSE, TRUE),
            # cleaning_fee
            cleaning_fee_yn = ifelse(cleaning_fee == 0 |
-                                    is.na(cleaning_fee), 0, 1),
+                                    is.na(cleaning_fee), FALSE, TRUE),
            # host_is_superhost
-           host_is_superhost = ifelse(host_is_superhost == "t", 0, 1))
+           host_is_superhost = ifelse(host_is_superhost == "t", FALSE, TRUE))
   
   return(df_joined)
 }
