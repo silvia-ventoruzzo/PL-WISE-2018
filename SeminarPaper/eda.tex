@@ -1,42 +1,32 @@
 \section{Exploratory Data Analysis}\label{Sec:Exploratory}
 
-The exploratory data analysis will be divided in two parts: firstly, summary statistics are calculated for both numeric and categorical variables; secondly, density plots are produced for numerical variables and bar plots for categorical variables. Correlation will also be calculated, but only with respect to price. This subject will be dealt with in subsection \ref{corr}.
+The exploratory data analysis will be divided in two parts: subsection \ref{subsec:descriptive} will show the descriptive statistics calculated either numeric or categorical variables; subsection \ref{subsec:distrplots} will then display the distribution plots. 
+Correlation will also be calculated, but only with respect to price. This subject will be dealt with in subsection \ref{subsec:corr}.
 
 \subsection{Descriptive statistics}\label{subsec:descriptive}
 
 Descriptive statistics make the interpretation of the data easier by giving grouping it and thus providing a shorter representation of it \citep{descrstat:2014}.
 
-As in \cite{descrstat:2014} explained there are the general types of descriptive statistics:
-\begin{itemize}
+As in \cite{descrstat:2014} explained there are three general types of descriptive statistics:
+\begin{enumerate}
 \item Measures of central tendency
 \item Measures of spread
 \item Graphical displays
-\end{itemize}
+\end{enumerate}
 
 This subsection will focus on the first two, while subsection 
-\ref{distrplots} will deal with the third.
+\ref{subsec:distrplots} will deal with the third.
 
-Most of these statistics are usually applied to continuous data and even to numerical discrete data.
-For this type of data the following statistics of central tendency were calculated:
-\begin{itemize}
+Most of these statistics are usually applied to continuous data, sometimes even to numerical discrete data, but not to categorical variables. Therefore the function to calculate descriptive statistics has been split in two.
 
-\item $mean = \frac{1}{N}\sum\limits_{i=1}^{N}x_i$
-
-\item 
-
-\end{itemize}
-
-The median is also the 2nd quantile.
-
-As for spread, we can derive the range from the minimum and maximum $range = max - min$ and we calculate the 1st and 3nd quantile (the 2nd ist just the median) and their difference $IQR = 3Q - 1Q$. They correspond to the 25\% and 75\% of the values. Finally we also derive the standard deviation, which is the squared root of the variance $variance = ......$ (FORMULA OF VARIANCE)
+The first part calculate both measures of central tendency and spread of all numerical variables thanks to the function \texttt{apply}. The function \texttt{apply(X, MARGIN, FUN, ...)} calculates the function in \texttt{FUN} for all rows (\texttt{MARGIN = 1}) or columns (\texttt{MARGIN = 2}) for the data in \texttt{X}. One can add additional arguments, like the quantile probabilites in our case.
 
 
-CANNOT LOAD THE RIGHT CODE :(
-\lstinputlisting[language=R, firstline=1, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Helpers/summary_stat_num.R}{summary\_stat\_num.R}}|}]{../Helpers/getmode.R}
+\lstinputlisting[language=R, firstline=1, lastline=17, firstnumber=1, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Helpers/descriptive_statistics.R}{descriptive\_statistics.R}}|}]{../Helpers/descriptive_statistics.R}
 
-With this code one can calculate the descriptive statistics for one variable on the basis of all the data or, if both \textit{constraint\_var} and \textit{constraint\_var} are set, on the basis of some constraint on the data.
+Part of the results can be seen in table \ref{table:descrstatnum}.
 
-This function will then be applied to all the numerical variables to give a result such as in table\ref{table:sumstatnum}.
+
 
 \begin{table}[H]
 \centering
@@ -48,18 +38,17 @@ price & 0.00 & 30.00 & 45.00 & 70.00 & 9000.00 & 40.00 & 67.14 & 220.28 \\
    \hline \hline
 \end{tabular}
 \caption{Sample of descriptive table for numeric variables}
-\label{table:sumstatnum}
+\label{table:descrstatnum}
 \end{table}
 
 For categorical variables the explained statistics do not work, therefore frequencies and proportions of each factor were calculated.
 
-CANNOT LOAD THE RIGHT CODE :(
-\lstinputlisting[language=R, firstline=1, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Helpers/summary_stat_fact.R}{summary\_stat\_fact.R}}|}]{../Helpers/getmode.R}
+\lstinputlisting[language=R, firstline=20, lastline=50, firstnumber=19, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Helpers/descriptive_statistics.R}{descriptive\_statistics.R}}|}]{../Helpers/descriptive_statistics.R}
 
 
 \subsection{Distribution plots}\label{subsec:distrplots}
 
-Also for the distribution plots we distinguish between numerical and categorical variables. In the first case a frequency plot has been produced, where also mean, median, 1st and 3rd quantiles are visible.
+Also for the distribution plots we distinguish between numerical and categorical variables. In the first case a density plot has been produced, where also mean, median, 1st and 3rd quantiles are visible.
 Unfortunately, many variables present outliers, which were in some cases excluded from the plots for better visualization.
 
 \begin{figure}[H]

@@ -1,23 +1,17 @@
 \section{Data Preparation}\label{Sec:Data Preparation}
 
-For the analysis explained in this paper data was downloaded for a website independent from airbnb itself. insideairbnb (\href{http://insideairbnb.com/}{insideairbnb.com}) scrapes (????) airbnb to get its data and posts it online for the public to use on own analysis, while also providing some analysis of its own.
+For the analysis explained in this paper data was downloaded for a website independent from airbnb itself. insideairbnb \citep{airbnb} scrapes airbnb to get its data, posts it online for the public to use on own analysis, while also providing some analysis of its own.
 \\
-The data is divided according to cities and for each there is general information about the city's properties and their availability for the next year. The variables that are being kept for this analysis are listing on table 1. (HOW TO MAKE IT CHANGE NUMBER???).
-
-Even though the scraped data has already been partially .... from ...., not all information is necessary for our analysis and some feature engineering is needed.
-
-Moreover, the spatial data from the downloaded shapefiles also requires to be reprocessed.
-
-\subsection{Berlin neighbourhoods and districts}
+The data is divided according to cities and for each there is general information about the city's properties and their availability for the next year. For this analysis not all variables are being kept, the focus is indeed on the ones that might have the most affect on price. Moreover, feature engineering will also be performed to extract even more useful information. More details in subsection \ref{subsec:berlin}.
+\\
+Since we are dealing with data with coordinates, spatial data is also needed to produce a map of the location. For this purpose further data has been downloaded from the Statistics Office of Berlin-Brandenburg \citep{statberlin:2018} and Geofabrik \citep{geofabrik:2018} and further processed, as explained in subsections \ref{subsec:berlin} and \ref{subsec:vbb}.
+\\
+To handle data will be make use of functions from the different packages in the \texttt{tidyverse}, which allows for easy manipulation of the data and flexible plotting, see \cite{ross2017declutter}. For spatial data the package \texttt{sf} has been chosen, since it works well with the \texttt{tidyverse} packages and for all the other reasons listed in \cite{pebesma2018simple}.
 
 
-Berlin consists of 96 neighbourhoods (Ortsteile), which are grouped into 12 districts (Bezirke).
+\subsection{Berlin neighbourhoods and districts}\label{subsec:berlin}
 
-The polygons to plot them are extracted from the relative shapefile which is loaded with the function \texttt{st\_read} from the \texttt{sf} package to have it already as a sf polygon. 
-
-\lstinputlisting[language=R, firstline=14, lastline=14, firstnumber=1, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}{berlin\_districts\_neighbourhoods.R}}|}]{../Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}
-
-The types of objects used by and created with this package come in very handy since they look like data frames and many functions for data frames can be used on them. 
+Berlin consists of 96 neighbourhoods (Ortsteile), which are grouped into 12 districts (Bezirke). The data downloaded from  \citep{statberlin:2018} contain one polygon for each neighbourhood and additional information about them. The important variables for this analysis are showed in table \ref{table:neighbourhoods}.
 
 \begin{table}[H]
 \centering
@@ -34,32 +28,37 @@ Buckow              : 2   & Treptow-Köpenick          :15   & POLYGON      :97 
   (Other)             :90   & (Other)                   :32   &  \\ 
    \hline \hline
 \end{tabular}
-\caption{Summary of Berlin's \texttt{sf} object}
+\caption{Berlin's polygons data}
+\label{table:neighbourhoods}
 \end{table}
 
-Since the polygons represent the neighbourhoods, we do not need to perform any transformation on this object. Here we keep only the variables of interest, rename them and reorder the rows.
+The polygons have been extracted from the relative shapefile with the function \texttt{st\_read} from the \texttt{sf} package. For the neighbourhoods we simply rename the variables and keep the ones of interest.
 
-\lstinputlisting[language=R, firstline=17, lastline=26, firstnumber=4, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}{berlin\_districts\_neighbourhoods.R}}|}]{../Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}
+\lstinputlisting[language=R, firstline=18, lastline=26, firstnumber=1, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}{berlin\_districts\_neighbourhoods.R}}|}]{../Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}
 
-However, we have the problem with the neighbourhood Buckow, is composed of two separate
-parts. Therefore we need to unite the neighbourhoods according to their name. In this way we obtain an sf object with 96 polygons, the one of Buckow being a list of polygons.
+However, as we can see from table \ref{table:neighbourhoods} the neighbourhood Buckow is composed of two separate polygons, which we therefore need to unite according to the neighbourhoods' names. Thanks to the flexibility of the \texttt{sf} objects, this is done simply with a \texttt{summarize} from the package \texttt{dyplr}.
 
-\lstinputlisting[language=R, firstline=29, lastline=32, firstnumber=15, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}{berlin\_districts\_neighbourhoods.R}}|}]{../Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}
+\lstinputlisting[language=R, firstline=29, lastline=31, firstnumber=11, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}{berlin\_districts\_neighbourhoods.R}}|}]{../Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}
 
-For the districts we perform the same procedure, but this time we unite the polygons only by their district, which are represented here by the group variable.
+For the districts we perform the same procedure as above, but this time we unite the polygons only by their district, which are represented here by the group variable.
+
+\lstinputlisting[language=R, firstline=34, lastline=37, firstnumber=19, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}{berlin\_districts\_neighbourhoods.R}}|}]{../Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}
+
+The produced polygons can be used to map Berlin using \texttt{ggplot2} or \texttt{leaflet}, as shown in figure \ref{figure:berlin_map}. \texttt{leaflet} is more flexible and more suitable for plotting spatial data. Therefore, this package will be used for now on for mapping polygons and coordinate points.
 
 
 \begin{figure}[H]
 \centering
 \subfloat[With \texttt{leaflet}]{\includegraphics[height=1.8in]{berlin_district_leaflet.pdf}}
-\subfloat[With \texttt{ggplot}]{\includegraphics[height=1.8in]{berlin_district_ggplot.pdf}}
+\subfloat[With \texttt{ggplot2}]{\includegraphics[height=1.8in]{berlin_district_ggplot.pdf}}
 \caption{Maps of the Berlin Districts \protect\includegraphics[scale=0.05]{qletlogo.pdf} {\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods_maps.R}{berlin\_districts\_neighbourhoods\_maps.R}}}
 \centering
+\label{figure:berlin_map}
 \end{figure}
 
-\subsection{Berlin VBB Areas}
+\subsection{Berlin VBB Zones}\label{subsec:vbb}
 
-The VBB (Verkehrsverbund Berlin-Brandenburg) is "the public transport authority covering the federal states of Berlin and Brandenburg" (CITATION: \href{https://www.vbb.de/en/about-us/the-company-vbb}{VBB Website}). The city of Berlin, in particular, is divided in two fare areas: A, covering the center of Berlin up to the Ringbahn (circular line), and B, from the Ringbahn to the border with Brandenburg. After that there is also the area C, which however will not be covered here since we only consider the city of Berlin.
+The VBB (Verkehrsverbund Berlin-Brandenburg) is "the public transport authority covering the federal states of Berlin and Brandenburg" (CITATION: \href{https://www.vbb.de/en/about-us/the-company-vbb}{VBB Website}). The city of Berlin, in particular, is divided in two fare areas: A, covering the center of Berlin up to the circular line (Ringbahn), and B, from the Ringbahn to the border with Brandenburg. After that there is also the area C, which however will not be covered here since we only consider the city of Berlin.
 
 \begin{figure}[H]
 \begin{center}
@@ -68,41 +67,37 @@ The VBB (Verkehrsverbund Berlin-Brandenburg) is "the public transport authority 
 \end{center}
 \end{figure}
 
-We tried to replicate these areas by using the Berlin polygons and the stations points, which are again loaded using \texttt{st\_read} from the \texttt{sf} package.
+We tried to replicate these areas by also making use of the spatial points of the Berlin stations.
 
-\lstinputlisting[language=R, firstline=18, lastline=19, firstnumber=1, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_VBB_Areas/berlin_vbb_areas.R}{berlin\_vbb\_areas.R}}|}]{../Berlin_VBB_Zones/berlin_vbb_zones.R}
+First of all, we need to create the polygon for area A, which is done by joining the points in the circular line and transforming this into a polygon.
 
-First of all, we need to create the polygon for area A. This is done by joining the points and transforming this into a polygon.
+Unfortunately the shapefile with the stations did not contain information about the line to which these stations correspond. Therefore we needed to filter the stations manually with the ones belonging to the circular line. This vector also contains the information in which order the points will be connected. You can notice that the first and last station are the same since the polygon needs to close.
 
-Firstly, we filter the stations that belong to the Ringbahn (border of area A). Since the shapefile does not include the line name for the stations, we need to create our own vector of names. We also add the order in which they need to be connected. The first and last station are the same since the circle need to close.
+\lstinputlisting[language=R, firstline=27, lastline=38, firstnumber=1, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/berlin_vbb_zones/berlin_vbb_zones.R}{berlin\_vbb\_zones.R}}|}]{../Berlin_VBB_Zones/berlin_vbb_zones.R}
 
-\lstinputlisting[language=R, firstline=22, lastline=33, firstnumber=1, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/berlin_vbb_zones/berlin_vbb_zones.R}{berlin\_vbb\_areas.R}}|}]{../Berlin_VBB_Zones/berlin_vbb_zones.R}
+Since some stations appear multiple times, we firstly filter railway stations, which include both subway and lightrail, and then we calculate the middle point for each station among the ones having the same name. We then join this with the dataframe containing the names of the stations in the circular line, thus filtering the stations to the ones we are interested in. After performing some preparation steps, the function \texttt{st\_polygon} from the \texttt{sf} package was used to create a polygon out of a list of points.
 
-Since some stations appear multiple time, being both subway and lightrail stations (and maybe even bus and tram stops), we filter railway stations, which include both subway and lightrail, and then we calculate the middle point for each station among the ones having the same name.
+\lstinputlisting[language=R, firstline=41, lastline=57, firstnumber=13, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_VBB_Zones/berlin_vbb_zones.R}{berlin\_vbb\_zones.R}}|}]{../Berlin_VBB_Zones/berlin_vbb_zones.R}
 
-\lstinputlisting[language=R, firstline=36, lastline=44, firstnumber=1, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_VBB_Zones/berlin_vbb_zones.R}{berlin\_vbb\_areas.R}}|}]{../Berlin_VBB_Zones/berlin_vbb_zones.R}
+Second af all, in order to create the polygon for zone B, we need to produce the  polygon for entire Berlin. This is done with a procedure already explained in subsection \ref{subsec:berlin}. In this case we don't perform any grouping, thus uniting all neighbourhoods.
 
-By performing a right join with the dataframe with the Ringbahn station names, we only keep these stations. After performing some preparation steps, we use the function \texttt{st\_polygon} from the \texttt{sf} package, which creates a polygon out of a list of points (CHECK!!!).
+\lstinputlisting[language=R, firstline=60, lastline=61, firstnumber=31, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_VBB_Zones/berlin_vbb_zones.R}{berlin\_vbb\_zones.R}}|}]{../Berlin_VBB_Zones/berlin_vbb_zones.R}
 
-\lstinputlisting[language=R, firstline=45, lastline=52, firstnumber=11, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_VBB_Zones/berlin_vbb_zones.R}{berlin\_vbb\_areas.R}}|}]{../Berlin_VBB_Zones/berlin_vbb_zones.R}
-
-Secondly we need to create a polygon for entire Berlin. This is done by simply uniting all the neighbourhoods.
-
-\lstinputlisting[language=R, firstline=55, lastline=56, firstnumber=19, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_VBB_Zones/berlin_vbb_zones.R}{berlin\_vbb\_areas.R}}|}]{../Berlin_VBB_Zones/berlin_vbb_zones.R}
-
-Finally, we bind the two objects by rows and calculate their intersections thanks to the function \texttt{st\_intersection}. We then define the area names according to how many times the two previous polygons intersect:
+Finally, we bind the two objects by row and calculate their intersections thanks to the function \texttt{st\_intersection} from the package \texttt{sf}. We then define the area names according to how many times the two previous polygons intersect:
 	\begin{itemize}
     		\item Area A: where polygons intersect (n. overlaps > 1)
     		\item Area B: where polygons do not intersect (n. overlaps $\leq$ 1)
     \end{itemize}
 
-\lstinputlisting[language=R, firstline=59, lastline=64, firstnumber=21, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_VBB_Zones/berlin_vbb_zones.R}{berlin\_vbb\_areas.R}}|}]{../Berlin_VBB_Zones/berlin_vbb_zones.R}
+\lstinputlisting[language=R, firstline=64, lastline=69, firstnumber=34, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_VBB_Zones/berlin_vbb_zones.R}{berlin\_vbb\_zones.R}}|}]{../Berlin_VBB_Zones/berlin_vbb_zones.R}
 
+\iffalse
 In this code the custom-function \texttt{points\_midpoint} was used to calculate the middle point among many. It extracts the coordinates of the points thanks to \texttt{st\_coordinates} and then calculates the mean of latitude and longitude.
 
 \lstinputlisting[language=R, firstline=2, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master//Helpers/points_midpoint.R}{points\_midpoint.R}}|}]{../Berlin_VBB_Zones/Helpers/points_midpoint.R}
+\fi
 
-This sf object can be used to map the VBB zones using \texttt{leaflet} or \texttt{ggplot2}.
+As in subsection \ref{subsec:berlin} the \texttt{sf} object can be used to map the VBB zones using \texttt{leaflet} or \texttt{ggplot2}.
 
 \begin{figure}[H]
 \centering
@@ -112,16 +107,14 @@ This sf object can be used to map the VBB zones using \texttt{leaflet} or \textt
 \centering
 \end{figure}
 
-\subsection{Airbnb listings' attributes}
+\subsection{Airbnb listings' attributes}\label{subsec:airbnb}
 
-The first part of cleaning the airbnb datasets consists in joining the two containing general information according to their common variables and correcting some string values.
-Secondly, we proceed in checking for missing values and deriving that information from other correlated variables.
-Thirdly, we proceed to feature engineering.
-We firstly derive the areas where they are located thanks to the spatial polygons created before and the function \texttt{point\_in\_polygons}.
+The first part of cleaning the airbnb data consists in joining the two datasets containing general information according to their common variables and correcting some string values. Secondly, we proceed in checking for missing values and deriving that information from other correlated variables. Thirdly, we move on to feature engineering.
+
+We firstly derive the areas where the properties are located thanks to the spatial polygons created before and the function \texttt{point\_in\_polygons}.
+This function loops through the polygons in the \texttt{sf} object and check which points are contained in which polygons. In the end it writes the id associated to the polygon, in our case the area id, in the summary column, which can be named as preferred.
 
 \lstinputlisting[language=R, firstline=2, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Helpers/point_in_polygons.R}{point\_in\_polygons.R}}|}]{../Helpers/point_in_polygons.R}
-
-This function loops through the polygons in the \texttt{sf} object and check which points are contained in which polygons. In the end it writes the id associated to the polygon, in our case the area id, in the summary column, which can be named as preferred.
 
 Secondly, for railway stations and tourist attractions we calculate the amount inside a range and the distance to the nearest point using the function \texttt{distance\_count}. In particular, the following parameters will be used:
 
@@ -133,15 +126,21 @@ Secondly, for railway stations and tourist attractions we calculate the amount i
     
 \end{itemize}
 
-\lstinputlisting[language=R, firstline=3, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Helpers/distance_count.R}{distance\_count.R}}|}]{../Helpers/distance_count.R}
-
-This function firstly calculates the distance between all properties and all reference points, railway stations or tourist attractions, using the Haversine Formula, which "gives  minimum  distance  between  any  two  points  on  spherical body by using latitude and longitude" \citep{haversine:2013}.
+This function firstly calculates the distance between all properties and all reference points using the Haversine Formula, which "gives  minimum  distance  between  any  two  points  on  spherical body by using latitude and longitude" \citep{ingole2013landmark} according to the following formula:
 
 \begin{equation}
 d = 2r \arcsin \Bigg(\sqrt{\sin^2\Big(\frac{\phi_2 - \phi_1}{2}\Big) + \cos(\phi_2)\cos(\phi_1)\sin^2\Big(\frac{\psi_2 - \psi_1}{2}\Big)}\Bigg)
 \end{equation}
 
 %% \mathrm{where} \phi \mathrm{corresponds to the latitude and} \psi \mathrm{to the longitude of the two points.}
+
+Then it calculates how many reference points are within the set distance and how much is the distance to the nearest reference point. Finally this information is joined into the main dataframe.
+
+\lstinputlisting[language=R, firstline=3, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Helpers/distance_count.R}{distance\_count.R}}|}]{../Helpers/distance_count.R}
+
+In the end we use the calendar dataframe to calculate availability of each property in the different seasons.
+
+\lstinputlisting[language=R, firstline=209, lastline=221, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/airbnb_listings.R}{airbnb\_listings.R}}|}]{../airbnb_listings.R}
 
 
 

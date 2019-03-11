@@ -1,7 +1,7 @@
 \BOOKMARK [1][-]{section.1}{Introduction}{}% 1
 \BOOKMARK [1][-]{section.2}{Data Preparation}{}% 2
 \BOOKMARK [2][-]{subsection.2.1}{Berlin neighbourhoods and districts}{section.2}% 3
-\BOOKMARK [2][-]{subsection.2.2}{Berlin VBB Areas}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.2}{Berlin VBB Zones}{section.2}% 4
 \BOOKMARK [2][-]{subsection.2.3}{Airbnb listings' attributes}{section.2}% 5
 \BOOKMARK [1][-]{section.3}{Exploratory Data Analysis}{}% 6
 \BOOKMARK [2][-]{subsection.3.1}{Descriptive statistics}{section.3}% 7

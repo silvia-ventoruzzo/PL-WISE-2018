@@ -17,19 +17,27 @@ if (interactive()) {
 # Load file where the sf object is created
 source("berlin_districts_neighbourhoods.R", chdir = TRUE)
 
+# Colors for polygons
+district_colors = rainbow(12)
+
 # Leaflet map of the districts
 berlin_district_leaflet = leaflet() %>%
     addTiles() %>%
     addPolygons(data = berlin_district_sf,
                 weight = 1, smoothFactor = 1, fillOpacity = 0.8,
-                fillColor = rainbow(12), color = "grey") %>%
+                fillColor = district_colors, color = "grey") %>%
     addLabelOnlyMarkers(data = berlin_districts_names,
                       lng = ~long, lat = ~lat, label = ~lapply(name, htmltools::HTML),
                       labelOptions = labelOptions(noHide = TRUE, direction = 'center',
-                                                  textOnly = TRUE, textsize = "11px"))
+                                                  textOnly = TRUE, textsize = "11px")) %>%
+    setView(lng  = berlin_neighbourhoods_names$long[berlin_neighbourhoods_names$id == "Mitte"],
+            lat  = berlin_neighbourhoods_names$lat[berlin_neighbourhoods_names$id == "Mitte"],
+            zoom = 11)
 berlin_district_leaflet
 
 mapview::mapshot(berlin_district_leaflet, file = "berlin_district_leaflet.pdf",
+                 remove_controls = c("zoomControl", "layersControl", "homeButton","scaleBar"))
+mapview::mapshot(berlin_district_leaflet, file = "../SeminarPaper/berlin_district_leaflet.pdf",
                  remove_controls = c("zoomControl", "layersControl", "homeButton","scaleBar"))
 
 
@@ -37,7 +45,7 @@ mapview::mapshot(berlin_district_leaflet, file = "berlin_district_leaflet.pdf",
 ggplot() +
     geom_sf(data = berlin_district_sf, show.legend = FALSE, color = "grey") +
     coord_sf(datum = NA) +
-    aes(fill = rainbow(12)) +
+    aes(fill = district_colors) +
     geom_text(data = berlin_districts_names, aes(x = long, y = lat, 
                                                  label = gsub("<br>", "\n", name),
                                                  hjust = "center")) +
@@ -47,3 +55,4 @@ ggplot() +
           axis.title.y = element_blank())
 
 dev.copy2pdf(file = "berlin_district_ggplot.pdf")
+dev.copy2pdf(file = "../SeminarPaper/berlin_district_ggplot.pdf")

@@ -1,4 +1,4 @@
-\begin{thebibliography}{2}
+\begin{thebibliography}{6}
 \newcommand{\enquote}[1]{``#1''}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 
@@ -11,5 +11,25 @@
 \bibitem[\protect\citeauthoryear{Gallant}{Gallant}{1987}]{Gallant:87}
 \textsc{Gallant, A.~R.} (1987): \emph{Nonlinear Statistical Models}, New York:
   John Wiley \& Sons.
+
+\bibitem[\protect\citeauthoryear{Ibe}{Ibe}{2014}]{descrstat:2014}
+\textsc{Ibe, O.} (2014): \emph{Fundamentals of applied probability and random
+  processes. 2nd ed}, Academic Press, chap.~8.
+
+\bibitem[\protect\citeauthoryear{Ingole and Nichat}{Ingole and
+  Nichat}{2013}]{ingole2013landmark}
+\textsc{Ingole, P. and M.~M.~K. Nichat} (2013): \enquote{Landmark based
+  shortest path detection by using Dijkestra Algorithm and Haversine Formula,}
+  \emph{International Journal of Engineering Research and Applications}, 3,
+  162--165.
+
+\bibitem[\protect\citeauthoryear{Pebesma}{Pebesma}{2018}]{pebesma2018simple}
+\textsc{Pebesma, E.} (2018): \enquote{Simple Features for R: Standardized
+  Support for Spatial Vector Data,} \emph{The R Journal}, 10, 439--446.
+
+\bibitem[\protect\citeauthoryear{Ross, Wickham, and Robinson}{Ross
+  et~al.}{2017}]{ross2017declutter}
+\textsc{Ross, Z., H.~Wickham, and D.~Robinson} (2017): \enquote{Declutter your
+  R workflow with tidy tools,} Tech. rep., PeerJ Preprints.
 
 \end{thebibliography}

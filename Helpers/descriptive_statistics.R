@@ -1,22 +1,5 @@
-descriptive_statistics = function(df, constraint_var = NULL, constraint_value = NULL) {
-  
-  if (is.null(constraint_var) & is.null(constraint_value)) {
-    
-    df = df
-    
-  } else if (is.null(constraint_var) | is.null(constraint_value)) {
-    
-    stop("constraint_var or constraint_value is not defined. Review function values.")
-    
-  } else {
-    
-    constraint = sym(constraint_var)
-    df = df %>%
-      dplyr::filter(!!constraint == constraint_value) %>%
-      dplyr::select(-!!constraint)
-    
-  }
-  
+descriptive_statistics = function(df) {
+
   # Descriptive statistics for numeric variables
   if (unique(apply(df, 2, function(x) is.numeric(x)))) {
   

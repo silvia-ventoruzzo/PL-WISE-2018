@@ -29,10 +29,12 @@ berlin_vbb_zones_leaflet = leaflet() %>%
                                                   textOnly = TRUE, textsize = "20px")) %>%
     setView(lng  = berlin_vbb_AB_names$long[berlin_vbb_AB_names$id == "A"],
             lat  = berlin_vbb_AB_names$lat[berlin_vbb_AB_names$id == "A"],
-            zoom = 10)
+            zoom = 11)
 berlin_vbb_zones_leaflet
 
 mapview::mapshot(berlin_vbb_zones_leaflet, file = "berlin_vbb_zones_leaflet.pdf",
+                 remove_controls = c("zoomControl", "layersControl", "homeButton","scaleBar"))
+mapview::mapshot(berlin_vbb_zones_leaflet, file = "../SeminarPaper/berlin_vbb_zones_leaflet.pdf",
                  remove_controls = c("zoomControl", "layersControl", "homeButton","scaleBar"))
 
 
@@ -40,7 +42,7 @@ mapview::mapshot(berlin_vbb_zones_leaflet, file = "berlin_vbb_zones_leaflet.pdf"
 ggplot() +
     geom_sf(data = berlin_vbb_AB_sf, show.legend = FALSE, color = "black") +
     coord_sf(datum = NA) +
-    aes(fill = c("cadetblue", "darkorange")) +
+    aes(fill = c("darkorange", "cadetblue")) +
     geom_text(data = berlin_vbb_AB_names, aes(x = long, y = lat, label = id, hjust = "center"), size = 5) +
     theme_classic() +
     theme(plot.title   = element_text(hjust = 0.5),
@@ -48,3 +50,4 @@ ggplot() +
           axis.title.y = element_blank())
 
 dev.copy2pdf(file = "berlin_vbb_zones_ggplot.pdf")
+dev.copy2pdf(file = "../SeminarPaper/berlin_vbb_zones_ggplot.pdf")

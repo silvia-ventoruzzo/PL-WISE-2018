@@ -33,11 +33,11 @@ print("Spatial data loaded.")
 # Load dataframes
 # If files are zipped
 # This is the case, because the files are too big to be uploaded to GitHub otherwise
-listings_summarized = read_csv(file.path(getwd(), "Data", "airbnb_data", "07.11_listings_summary.csv.zip", fsep="/"),
+listings_summarized = read_csv(file.path(getwd(), "Data", "airbnb_data", "listings.csv", fsep="/"),
                                 na = c("NA", ""), locale = locale(encoding = "UTF-8"))
-listings_detailed = read_csv(file.path(getwd(), "Data", "airbnb_data", "07.11_listings_detailed.csv.zip", fsep="/"),
+listings_detailed = read_csv(file.path(getwd(), "Data", "airbnb_data", "listings.csv.gz", fsep="/"),
                               na = c("NA", ""), locale = locale(encoding = "UTF-8"))
-listings_calendar = read_csv(file.path(getwd(), "Data", "airbnb_data", "07.11_listings_calendar.csv.zip", fsep="/"),
+listings_calendar = read_csv(file.path(getwd(), "Data", "airbnb_data", "calendar.csv.gz", fsep="/"),
                               na = c("NA", ""), locale = locale(encoding = "UTF-8"))
 
 # Print code development
@@ -55,7 +55,8 @@ if (!interactive()) {
 # According to airbnb: https://www.airbnb.com/help/article/828
 if (!interactive()) {
   listings %>%
-    dplyr::filter(is.na(host_is_superhost)) # 26
+    dplyr::filter(is.na(host_is_superhost)) %>%
+    dplyr::summarize(count = n()) # 21
 }
 
 listings = listings %>%
@@ -65,7 +66,8 @@ listings = listings %>%
 if (!interactive()) {
   listings %>%
     dplyr::filter(is.na(review_scores_rating)) %>%
-    dplyr::select(id, review_scores_rating, number_of_reviews) # 4,389
+    dplyr::select(id, review_scores_rating, number_of_reviews)%>%
+    dplyr::summarize(count = n()) # 4755
 }
 # If the number_of_reviews is zero, we set the review_scores_value to 0 meanwhile creating a variable to keep track that the listing has not been reviewed yet
 listings = listings %>%
@@ -78,11 +80,12 @@ if (!interactive()) {
     dplyr::select(id, review_scores_accuracy, review_scores_value,
                   review_scores_cleanliness, review_scores_checkin, review_scores_communication,
                   review_scores_location, review_scores_rating,
-                  number_of_reviews) # 499
+                  number_of_reviews) %>%
+    dplyr::summarize(count = n()) # 481
   listings %>% 
-    dplyr::summarize(mean = mean(review_scores_rating, na.rm = TRUE),
-                    median = median(review_scores_rating, na.rm = TRUE),
-                    mode = getmode(review_scores_rating)) %>%
+    dplyr::summarize(mean = mean(review_scores_rating, na.rm = TRUE), # 77
+                    median = median(review_scores_rating, na.rm = TRUE), # 95
+                    mode = getmode(review_scores_rating)) %>% # 100
     round(0)
 }
 # mean might be influenced by outliers, being it so different from median and mode, and mode is too high, so I will substitute the missing values with the median
@@ -94,9 +97,10 @@ listings = listings %>%
 # bedrooms and beds
 if (!interactive()) {
   listings %>%
-  dplyr::filter(is.na(bedrooms) | 
+    dplyr::filter(is.na(bedrooms) | 
                 is.na(beds)) %>%
-  dplyr::select(id, accommodates, bedrooms, beds) # 57
+    dplyr::select(id, accommodates, bedrooms, beds) %>%
+    dplyr::summarize(count = n()) # 67
 }
 # Being the amount of missing values in these features relative small, we can derive their value from the other variables:
 listings = listings %>%
@@ -200,9 +204,10 @@ listings_calendar = listings_calendar %>%
                               (month == "Nov") | (month == "Dec" & day < 21), "Fall",
                                                                               "Winter"))) %>%
            factor(levels = c("Spring", "Summer", "Fall", "Winter")),
-         year_season = paste(year, tolower(season), sep = "_") %>%
-           factor(levels = c("2018_fall", "2018_winter", "2019_spring",
-                             "2019_summer", "2019_fall", "2019_winter"))) %>%
+         year_season = paste(year, tolower(season), sep = "_") 
+         # %>% factor(levels = c("2018_fall", "2018_winter", "2019_spring",
+         #                     "2019_summer", "2019_fall", "2019_winter"))
+         ) %>%
   dplyr::select(-price)
 
 # Availability per year_season
