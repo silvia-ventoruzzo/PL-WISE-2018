@@ -18,7 +18,7 @@ rm("needed_packages", "package")
   setwd(dirname(sys.frame(1)$ofile))
 
 # Load helper functions and other scripts
-source("price.R", chdir = TRUE)
+source("exploratory_data_analysis.R", chdir = TRUE)
 source(file.path(getwd(), "Helpers", "from_row_to_col.R", fsep="/"))
 source(file.path(getwd(), "Helpers", "recode_all.R", fsep="/"))
 
@@ -29,32 +29,24 @@ listings_scaled = listings %>%
   recode_all("room_type") %>% from_row_to_col("room_type") %>%
   recode_all("property_type") %>% from_row_to_col("property_type") %>%
   recode_all("cancellation_policy") %>% from_row_to_col("cancellation_policy") %>%
+  recode_all("security_deposit") %>% from_row_to_col("security_deposit") %>%
+  recode_all("cleaning_fee") %>% from_row_to_col("cleaning_fee") %>%
+  recode_all("station_count") %>% from_row_to_col("station_count") %>%
+  recode_all("attraction_count") %>% from_row_to_col("attraction_count") %>%
   dplyr::select(-id, -lat, -long, -listing_url, - district, -vbb_zone, -neighbourhood) %>%
   scale()
 
 # Total variance explained
-set.seed(900114)
-k_values = 2:96
-tve = data.frame(clusters = k_values,
-                 tve      = rep(NA, length(k_values)))
-clk = list()
-for (k in k_values) {
-  clk[[k-1]] = kmeans(listings_scaled, centers = k, iter.max = 20)
-  names(clk)[k-1] = paste(k, "clusters", sep = " ")
-  tve$tve[k-1] = 1-clk[[k-1]]$tot.withinss/clk[[k-1]]$totss
-  print(paste("k-means with", k, "clusters done", sep = " "))
-}
-ggplot(data = tve,
-       aes(x = clusters,
-           y = tve)) +
-    geom_line(color = "grey") +
-    geom_point(color = "red") +
-    scale_x_continuous(breaks = seq(0, 100, by = 5))
-# 40 clusters
+number_of_clusters(scaled_df   = listings_scaled,
+                   max         = 96,
+                   iter_max    = 20, 
+                   plot_breaks = seq(0, 100, by = 5))
+dev.copy2pdf(file = "./SeminarPaper/numclusters.pdf")
+dev.off()
 
 ## Clustering
-n_clusters = 40
-listings_kmeans = clk[[paste(n_clusters, "clusters", sep = " ")]]
+n_clusters = 50
+listings_kmeans = kmeans(listings_scaled, centers = n_clusters, iter.max = 20)
 
 # Principal components
 listings_pc = prcomp(x = listings_scaled, center = FALSE, scale = FALSE)

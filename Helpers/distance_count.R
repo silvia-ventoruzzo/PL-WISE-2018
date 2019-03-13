@@ -13,13 +13,14 @@ distance_count = function(main, reference, var_name, distance) {
         as.data.frame() %>%
         data.table::setnames(as.character(reference$id))
     # Calculate how many "reference" are within "distance"
-    point_distance[,var_name_count] = rowSums(point_distance <= distance)
+    point_distance[,var_name_count] = rowSums(point_distance <= distance) %>%
+                                        as.factor()
+                                      
     # Calculate the distance to the nearest "reference"
-    point_distance[,var_name_dist] = apply(point_distance
-                                          [,-ncol(point_distance)],
-                                          MARGIN = 1,
-                                          FUN = min) %>%
-                                      round(0)
+    point_distance[,var_name_dist]  = apply(point_distance[,-ncol(point_distance)],
+                                            MARGIN = 1,
+                                            FUN = min) %>%
+                                        round(0)
     # Insert this information into the main DF
     main = point_distance %>%
         dplyr::mutate(id = main$id) %>%

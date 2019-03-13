@@ -10,6 +10,8 @@
 \BOOKMARK [2][-]{subsection.4.1}{Correlation with price}{section.4}% 10
 \BOOKMARK [2][-]{subsection.4.2}{Linear regression on price}{section.4}% 11
 \BOOKMARK [1][-]{section.5}{Clustering}{}% 12
-\BOOKMARK [1][-]{section.6}{ShinyApp}{}% 13
-\BOOKMARK [1][-]{section.7}{Results and Conclusions}{}% 14
-\BOOKMARK [1][-]{section.7}{References}{}% 15
+\BOOKMARK [2][-]{subsection.5.1}{Choosing the number of clusters}{section.5}% 13
+\BOOKMARK [2][-]{subsection.5.2}{k-means clustering}{section.5}% 14
+\BOOKMARK [1][-]{section.6}{ShinyApp}{}% 15
+\BOOKMARK [1][-]{section.7}{Results and Conclusions}{}% 16
+\BOOKMARK [1][-]{section.7}{References}{}% 17

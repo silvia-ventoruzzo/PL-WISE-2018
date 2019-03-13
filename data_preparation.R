@@ -47,86 +47,48 @@ print("Airbnb datasets uploaded.")
 listings = df_join_clean(df1 = listings_detailed, df2 = listings_summarized)
 
 # Check if there are missing values
-if (!interactive()) {
-  apply(listings, 2, function(x) any(is.na(x)))
-}
+apply(listings, 2, function(x) any(is.na(x)))
 
-# host_is_superhost
-# According to airbnb: https://www.airbnb.com/help/article/828
-if (!interactive()) {
-  listings %>%
-    dplyr::filter(is.na(host_is_superhost)) %>%
-    dplyr::summarize(count = n()) # 21
-}
-
+# host_is_superhost, # host_has_profile_pic, host_identity_verified
 listings = listings %>%
-  dplyr::mutate(host_is_superhost = ifelse(is.na(host_is_superhost), 0, host_is_superhost))
+    dplyr::mutate(host_is_superhost      = ifelse(is.na(host_is_superhost), FALSE, host_is_superhost),
+                  host_has_profile_pic   = ifelse(is.na(host_has_profile_pic), FALSE, host_has_profile_pic),
+                  host_identity_verified = ifelse(is.na(host_identity_verified), FALSE, host_identity_verified))
 
 # review_scores_rating
-if (!interactive()) {
-  listings %>%
-    dplyr::filter(is.na(review_scores_rating)) %>%
-    dplyr::select(id, review_scores_rating, number_of_reviews)%>%
-    dplyr::summarize(count = n()) # 4755
-}
-# If the number_of_reviews is zero, we set the review_scores_value to 0 meanwhile creating a variable to keep track that the listing has not been reviewed yet
-listings = listings %>%
-  dplyr::mutate(review_scores_rating = ifelse(number_of_reviews == 0, 0, review_scores_rating),
-                reviewed_yn = ifelse(number_of_reviews == 0, FALSE, TRUE))
-# For the rest, we insert the average of the review_scores_rating
-if (!interactive()) {
-  listings %>%
-    dplyr::filter(is.na(review_scores_rating)) %>%
-    dplyr::select(id, review_scores_accuracy, review_scores_value,
-                  review_scores_cleanliness, review_scores_checkin, review_scores_communication,
-                  review_scores_location, review_scores_rating,
-                  number_of_reviews) %>%
-    dplyr::summarize(count = n()) # 481
-  listings %>% 
+# We insert the average of the review_scores_rating
+listings %>% 
     dplyr::summarize(mean = mean(review_scores_rating, na.rm = TRUE), # 77
                     median = median(review_scores_rating, na.rm = TRUE), # 95
                     mode = getmode(review_scores_rating)) %>% # 100
     round(0)
-}
 # mean might be influenced by outliers, being it so different from median and mode, and mode is too high, so I will substitute the missing values with the median
 listings = listings %>%
-  mutate(review_scores_rating = ifelse(is.na(review_scores_rating), 
-                                       median(review_scores_rating, na.rm = TRUE),
-                                       review_scores_rating))
-
+    dplyr::mutate(review_scores_rating = ifelse(is.na(review_scores_rating), 
+                                                median(review_scores_rating, na.rm = TRUE),
+                                                review_scores_rating))
 # bedrooms and beds
-if (!interactive()) {
-  listings %>%
-    dplyr::filter(is.na(bedrooms) | 
-                is.na(beds)) %>%
-    dplyr::select(id, accommodates, bedrooms, beds) %>%
-    dplyr::summarize(count = n()) # 67
-}
 # Being the amount of missing values in these features relative small, we can derive their value from the other variables:
 listings = listings %>%
   # If beds is NA, but bedrooms has a valid value, we set beds with the number of bedrooms
-  dplyr::mutate(beds = ifelse(is.na(beds) & !is.na(bedrooms), bedrooms, beds),
+  dplyr::mutate(beds     = ifelse(is.na(beds) & !is.na(bedrooms), bedrooms, beds),
                 # If bedrooms is NA, but beds has a valid value, we set bedrooms with the number of beds
                 bedrooms = ifelse(is.na(bedrooms) & !is.na(beds), beds, bedrooms),
                 # If both beds and bedrooms are NA: 1
                 # Since in this case the property can accomodate only one person, we assume that it has 1 bed and 1                             bedroom (even if it might not be separate)
-                beds = ifelse(is.na(beds) & is.na(bedrooms), 1, beds),
+                beds     = ifelse(is.na(beds) & is.na(bedrooms), 1, beds),
                 bedrooms = ifelse(beds == 1 & is.na(bedrooms), 1, bedrooms))
 
-listings = listings %>%
-  dplyr::rename(price = price.x) %>%
-  # Keep only columns of interest
-  dplyr::select(id, long, lat, price, property_type, room_type,
-                security_deposit_yn, cleaning_fee_yn,
-                host_is_superhost, accommodates, bedrooms, beds, minimum_nights, 
-                review_scores_rating, number_of_reviews, reviewed_yn, cancellation_policy,
-                availability_30, availability_60, availability_90, availability_365,
-                listing_url)
-
 # Check if there are missing values
-if (!interactive()) {
-  apply(listings, 2, function(x) any(is.na(x)))
-}
+apply(listings, 2, function(x) any(is.na(x)))
+
+# Listings selection
+# Keep only listings with at least one customer review, as per Wang and Nicolau (2017)
+listings %>%
+  dplyr::filter(number_of_reviews == 0) %>%
+  dplyr::summarize(count = n())
+listings = listings %>%
+  dplyr::filter(number_of_reviews > 0)
 
 # Print code development
 print("Missing values cleaned.")
@@ -187,43 +149,38 @@ listings = distance_count(main = listings, reference = attractions_df,
 
 # season availability
 listings_calendar = listings_calendar %>%
-  rename(id = listing_id) %>%
-  mutate(date        = as.Date(date),
-         # if loading the csv use recode, if loading the zip there is no need
-         # available   = recode(available,
-         #                    "f" = 0,
-         #                    "t" = 1),
-         year        = lubridate::year(date),
-         month       = lubridate::month(date, label = TRUE),
-         day         = lubridate::day(date),
-         season      = ifelse((month == "Mar" & day >= 21) | (month == "Apr") | 
-                              (month == "May") | (month == "Jun" & day < 21), "Spring",
-                       ifelse((month == "Jun" & day >= 21) | (month == "Jul") | 
-                              (month == "Aug") | (month == "Sep" & day < 21), "Summer",
-                       ifelse((month == "Sep" & day >= 21) | (month == "Oct") | 
-                              (month == "Nov") | (month == "Dec" & day < 21), "Fall",
+  dplyr::rename(id = listing_id) %>%
+  dplyr::mutate(date        = as.Date(date),
+                year        = lubridate::year(date),
+                month       = lubridate::month(date, label = TRUE),
+                day         = lubridate::day(date),
+                season      = ifelse((month == "Mar" & day >= 21) | (month == "Apr") | 
+                                    (month == "May") | (month == "Jun" & day < 21), "Spring",
+                              ifelse((month == "Jun" & day >= 21) | (month == "Jul") | 
+                                    (month == "Aug") | (month == "Sep" & day < 21), "Summer",
+                              ifelse((month == "Sep" & day >= 21) | (month == "Oct") | 
+                                    (month == "Nov") | (month == "Dec" & day < 21), "Fall",
                                                                               "Winter"))) %>%
-           factor(levels = c("Spring", "Summer", "Fall", "Winter")),
-         year_season = paste(year, tolower(season), sep = "_") 
-         # %>% factor(levels = c("2018_fall", "2018_winter", "2019_spring",
-         #                     "2019_summer", "2019_fall", "2019_winter"))
-         ) %>%
+                                  factor(levels = c("Spring", "Summer", "Fall", "Winter")),
+                year_season = paste(tolower(season), year, sep = "_")) %>%
+  dplyr::ungroup() %>%
   dplyr::select(-price)
 
 # Availability per year_season
 listings_season_availability = listings_calendar %>% 
   dplyr::group_by(id, year_season) %>% 
-  # if loading the csv use sum(available)
-  # dplyr::summarize(count = sum(available)) %>% 
-  # if loading the zip use sum(available == TRUE)
-  dplyr::summarize(count = sum(available == TRUE)) %>%   
+  dplyr::summarize(count       = sum(available == TRUE),
+                   season_days = n(),
+                   proportion  = round(count/season_days*100, 4)) %>%   
   dplyr::arrange(id, year_season) %>%
   dplyr::ungroup() %>%
   dplyr::mutate(season_av =  paste(year_season, "availability", sep = "_") %>%
-           tolower() %>%
-           factor(levels = unique(tolower(paste(year_season, "availability", sep = "_"))))) %>%
-  dplyr::select(-year_season) %>%
-  tidyr::spread(season_av, count)
+                             tolower() %>%
+                             factor(levels = paste(year_season, "availability", sep = "_") %>%
+                                             tolower() %>%
+                                             unique())) %>%
+  dplyr::select(-count, -year_season, -season_days) %>%
+  tidyr::spread(season_av, proportion)
 
 # Print code development
 print("New variables created.")

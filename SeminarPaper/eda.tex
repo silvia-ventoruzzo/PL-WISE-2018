@@ -30,54 +30,55 @@ Part of the results can be seen in table \ref{table:descrstatnum}.
 
 \begin{table}[H]
 \centering
+\centering
 \begin{tabular}{lrrrrrrrr}
   \hline \hline
 variable & min & 1Q & median & 3Q & max & iqr & mean & sd \\ 
   \hline
-price & 0.00 & 30.00 & 45.00 & 70.00 & 9000.00 & 40.00 & 67.14 & 220.28 \\ 
+price & 0.00 & 30.00 & 47.00 & 70.00 & 9000.00 & 40.00 & 67.69 & 210.53 \\ 
+  review\_scores\_rating & 0.00 & 84.00 & 95.00 & 100.00 & 100.00 & 16.00 & 77.26 & 37.09 \\ 
    \hline \hline
 \end{tabular}
-\caption{Sample of descriptive table for numeric variables}
+\caption{Sample of descriptive table for numeric variables \protect\includegraphics[scale=0.05]{qletlogo.pdf} {\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Helpers/descriptive_statistics.R}{descriptive\_statistics.R}}}
 \label{table:descrstatnum}
 \end{table}
 
-For categorical variables the explained statistics do not work, therefore frequencies and proportions of each factor were calculated.
+For categorical variables the above used statistics do not work, therefore frequencies and proportions of each factor were calculated. The mode is then simply the factor with the highest frequency.
 
 \lstinputlisting[language=R, firstline=20, lastline=50, firstnumber=19, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Helpers/descriptive_statistics.R}{descriptive\_statistics.R}}|}]{../Helpers/descriptive_statistics.R}
 
 
 \subsection{Distribution plots}\label{subsec:distrplots}
 
-Also for the distribution plots we distinguish between numerical and categorical variables. In the first case a density plot has been produced, where also mean, median, 1st and 3rd quantiles are visible.
-Unfortunately, many variables present outliers, which were in some cases excluded from the plots for better visualization.
+Also for the distribution plots we distinguish between numerical and categorical variables. In the former case a density plot has been chose, while in the latter a bar plot.
+
+Unfortunately, many numeric variables present outliers, which, in the case of very skewed data, have been excluded for better visualization. An example can be seen in figure \ref{figure:numdistr}.
 
 \begin{figure}[H]
 \centering
 \subfloat[Complete]{\includegraphics[height=7cm]{price_distribution_complete.pdf}}
 \subfloat[Without outliers]{\includegraphics[height=7cm]{price_distribution_nooutliers.pdf}}
-\caption{Distribution of the variable price \protect\includegraphics[scale=0.05]{qletlogo.pdf} {\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/exploratory_data_analysis.R}{exploratory\_data\_analysis.R}}}
+\caption{Distribution of the variable price \protect\includegraphics[scale=0.05]{qletlogo.pdf} {\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Helpers/distribution_plot.R}{distribution\_plot.R}}}
 \centering
+\label{figure:numdistr}
 \end{figure}
 
-For the categorical variables a bar plot is more appropriate, since the values that the variable can assume are discrete and usually also few, like in the case displayed in figure \ref{figure:room_type}.
-
-
-
+For the categorical variables a bar plot is more appropriate, since variable can only assume a limited amount of values,and usually only a few, like in the case displayed in figure \ref{figure:catdistr}.
 
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.5\textwidth, keepaspectratio]{room_type_distribution.pdf} \\
-\caption{Distribution of the variable room\_type \protect\includegraphics[scale=0.05]{qletlogo.pdf} {\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/exploratory_data_analysis.R}{exploratory\_data\_analysis.R}}}
-\label{figure:room_type}
+\caption{Distribution of the variable station\_count \protect\includegraphics[scale=0.05]{qletlogo.pdf} {\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Helpers/distribution_plot.R}{distribution\_plot.R}}}
+\label{figure:catdistr}
 \end{center}
 \end{figure}
 
-We also mapped the Berlin districts and the distribution of the average of a certain variable on them with the use of the package \textit{leaflet}.
+Having succesfully created spatial polygons for Berlin, we can also map the distribution of the variables across the city. For example, in figure \ref{figure:priceavg} one can see how the average of price in each neighbourhood is distributed across neighbourhoods.
 
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.5\textwidth, keepaspectratio]{price_map_distr} \\
 \caption{Distribution of the average of price across Berlin's districts}
-\label{figure:room_type}
+\label{figure:priceavg}
 \end{center}
 \end{figure}

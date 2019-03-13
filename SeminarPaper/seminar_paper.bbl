@@ -1,16 +1,11 @@
-\begin{thebibliography}{6}
+\begin{thebibliography}{12}
 \newcommand{\enquote}[1]{``#1''}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 
-\bibitem[\protect\citeauthoryear{Breusch and Schmidt}{Breusch and
-  Schmidt}{1988}]{Breusch&Schmidt:88}
-\textsc{Breusch, T.~S. and P.~Schmidt} (1988): \enquote{Alternative Forms of
-  the {W}ald test: How Long is a Piece of String,} \emph{Communications in
-  Statistics, Theory and Methods}, 17, 2789--2795.
-
-\bibitem[\protect\citeauthoryear{Gallant}{Gallant}{1987}]{Gallant:87}
-\textsc{Gallant, A.~R.} (1987): \emph{Nonlinear Statistical Models}, New York:
-  John Wiley \& Sons.
+\bibitem[\protect\citeauthoryear{Bock}{Bock}{2007}]{bock2007clustering}
+\textsc{Bock, H.-H.} (2007): \enquote{Clustering methods: a history of k-means
+  algorithms,} in \emph{Selected contributions in data analysis and
+  classification}, Springer, 161--172.
 
 \bibitem[\protect\citeauthoryear{Ibe}{Ibe}{2014}]{descrstat:2014}
 \textsc{Ibe, O.} (2014): \emph{Fundamentals of applied probability and random
@@ -23,6 +18,28 @@
   \emph{International Journal of Engineering Research and Applications}, 3,
   162--165.
 
+\bibitem[\protect\citeauthoryear{Kaufman and Rousseeuw}{Kaufman and
+  Rousseeuw}{2009}]{kaufman2009finding}
+\textsc{Kaufman, L. and P.~J. Rousseeuw} (2009): \emph{Finding groups in data:
+  an introduction to cluster analysis}, vol. 344, John Wiley \& Sons.
+
+\bibitem[\protect\citeauthoryear{Kodinariya and Makwana}{Kodinariya and
+  Makwana}{2013}]{kodinariya2013review}
+\textsc{Kodinariya, T.~M. and P.~R. Makwana} (2013): \enquote{Review on
+  determining number of Cluster in K-Means Clustering,} \emph{International
+  Journal}, 1, 90--95.
+
+\bibitem[\protect\citeauthoryear{Liang, Choi, and Joppe}{Liang
+  et~al.}{2018}]{liang2018understanding}
+\textsc{Liang, L.~J., H.~C. Choi, and M.~Joppe} (2018): \enquote{Understanding
+  repurchase intention of Airbnb consumers: perceived authenticity, electronic
+  word-of-mouth, and price sensitivity,} \emph{Journal of Travel \& Tourism
+  Marketing}, 35, 73--89.
+
+\bibitem[\protect\citeauthoryear{Madhulatha}{Madhulatha}{2012}]{madhulatha2012overview}
+\textsc{Madhulatha, T.~S.} (2012): \enquote{An overview on clustering methods,}
+  \emph{arXiv preprint arXiv:1205.1117}.
+
 \bibitem[\protect\citeauthoryear{Pebesma}{Pebesma}{2018}]{pebesma2018simple}
 \textsc{Pebesma, E.} (2018): \enquote{Simple Features for R: Standardized
   Support for Spatial Vector Data,} \emph{The R Journal}, 10, 439--446.
@@ -31,5 +48,20 @@
   et~al.}{2017}]{ross2017declutter}
 \textsc{Ross, Z., H.~Wickham, and D.~Robinson} (2017): \enquote{Declutter your
   R workflow with tidy tools,} Tech. rep., PeerJ Preprints.
+
+\bibitem[\protect\citeauthoryear{Surname}{Surname}{2012}]{airbnbstory:2012}
+\textsc{Surname, A.} (2012): \enquote{Airbnb: The story behind the $1.3bn
+  room-letting website,} .
+
+\bibitem[\protect\citeauthoryear{Tan}{Tan}{2018}]{tan2018introduction}
+\textsc{Tan, P.-N.} (2018): \emph{Introduction to data mining}, Pearson
+  Education India, chap.~8.
+
+\bibitem[\protect\citeauthoryear{Wang and Nicolau}{Wang and
+  Nicolau}{2017}]{wang2017price}
+\textsc{Wang, D. and J.~L. Nicolau} (2017): \enquote{Price determinants of
+  sharing economy based accommodation rental: A study of listings from 33
+  cities on Airbnb. com,} \emph{International Journal of Hospitality
+  Management}, 62, 120--131.
 
 \end{thebibliography}
