@@ -1,4 +1,4 @@
-Name of Quantlet: berlin_vbb_areas
+Name of Quantlet: SPL_berlin_vbb_areas
 
 Published in: 'Statistical programming languages - Student Project on SPL_WISE_18/19’
 
@@ -8,7 +8,7 @@ Keywords: plot, graphical representation
 
 Author: Silvia Ventoruzzo
 
-See also: 
+See also: SPL_berlin_districts_neighbourhoods
 
 Submitted: Fri, March 15 2019 by Silvia Ventoruzzo
 
