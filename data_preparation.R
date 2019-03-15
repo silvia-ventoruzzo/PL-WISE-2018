@@ -22,9 +22,9 @@ rm("needed_packages", "package")
   setwd(dirname(sys.frame(1)$ofile))
 
 # Load helper functions and other scripts
-source(file.path(getwd(), "Berlin_VBB_Zones", 
+source(file.path(getwd(), "SPL_Berlin_VBB_Zones", 
                  "berlin_vbb_zones.R", fsep="/"), chdir = TRUE)
-source(file.path(getwd(), "Berlin_Districts_Neighbourhoods", 
+source(file.path(getwd(), "SPL_Berlin_Districts_Neighbourhoods", 
                  "berlin_districts_neighbourhoods.R", fsep="/"), chdir = TRUE)
 Jmisc::sourceAll(file.path(getwd(), "Helpers", fsep="/"))
 
