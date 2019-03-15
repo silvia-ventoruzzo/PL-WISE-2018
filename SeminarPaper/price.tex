@@ -30,7 +30,7 @@ As pointed out in \cite{wang2017price} linear regression is used to describe pos
 
 In this case we will look for the relationship that the properties' attributes have on their price. For this purpose we used again the data with the categorical variables transformed to dummies. The linear regression was then run using all other variables, except \textit{id}, \textit{long}, \textit{lat}, \textit{neighbourhood} and \textit{listing\_url}, as regressors.
 
-On table \ref{table:lmresults} you can see a sample of the results. A positive coefficient means that the variable has a positive impact on the dependent variable, the higher this regressor is, the higher \textit{price} will be. On the other side, a negative coefficient suggests that a higher value of the independent variable will result in a lower value of \textit{price}. Moreover, a variable is considered significant if the p-value is lower than the significance level, set at 5\% in this case, since it rejects the null hypothesis for that regressor coefficient to be equal to zero \cite{moye2006statistical}.
+On table \ref{table:lmresults} you can see a sample of the results. A positive coefficient means that the variable has a positive impact on the dependent variable, the higher this regressor is, the higher \textit{price} will be. On the other side, a negative coefficient suggests that a higher value of the independent variable will result in a lower value of \textit{price}. Moreover, a variable is considered significant if the p-value is lower than the significance level, set at 5\% in this case, since it rejects the null hypothesis for that regressor coefficient to be equal to zero \citep{moye2006statistical}.
 
 \begin{table}[H]
 \centering

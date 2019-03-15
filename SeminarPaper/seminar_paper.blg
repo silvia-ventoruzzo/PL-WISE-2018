@@ -5,37 +5,37 @@ The style file: ecta.bst
 Database file #1: literature.bib
 You've used 19 entries,
             2849 wiz_defined-function locations,
-            701 strings with 7776 characters,
-and the built_in function-call counts, 9699 in all, are:
-= -- 817
+            702 strings with 7840 characters,
+and the built_in function-call counts, 9706 in all, are:
+= -- 818
 > -- 350
 < -- 35
 + -- 116
 - -- 93
-* -- 756
-:= -- 1548
+* -- 757
+:= -- 1549
 add.period$ -- 34
 call.type$ -- 19
 change.case$ -- 114
 chr.to.int$ -- 19
 cite$ -- 19
-duplicate$ -- 739
-empty$ -- 749
+duplicate$ -- 740
+empty$ -- 750
 format.name$ -- 161
-if$ -- 1934
+if$ -- 1936
 int.to.chr$ -- 1
 int.to.str$ -- 1
 missing$ -- 134
 newline$ -- 62
 num.names$ -- 95
-pop$ -- 254
+pop$ -- 252
 preamble$ -- 1
 purify$ -- 107
 quote$ -- 0
 skip$ -- 305
 stack$ -- 0
 substring$ -- 385
-swap$ -- 337
+swap$ -- 338
 text.length$ -- 3
 text.prefix$ -- 0
 top$ -- 0
@@ -43,4 +43,4 @@ type$ -- 212
 warning$ -- 0
 while$ -- 70
 width$ -- 0
-write$ -- 229
+write$ -- 230

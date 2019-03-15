@@ -84,9 +84,12 @@
 \textsc{Ross, Z., H.~Wickham, and D.~Robinson} (2017): \enquote{Declutter your
   R workflow with tidy tools,} Tech. rep., PeerJ Preprints.
 
-\bibitem[\protect\citeauthoryear{Salter}{Salter}{2012}]{airbnbstory:2012}
-\textsc{Salter, J. T.~T.} (2012): \enquote{Airbnb: The story behind the /$1.3bn
-  room-letting website,} Online; last accessed on 15. March 2019.
+\bibitem[\protect\citeauthoryear{{Salter, Jessica (The Telegraph)}}{{Salter,
+  Jessica (The Telegraph)}}{2012}]{airbnbstory:2012}
+\textsc{{Salter, Jessica (The Telegraph)}} (2012): \enquote{Airbnb: The story
+  behind the /$1.3bn room-letting website,}
+  \url{https://www.telegraph.co.uk/technology/news/9525267/Airb}, online; last
+  accessed on 15. March 2019.
 
 \bibitem[\protect\citeauthoryear{Tan}{Tan}{2018}]{tan2018introduction}
 \textsc{Tan, P.-N.} (2018): \emph{Introduction to data mining}, Pearson
