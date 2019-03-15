@@ -1,11 +1,37 @@
-\begin{thebibliography}{12}
+\begin{thebibliography}{19}
 \newcommand{\enquote}[1]{``#1''}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+
+\bibitem[\protect\citeauthoryear{{Amt für Statistik Berlin-Brandenburg}}{{Amt
+  für Statistik Berlin-Brandenburg}}{2019}]{statberlin:2018}
+\textsc{{Amt für Statistik Berlin-Brandenburg}} (2019): \enquote{Statistik
+  Berlin-Brandenburg BerlinOpenData Geometrien,}
+  \url{https://www.statistik-berlin-brandenburg.de/produkte/opendata/geometrienOD.asp?Kat=6301},
+  online; last accessed on 12. November 2018.
 
 \bibitem[\protect\citeauthoryear{Bock}{Bock}{2007}]{bock2007clustering}
 \textsc{Bock, H.-H.} (2007): \enquote{Clustering methods: a history of k-means
   algorithms,} in \emph{Selected contributions in data analysis and
   classification}, Springer, 161--172.
+
+\bibitem[\protect\citeauthoryear{{Bort, Julie (Business Insider)}}{{Bort, Julie
+  (Business Insider)}}{2018}]{businessinsider}
+\textsc{{Bort, Julie (Business Insider)}} (2018): \enquote{Insideairbnb Get the
+  Data,}
+  \url{https://www.businessinsider.de/airbnb-profit-revenue-2018-2?r=US&IR=T},
+  online; last accessed on 22. February 2019.
+
+\bibitem[\protect\citeauthoryear{Coles, Egesdal, Ellen, Li, and
+  Sundararajan}{Coles et~al.}{2017}]{coles2017airbnb}
+\textsc{Coles, P.~A., M.~Egesdal, I.~G. Ellen, X.~Li, and A.~Sundararajan}
+  (2017): \enquote{Airbnb usage across new York City neighborhoods: Geographic
+  patterns and regulatory implications,} \emph{Forthcoming, Cambridge Handbook
+  on the Law of the Sharing Economy}.
+
+\bibitem[\protect\citeauthoryear{Geofabrik}{Geofabrik}{2019}]{geofabrik:2018}
+\textsc{Geofabrik} (2019): \enquote{Geofabrik Downloads: Europe, Germany,
+  Berlin,} \url{http://download.geofabrik.de/europe/germany/berlin.html},
+  online; last accessed on 20. November 2018.
 
 \bibitem[\protect\citeauthoryear{Ibe}{Ibe}{2014}]{descrstat:2014}
 \textsc{Ibe, O.} (2014): \emph{Fundamentals of applied probability and random
@@ -17,6 +43,11 @@
   shortest path detection by using Dijkestra Algorithm and Haversine Formula,}
   \emph{International Journal of Engineering Research and Applications}, 3,
   162--165.
+
+\bibitem[\protect\citeauthoryear{Insideairbnb}{Insideairbnb}{2019}]{insideairbnb}
+\textsc{Insideairbnb} (2019): \enquote{Insideairbnb Get the Data,}
+  \url{http://insideairbnb.com/get-the-data.html}, online; last accessed on 04.
+  March 2019.
 
 \bibitem[\protect\citeauthoryear{Kaufman and Rousseeuw}{Kaufman and
   Rousseeuw}{2009}]{kaufman2009finding}
@@ -40,6 +71,10 @@
 \textsc{Madhulatha, T.~S.} (2012): \enquote{An overview on clustering methods,}
   \emph{arXiv preprint arXiv:1205.1117}.
 
+\bibitem[\protect\citeauthoryear{Moy{\'e}}{Moy{\'e}}{2006}]{moye2006statistical}
+\textsc{Moy{\'e}, L.~A.} (2006): \emph{Statistical reasoning in medicine: the
+  intuitive P-value primer}, Springer Science \& Business Media.
+
 \bibitem[\protect\citeauthoryear{Pebesma}{Pebesma}{2018}]{pebesma2018simple}
 \textsc{Pebesma, E.} (2018): \enquote{Simple Features for R: Standardized
   Support for Spatial Vector Data,} \emph{The R Journal}, 10, 439--446.
@@ -49,13 +84,19 @@
 \textsc{Ross, Z., H.~Wickham, and D.~Robinson} (2017): \enquote{Declutter your
   R workflow with tidy tools,} Tech. rep., PeerJ Preprints.
 
-\bibitem[\protect\citeauthoryear{Surname}{Surname}{2012}]{airbnbstory:2012}
-\textsc{Surname, A.} (2012): \enquote{Airbnb: The story behind the $1.3bn
+\bibitem[\protect\citeauthoryear{Salter}{Salter}{2012}]{airbnbstory:2012}
+\textsc{Salter, J.} (2012): \enquote{Airbnb: The story behind the /$1.3bn
   room-letting website,} .
 
 \bibitem[\protect\citeauthoryear{Tan}{Tan}{2018}]{tan2018introduction}
 \textsc{Tan, P.-N.} (2018): \emph{Introduction to data mining}, Pearson
   Education India, chap.~8.
+
+\bibitem[\protect\citeauthoryear{{Verkehrsverbund
+  Berlin-Brandenburg}}{{Verkehrsverbund Berlin-Brandenburg}}{2019}]{vbb:2019}
+\textsc{{Verkehrsverbund Berlin-Brandenburg}} (2019): \enquote{The company
+  VBB,} \url{https://www.vbb.de/en/about-us/the-company-vbb}, online; last
+  accessed on 14. March 2018.
 
 \bibitem[\protect\citeauthoryear{Wang and Nicolau}{Wang and
   Nicolau}{2017}]{wang2017price}

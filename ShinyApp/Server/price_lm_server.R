@@ -33,28 +33,6 @@ price_lm_server = function(input, output, session) {
       
     })
     
-    # Update variables that one can select
-    observe({
-      updateSelectInput(session = session,
-                        inputId = "variable3_2",
-                        choices = input$variable3)
-    })
-    
-    ## SCATTERPLOT
-    
-    output$price_lm_scatterplot = renderPlot({
-      
-      ggplot(price_lm(), aes(x = price, y = gsub(" ", "_", input$variable3_2))) +
-        geom_point(shape = 19, alpha = 0.25) +
-        geom_smooth(method = lm) +
-        # geom_hline(yintercept=0, col="red", linetype="dashed") +
-        xlab("Price") +
-        ylab(input$variable3_2) +
-        ggtitle("Scatterplot") +
-        theme_bw()
-      
-    })
-    
     ## TABLE WITH COEFFICIENTS
     
     output$price_lm_coefficients = renderTable({

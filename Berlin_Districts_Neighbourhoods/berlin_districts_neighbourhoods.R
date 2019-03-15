@@ -1,7 +1,8 @@
 # Load packages
 needed_packages = c("dplyr", "data.table", "sf", "tibble")
 for (package in needed_packages) {
-    if (!require(package, character.only=TRUE)) {install.packages(package, character.only=TRUE)}
+    if (!require(package, character.only=TRUE))
+      {install.packages(package, character.only=TRUE)}
     library(package, character.only=TRUE)
 }
 rm("needed_packages", "package")
@@ -16,7 +17,8 @@ rm("needed_packages", "package")
 
 
 # Load shapefiles
-berlin = sf::st_read(file.path(getwd(), "Data", "Berlin-Ortsteile-polygon.shp", fsep="/"))
+berlin = sf::st_read(file.path(getwd(), "Data", 
+                               "Berlin-Ortsteile-polygon.shp", fsep="/"))
 
 # Object with the neightbourhoods (and respective district)
 berlin_neighbourhood_sf = berlin %>%

@@ -1,7 +1,7 @@
 \section{ShinyApp}\label{Sec:shiny}
 
 \texttt{shiny} is an \texttt{R} package that allows the user to write interactive web applications. These are especially helpful when delivering information to people with no coding experience in a very user-friedly way.
-\\
+
 As described in the official site of \texttt{shiny}, in its most basic version an App is contained in a single script called \textit{app.R}. As the Apps become more and more complicated one can write the code in two scripts, \textit{ui.R} and \textit{server.R}, or even further split these into thematic scripts.
 \\
 The App structure is divided into two main elements:
@@ -11,39 +11,6 @@ The App structure is divided into two main elements:
 \end{itemize}
 
 Finally the App will be called using the function \texttt{shinyApp(ui, server)}.
-\\
-A simple example from the \texttt{shiny} website shows this in action.
 
-\begin{lstlisting}[language = R]
-ui = fluidPage(
-    titlePanel("Hello Shiny!"),
-    sidebarLayout(
-      sidebarPanel(sliderInput(inputId = "bins",
-                               label = "Number of bins:",
-                               min = 1, max = 50, value = 30)),
-      mainPanel(plotOutput(outputId = "distPlot")))
-)
+Because of its interactiveness and flexibility a ShinyApp was built for this project in order to enable the final user a chance to a first hand analysis of the data. The code for the App can be found in the Appendix at subsection \ref{subsec:codeshiny}. It is divided into four tabs: the first one is just introductory, presenting the project and the App itself; the second display Berlin maps and descriptive statistics according to section \ref{Sec:Exploratory}; the third relates to price analysis explained in section \ref{Sec:Price analysis}; the fourth and final one enables the user to perform clustering, like illustrated in section \ref{Sec:cluster}. The ShinyApp is reachable at this link: \url{https://silviav.shinyapps.io/airbnb-berlin/}.
 
-server = function(input, output) {
-    output$distPlot = renderPlot({
-      x    = faithful$waiting
-      bins = seq(min(x), max(x), length.out = input$bins + 1)
-      hist(x, breaks = bins, col = "#75AADB", border = "white",
-           xlab = "Waiting time to next eruption (in mins)",
-           main = "Histogram of waiting times")})
-}
-
-shinyApp(ui = ui, server = server)
-\end{lstlisting}
-
-This simple App produces the result in figure \ref{figure:shiny_example}.
-
-\begin{figure}[H]
-\begin{center}
-\includegraphics[width=0.6\textwidth, keepaspectratio]{shiny_example.png} \\
-\caption{Example of simple ShinyApp from website}
-\label{figure:shiny_example}
-\end{center}
-\end{figure}
-
-Because of its interactiveness and flexibility a ShinyApp was built for this project in order to enable the final user a chance to a first hand analysis of the data. The App is reachable at this link (INSERT SHINY APP LINK).

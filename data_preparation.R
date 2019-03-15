@@ -3,9 +3,12 @@ needed_packages = c("tidyverse",
                      "geosphere",
                      "readr",
                      "rstudioapi",
-                     "Jmisc")
+                     "Jmisc",
+                     "sp",
+                     "sf")
 for (package in needed_packages) {
-  if (!require(package, character.only=TRUE)) {install.packages(package, character.only=TRUE)}
+  if (!require(package, character.only=TRUE)) {
+    install.packages(package, character.only=TRUE)}
   library(package, character.only=TRUE)
 }
 rm("needed_packages", "package")
@@ -19,26 +22,33 @@ rm("needed_packages", "package")
   setwd(dirname(sys.frame(1)$ofile))
 
 # Load helper functions and other scripts
-source(file.path(getwd(), "Berlin_VBB_Zones", "berlin_vbb_zones.R", fsep="/"), chdir = TRUE)
-source(file.path(getwd(), "Berlin_Districts_Neighbourhoods", "berlin_districts_neighbourhoods.R", fsep="/"), chdir = TRUE)
+source(file.path(getwd(), "Berlin_VBB_Zones", 
+                 "berlin_vbb_zones.R", fsep="/"), chdir = TRUE)
+source(file.path(getwd(), "Berlin_Districts_Neighbourhoods", 
+                 "berlin_districts_neighbourhoods.R", fsep="/"), chdir = TRUE)
 Jmisc::sourceAll(file.path(getwd(), "Helpers", fsep="/"))
 
 # Load shapefile
-stations = sf::st_read(file.path(getwd(), "Data", "spatial_data", "gis_osm_transport_free_1.shp", fsep="/"))
+stations = sf::st_read(file.path(getwd(), "Data", "spatial_data", 
+                                 "gis_osm_transport_free_1.shp", fsep="/"))
 
 # Print code development
 print("Spatial data loaded.")
 
 
 # Load dataframes
-# If files are zipped
-# This is the case, because the files are too big to be uploaded to GitHub otherwise
-listings_summarized = read_csv(file.path(getwd(), "Data", "airbnb_data", "listings.csv", fsep="/"),
-                                na = c("NA", ""), locale = locale(encoding = "UTF-8"))
-listings_detailed = read_csv(file.path(getwd(), "Data", "airbnb_data", "listings.csv.gz", fsep="/"),
-                              na = c("NA", ""), locale = locale(encoding = "UTF-8"))
-listings_calendar = read_csv(file.path(getwd(), "Data", "airbnb_data", "calendar.csv.gz", fsep="/"),
-                              na = c("NA", ""), locale = locale(encoding = "UTF-8"))
+listings_summarized = read_csv(file.path(getwd(), "Data", "airbnb_data", 
+                                         "listings.csv", fsep="/"),
+                                na = c("NA", ""), 
+                               locale = locale(encoding = "UTF-8"))
+listings_detailed = read_csv(file.path(getwd(), "Data", "airbnb_data", 
+                                       "listings.csv.gz", fsep="/"),
+                              na = c("NA", ""), 
+                             locale = locale(encoding = "UTF-8"))
+listings_calendar = read_csv(file.path(getwd(), "Data", "airbnb_data", 
+                                       "calendar.csv.gz", fsep="/"),
+                              na = c("NA", ""), 
+                             locale = locale(encoding = "UTF-8"))
 
 # Print code development
 print("Airbnb datasets uploaded.")
@@ -51,9 +61,12 @@ apply(listings, 2, function(x) any(is.na(x)))
 
 # host_is_superhost, # host_has_profile_pic, host_identity_verified
 listings = listings %>%
-    dplyr::mutate(host_is_superhost      = ifelse(is.na(host_is_superhost), FALSE, host_is_superhost),
-                  host_has_profile_pic   = ifelse(is.na(host_has_profile_pic), FALSE, host_has_profile_pic),
-                  host_identity_verified = ifelse(is.na(host_identity_verified), FALSE, host_identity_verified))
+    dplyr::mutate(host_is_superhost      = ifelse(is.na(host_is_superhost), 
+                                                  FALSE, host_is_superhost),
+                  host_has_profile_pic   = ifelse(is.na(host_has_profile_pic), 
+                                                  FALSE, host_has_profile_pic),
+                  host_identity_verified = ifelse(is.na(host_identity_verified), 
+                                                  FALSE, host_identity_verified))
 
 # review_scores_rating
 # We insert the average of the review_scores_rating
@@ -71,7 +84,8 @@ listings = listings %>%
 # Being the amount of missing values in these features relative small, we can derive their value from the other variables:
 listings = listings %>%
   # If beds is NA, but bedrooms has a valid value, we set beds with the number of bedrooms
-  dplyr::mutate(beds     = ifelse(is.na(beds) & !is.na(bedrooms), bedrooms, beds),
+  dplyr::mutate(beds     = ifelse(is.na(beds) & !is.na(bedrooms), 
+                                  bedrooms, beds),
                 # If bedrooms is NA, but beds has a valid value, we set bedrooms with the number of beds
                 bedrooms = ifelse(is.na(bedrooms) & !is.na(beds), beds, bedrooms),
                 # If both beds and bedrooms are NA: 1
@@ -134,8 +148,9 @@ listings = distance_count(main = listings, reference = railway_stations_df,
 
 # (Top 10) attractions
 attractions_df = data.frame(
-  id   = c("Reichstag", "Brandenburger Tor", "Fernsehturm", "Gendarmenmarkt",
-           "Berliner Dom", "Kurfürstendamm", "Schloss Charlottenburg", "Museuminsel",
+  id   = c("Reichstag", "Brandenburger Tor", "Fernsehturm", 
+           "Gendarmenmarkt", "Berliner Dom", "Kurfürstendamm", 
+           "Schloss Charlottenburg", "Museuminsel",
            "Gedenkstätte Berliner Mauer", "Potsdamer Platz"),
   lat  = c(52.518611, 52.516389, 52.520803, 52.513333, 52.519167, 
            52.500833, 52.521111, 52.520556, 52.535, 52.509444),
@@ -154,14 +169,21 @@ listings_calendar = listings_calendar %>%
                 year        = lubridate::year(date),
                 month       = lubridate::month(date, label = TRUE),
                 day         = lubridate::day(date),
-                season      = ifelse((month == "Mar" & day >= 21) | (month == "Apr") | 
-                                    (month == "May") | (month == "Jun" & day < 21), "Spring",
-                              ifelse((month == "Jun" & day >= 21) | (month == "Jul") | 
-                                    (month == "Aug") | (month == "Sep" & day < 21), "Summer",
-                              ifelse((month == "Sep" & day >= 21) | (month == "Oct") | 
-                                    (month == "Nov") | (month == "Dec" & day < 21), "Fall",
-                                                                              "Winter"))) %>%
-                                  factor(levels = c("Spring", "Summer", "Fall", "Winter")),
+                season      = ifelse((month == "Mar" & day >= 21) | 
+                                      (month == "Apr") | 
+                                      (month == "May") |
+                                      (month == "Jun" & day < 21), "Spring",
+                              ifelse((month == "Jun" & day >= 21) | 
+                                     (month == "Jul") | 
+                                    (month == "Aug") | 
+                                      (month == "Sep" & day < 21), "Summer",
+                              ifelse((month == "Sep" & day >= 21) | 
+                                     (month == "Oct") | 
+                                     (month == "Nov") | 
+                                     (month == "Dec" & day < 21), "Fall",
+                                                            "Winter"))) %>%
+                                  factor(levels = c("Spring", "Summer", 
+                                                    "Fall", "Winter")),
                 year_season = paste(tolower(season), year, sep = "_")) %>%
   dplyr::ungroup() %>%
   dplyr::select(-price)
@@ -174,9 +196,12 @@ listings_season_availability = listings_calendar %>%
                    proportion  = round(count/season_days*100, 4)) %>%   
   dplyr::arrange(id, year_season) %>%
   dplyr::ungroup() %>%
-  dplyr::mutate(season_av =  paste(year_season, "availability", sep = "_") %>%
+  dplyr::mutate(season_av =  paste(year_season, "availability", 
+                                   sep = "_") %>%
                              tolower() %>%
-                             factor(levels = paste(year_season, "availability", sep = "_") %>%
+                             factor(levels = paste(year_season, 
+                                                   "availability", 
+                                                   sep = "_") %>%
                                              tolower() %>%
                                              unique())) %>%
   dplyr::select(-count, -year_season, -season_days) %>%
@@ -191,6 +216,6 @@ listings = listings %>%
   replace(is.na(.), 0)
 
 # Remove unnecessary objects
-rm("listings_calendar", "listings_season_availability", "stations", "berlin_neighbourhood_sf",
-   "listings_detailed", "listings_summarized")
+rm("listings_calendar", "listings_season_availability", "stations", 
+   "berlin_neighbourhood_sf", "listings_detailed", "listings_summarized")
 rm(list=lsf.str()) # All functions

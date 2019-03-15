@@ -1,42 +1,23 @@
 \section{Data Preparation}\label{Sec:Data Preparation}
 
-For the analysis explained in this paper data was downloaded for a website independent from airbnb itself. insideairbnb \citep{airbnb} scrapes airbnb to get its data, posts it online for the public to use on own analysis, while also providing some analysis of its own.
-\\
+For the analysis explained in this paper data was downloaded for a website independent from airbnb itself. Insideairbnb \citep{insideairbnb} scrapes airbnb to get its data, posts it online for the public to use on own analysis, while also providing some analysis of its own.
+
 The data is divided according to cities and for each there is general information about the city's properties and their availability for the next year. For this analysis not all variables are being kept, the focus is indeed on the ones that might have the most affect on price. Moreover, feature engineering will also be performed to extract even more useful information. More details in subsection \ref{subsec:berlin}.
-\\
+
 Since we are dealing with data with coordinates, spatial data is also needed to produce a map of the location. For this purpose further data has been downloaded from the Statistics Office of Berlin-Brandenburg \citep{statberlin:2018} and Geofabrik \citep{geofabrik:2018} and further processed, as explained in subsections \ref{subsec:berlin} and \ref{subsec:vbb}.
-\\
+
 To handle data will be make use of functions from the different packages in the \texttt{tidyverse}, which allows for easy manipulation of the data and flexible plotting, see \cite{ross2017declutter}. For spatial data the package \texttt{sf} has been chosen, since it works well with the \texttt{tidyverse} packages and for all the other reasons listed in \cite{pebesma2018simple}.
 
 
 \subsection{Berlin neighbourhoods and districts}\label{subsec:berlin}
 
-Berlin consists of 96 neighbourhoods (Ortsteile), which are grouped into 12 districts (Bezirke). The data downloaded from  \citep{statberlin:2018} contain one polygon for each neighbourhood and additional information about them. The important variables for this analysis are showed in table \ref{table:neighbourhoods}.
-
-\begin{table}[H]
-\centering
-\begin{tabular}{lll}
-  \hline \hline
-                  Name &                       BEZNAME &          geometry \\ 
-  \hline
-Buckow              : 2   & Treptow-Köpenick          :15   & POLYGON      :97   \\ 
-  Adlershof           : 1   & Pankow                    :13   & epsg:4326    : 0   \\ 
-  Alt-Hohenschönhausen: 1   & Reinickendorf             :11   & +proj=long...: 0   \\ 
-  Alt-Treptow         : 1   & Lichtenberg               :10   &  \\ 
-  Altglienicke        : 1   & Spandau                   : 9   &  \\ 
-  Baumschulenweg      : 1   & Charlottenburg-Wilmersdorf: 7   &  \\ 
-  (Other)             :90   & (Other)                   :32   &  \\ 
-   \hline \hline
-\end{tabular}
-\caption{Berlin's polygons data}
-\label{table:neighbourhoods}
-\end{table}
+Berlin consists of 96 neighbourhoods (Ortsteile), which are grouped into 12 districts (Bezirke). The data downloaded from  \cite{statberlin:2018} contain one polygon for each neighbourhood and additional information about them, out of which we only kept the district.
 
 The polygons have been extracted from the relative shapefile with the function \texttt{st\_read} from the \texttt{sf} package. For the neighbourhoods we simply rename the variables and keep the ones of interest.
 
 \lstinputlisting[language=R, firstline=18, lastline=26, firstnumber=1, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}{berlin\_districts\_neighbourhoods.R}}|}]{../Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}
 
-However, as we can see from table \ref{table:neighbourhoods} the neighbourhood Buckow is composed of two separate polygons, which we therefore need to unite according to the neighbourhoods' names. Thanks to the flexibility of the \texttt{sf} objects, this is done simply with a \texttt{summarize} from the package \texttt{dyplr}.
+However, one of the neighbourhoods, Buckow, is composed of two separate polygons, which we therefore need to unite according to the neighbourhoods' names. Thanks to the flexibility of the \texttt{sf} objects, this is done simply with a \texttt{summarize} from the package \texttt{dyplr}.
 
 \lstinputlisting[language=R, firstline=29, lastline=31, firstnumber=11, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}{berlin\_districts\_neighbourhoods.R}}|}]{../Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}
 
@@ -49,8 +30,8 @@ The produced polygons can be used to map Berlin using \texttt{ggplot2} or \textt
 
 \begin{figure}[H]
 \centering
-\subfloat[With \texttt{leaflet}]{\includegraphics[height=1.8in]{berlin_district_leaflet.pdf}}
-\subfloat[With \texttt{ggplot2}]{\includegraphics[height=1.8in]{berlin_district_ggplot.pdf}}
+\subfloat[With \texttt{leaflet}]{\includegraphics[width=0.4\textwidth]{berlin_district_leaflet.pdf}}
+\subfloat[With \texttt{ggplot2}]{\includegraphics[width=0.4\textwidth]{berlin_district_ggplot.pdf}}
 \caption{Maps of the Berlin Districts \protect\includegraphics[scale=0.05]{qletlogo.pdf} {\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods_maps.R}{berlin\_districts\_neighbourhoods\_maps.R}}}
 \centering
 \label{figure:berlin_map}
@@ -58,12 +39,12 @@ The produced polygons can be used to map Berlin using \texttt{ggplot2} or \textt
 
 \subsection{Berlin VBB Zones}\label{subsec:vbb}
 
-The VBB (Verkehrsverbund Berlin-Brandenburg) is "the public transport authority covering the federal states of Berlin and Brandenburg" (CITATION: \href{https://www.vbb.de/en/about-us/the-company-vbb}{VBB Website}). The city of Berlin, in particular, is divided in two fare areas: A, covering the center of Berlin up to the circular line (Ringbahn), and B, from the Ringbahn to the border with Brandenburg. After that there is also the area C, which however will not be covered here since we only consider the city of Berlin.
+The VBB (Verkehrsverbund Berlin-Brandenburg) is "the public transport authority covering the federal states of Berlin and Brandenburg" \citep{vbb:2019}. The city of Berlin, in particular, is divided in two fare areas: A, covering the center of Berlin up to the circular line (Ringbahn), and B, from the Ringbahn to the border with Brandenburg. After that there is also the area C, which however will not be covered here since we only consider the city of Berlin.
 
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.8\textwidth, keepaspectratio]{S_und_U-Bahnnetz_mit_Regionalbahn_Innenstadt.pdf} \\
-\caption{Network Map of Berlin Areas A and B (from \href{https://www.vbb.de/en/timetables/network-maps}{VBB Website})}
+\caption{Network Map of Berlin Areas A and B (Source: \cite{vbb:2019})}
 \end{center}
 \end{figure}
 
@@ -101,8 +82,8 @@ As in subsection \ref{subsec:berlin} the \texttt{sf} object can be used to map t
 
 \begin{figure}[H]
 \centering
-\subfloat[With \texttt{leaflet}]{\includegraphics[height=1.8in]{berlin_vbb_zones_leaflet.pdf}}
-\subfloat[With \texttt{ggplot}]{\includegraphics[height=1.8in]{berlin_vbb_zones_ggplot.pdf}}
+\subfloat[With \texttt{leaflet}]{\includegraphics[width=0.4\textwidth]{berlin_vbb_zones_leaflet.pdf}}
+\subfloat[With \texttt{ggplot}]{\includegraphics[width=0.4\textwidth]{berlin_vbb_zones_ggplot.pdf}}
 \caption{Maps of the Berlin VBB Zones \protect\includegraphics[scale=0.05]{qletlogo.pdf} {\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_VBB_Zones/berlin_vbb_zones_maps.R}{berlin\_vbb\_zones\_maps.R}}}
 \centering
 \end{figure}
@@ -132,7 +113,7 @@ This function firstly calculates the distance between all properties and all ref
 d = 2r \arcsin \Bigg(\sqrt{\sin^2\Big(\frac{\phi_2 - \phi_1}{2}\Big) + \cos(\phi_2)\cos(\phi_1)\sin^2\Big(\frac{\psi_2 - \psi_1}{2}\Big)}\Bigg)
 \end{equation}
 
-%% \mathrm{where} \phi \mathrm{corresponds to the latitude and} \psi \mathrm{to the longitude of the two points.}
+where $\phi$ corresponds to the latitude and $\psi$ to the longitude of the two points.
 
 Then it calculates how many reference points are within the set distance and how much is the distance to the nearest reference point. Finally this information is joined into the main dataframe.
 
@@ -140,58 +121,4 @@ Then it calculates how many reference points are within the set distance and how
 
 In the end we use the calendar dataframe to calculate availability of each property in the different seasons.
 
-\lstinputlisting[language=R, firstline=209, lastline=221, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/data_preparation.R}{data\_preparation.R}}|}]{../data_preparation.R}
-
-
-
-\iffalse
-
-\begin{table}[H]
-\centering
-\begin{tabular}{l}
-  \hline
-x \\ 
-  \hline
-id \\ 
-  attraction\_count \\ 
-  attraction\_dist \\ 
-  station\_count \\ 
-  station\_dist \\ 
-  long \\ 
-  lat \\ 
-  price \\ 
-  property\_type \\ 
-  room\_type \\ 
-  security\_deposit\_yn \\ 
-  cleaning\_fee\_yn \\ 
-  host\_is\_superhost \\ 
-  accommodates \\ 
-  bedrooms \\ 
-  beds \\ 
-  minimum\_nights \\ 
-  review\_scores\_rating \\ 
-  number\_of\_reviews \\ 
-  reviewed\_yn \\ 
-  cancellation\_policy \\ 
-  availability\_30 \\ 
-  availability\_60 \\ 
-  availability\_90 \\ 
-  availability\_365 \\ 
-  listing\_url \\ 
-  district \\ 
-  vbb\_area \\ 
-  neighbourhood \\ 
-  2018\_fall\_availability \\ 
-  2018\_winter\_availability \\ 
-  2019\_spring\_availability \\ 
-  2019\_summer\_availability \\ 
-  2019\_fall\_availability \\ 
-  2019\_winter\_availability \\ 
-   \hline
-\end{tabular}
-\end{table}
-
-\fi
-
-
-
+\lstinputlisting[language=R, firstline=170, lastline=183, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/data_preparation.R}{data\_preparation.R}}|}]{../data_preparation.R}

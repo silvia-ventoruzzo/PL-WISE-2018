@@ -18,17 +18,15 @@ maps_district_server = function(input, output, session) {
   
   title_secondary_map_change = reactive({
     
-    factor_vars <- c("room_type", "property_type", "room_type")
-    
     if (variable2() == "none") {
       
       paste("Map of", input$district, sep = " ") %>%
         paste("'s", sep = "") %>%
         paste("Neighbourhoods", sep = " ")
       
-    } else if (grepl(paste(factor_vars, collapse = "|"), variable2())) {
+    } else if (grepl(paste(factor_vars(), collapse = "|"), variable2())) {
       
-      variable = stringr::str_match(variable2(), paste(factor_vars, collapse = "|")) %>% 
+      variable = stringr::str_match(variable2(), paste(factor_vars(), collapse = "|")) %>% 
         c() %>% gsub("_", " ", .) %>% capwords()
       
       variable %>%
@@ -76,19 +74,40 @@ maps_district_server = function(input, output, session) {
     
   })
   
+  # Number of areas in selected view
+  neighbourhood_area_num = reactive({
+    
+    berlin_names %>%
+      dplyr::filter(view  == "Neighbourhoods",
+                    group == input$district) %>%
+      dplyr::summarize(count = n()) %>%
+      as.numeric()
+    
+  })
   
-  # When choosing a variable (input$variable2), the color should represent the variable'distribution
-  neighbourhood_colors_var = reactive({leaflet::colorNumeric(palette = "Dark2",
-                                                             domain = listings_area_summary %>%
-                                                               filter(view == "Neighbourhoods",
-                                                                      group == input$district) %>%
-                                                               select(variable2()),
-                                                             n = berlin_names %>%
-                                                               filter(view  == "Neighbourhoods",
-                                                                      group == input$district) %>%
-                                                               dplyr::summarize(count = n()) %>%
-                                                               as.numeric(),
-                                                             reverse = TRUE)}) # find better color palette!!!
+  # Colors for average maps
+  neighbourhood_colors_var = reactive({
+    leaflet::colorNumeric(
+      palette = topo.colors(area_num()),
+      domain  = listings_area_summary %>%
+        dplyr::filter(view == input$view) %>%
+        dplyr::select(variable1()),
+      n       = area_num(),
+      reverse = TRUE)})
+  
+  
+  # When choosing a variable (input$variable2), the color should represent the variable's distribution
+  neighbourhood_colors_var = reactive({
+    leaflet::colorNumeric(
+      palette = topo.colors(neighbourhood_area_num()),
+      domain  = listings_area_summary %>%
+                  dplyr::filter(view == "Neighbourhoods",
+                                group == input$district) %>%
+                  dplyr::select(variable2()),
+      n       = neighbourhood_area_num(),
+      reverse = TRUE)
+      
+  })
   
   
   ## MAP
@@ -103,25 +122,10 @@ maps_district_server = function(input, output, session) {
     
     secondary_map = leaflet() %>%
       addTiles() %>%
-      # addPolygons(data = neighbourhoods(), weight = 1, smoothFactor = 1, fillOpacity = 0.8,
-      #             color = "grey", fillColor = neighbourhood_colors(),
-      #             group = "start") %>%
-      # addPolygons(data = neighbourhoods(),
-      #             fillColor = ~neighbourhood_colors_vars(listings_area_summary[listings_area_summary$view  == "Neighbourhoods" &
-      #                                                                            listings_area_summary$group == input$district, 
-      #                                                                          variable2()]),
-      #             group = "variables") %>%
-      # addLegend(position = "bottomleft", pal = neighbourhood_colors_var(), 
-      #           values = listings_area_summary[listings_area_summary$view  == "Neighbourhoods" &
-      #                                            listings_area_summary$group == input$district, 
-    #                                          variable2()],
-    #           labFormat = labelFormat(transform = function(x) sort(x, decreasing = TRUE)),
-    #           title = variable2(),
-    #           group = "variables") %>%
-    addLabelOnlyMarkers(data = neighbourhood_names(),
-                        lng = ~long, lat = ~lat, label = ~lapply(name, htmltools::HTML),
-                        labelOptions = labelOptions(noHide = TRUE, direction = 'center',
-                                                    textOnly = TRUE, textsize = "11px")) %>%
+      addLabelOnlyMarkers(data = neighbourhood_names(),
+                          lng = ~long, lat = ~lat, label = ~lapply(name, htmltools::HTML),
+                          labelOptions = labelOptions(noHide = TRUE, direction = 'center',
+                                                      textOnly = TRUE, textsize = "11px")) %>%
       addAwesomeMarkers(data = listings %>% filter(district == input$district),
                         lng = ~long, lat = ~lat,
                         icon = district_icons[["district_properties"]],
@@ -177,17 +181,15 @@ maps_district_server = function(input, output, session) {
       addMiniMap(centerFixed    = berlin_center %>% t() %>% c(),
                  zoomLevelFixed = 8,
                  zoomAnimation  = FALSE)
-    # %>%
-    #   setView(lng = berlin_names[berlin_names$view == "Districts" & berlin_names$group == input$district, "long"],
-    #           lat = berlin_names[berlin_names$view == "Districts" & berlin_names$group == input$district, "lat"], 
-    #           zoom = 11.5)
     
+    # if no variable is selected
     if (variable2() == "none") {
       
       secondary_map %>%
         addPolygons(data = neighbourhoods(), weight = 1, smoothFactor = 1, fillOpacity = 0.8,
                     color = "grey", fillColor = neighbourhood_colors())
-      
+     
+    # if variable is selected   
     } else {
       
       neighbourhood_colors_vars = neighbourhood_colors_var()
@@ -195,9 +197,11 @@ maps_district_server = function(input, output, session) {
       secondary_map %>%
         addPolygons(data = neighbourhoods(), weight = 1, smoothFactor = 1, fillOpacity = 0.8,
                     color = "grey",
-                    fillColor = ~neighbourhood_colors_vars(listings_area_summary[listings_area_summary$view  == "Neighbourhoods" &
-                                                                                   listings_area_summary$group == input$district,
-                                                                                 variable2()])) %>%
+                    fillColor = ~neighbourhood_colors_vars(
+                                    listings_area_summary
+                                          [listings_area_summary$view  == "Neighbourhoods" &
+                                           listings_area_summary$group == input$district,
+                                           variable2()])) %>%
         addLegend(position = "bottomleft", pal = neighbourhood_colors_var(),
                   values = listings_area_summary[listings_area_summary$view  == "Neighbourhoods" &
                                                    listings_area_summary$group == input$district,
@@ -205,7 +209,7 @@ maps_district_server = function(input, output, session) {
                   labFormat = labelFormat(transform = function(x) sort(x, decreasing = TRUE)),
                   title = variable2())
       
-    }
+        }
     })
   
   # checkboxInputs
@@ -230,16 +234,11 @@ maps_district_server = function(input, output, session) {
 
   title_secondary_table_change = reactive({
     
-    factor_vars = listings %>%
-      dplyr::select(-id, -listing_url, -long, -lat, -vbb_zone, -district, -neighbourhood) %>%
-      dplyr::select_if(function(x) is.character(x) | is.factor(x) | is.logical(x)) %>%
-      names()
-    
     if (variable2() == "none") { return() }
     
-    if (grepl(paste(factor_vars, collapse = "|"), variable2())) {
+    if (grepl(paste(factor_vars(), collapse = "|"), variable2())) {
       
-      variable = stringr::str_match(variable2(), paste(factor_vars, collapse = "|")) %>% 
+      variable = stringr::str_match(variable2(), paste(factor_vars(), collapse = "|")) %>% 
         c() %>% gsub("_", " ", .) %>% capwords()
       
     } else {
@@ -258,51 +257,84 @@ maps_district_server = function(input, output, session) {
   
   ## REACTIVE ELEMENTS
   
-  var_table_plot2 = reactive({
+  # Categorical variables
+  factor_vars = reactive({
     
-    factor_vars <- c("room_type", "property_type", "room_type")
+    listings %>%
+      dplyr::select(-id, -listing_url, -long, -lat, -vbb_zone, -district, -neighbourhood) %>%
+      dplyr::select_if(function(x) is.character(x) | is.factor(x) | is.logical(x)) %>%
+      names()
+    
+  })
+  
+  var_table_plot2 = reactive({
+
+    if (variable2() == "none") { return() }
+
+    if (grepl(paste(factor_vars(), collapse = "|"), variable2())) {
+
+      variable = stringr::str_match(variable2(), paste(factor_vars(), collapse = "|")) %>% c()
+
+    } else {
+
+      variable = variable2()
+
+    }
+
+  })
+
+  
+  table_df = reactive({
     
     if (variable2() == "none") { return() }
     
-    if (grepl(paste(factor_vars, collapse = "|"), variable2())) {
-      
-      variable = stringr::str_match(variable2(), paste(factor_vars, collapse = "|")) %>% c()
-      
-    } else {
-      
-      variable = variable2()
-      
-    }
+    df = listings %>%
+      dplyr::filter(district == input$district) %>%
+      dplyr::select(var_table_plot2())
+    
+    return(df)
     
   })
   
   ## TABLE
   
-  # Table of average or count values of the selected variable (input$variable2) for each neighbourhood
-  # in the selected district (input$district)
-  output$secondary_table = renderTable({
+  # Descriptive table
+  output$secondary_table1 = renderTable({
     
-    factor_vars <- c("room_type", "property_type", "room_type")
-    
-    if (variable2() == "none") { return() }
-    
-    if (grepl(paste(factor_vars, collapse = "|"), variable2())) {
+    if (variable2() == "none") {
       
-      variable = stringr::str_match(variable2(), paste(factor_vars, collapse = "|")) %>% c()
+      return() 
       
-      secondary_df  = summary_stat_fact(df               = listings,
-                                        var              = variable,
-                                        constraint_var   = "district",
-                                        constraint_value = input$district)
+    } else if (grepl(paste(factor_vars(), collapse = "|"), variable2())) {
+      
+      secondary_df = descriptive_statistics(table_df())
+        
+    } else {
+      
+      secondary_df = descriptive_statistics(table_df()) %>%
+        dplyr::select(min, `1Q`, median, `3Q`, max)
+      
+    }
+    
+    return(secondary_df)
+    
+  })
+  
+  output$secondary_table2 = renderTable({
+    
+    if (variable2() == "none") {
+      
+      return() 
+      
+    } else if (grepl(paste(factor_vars(), collapse = "|"), variable2())) {
+      
+      return()
       
     } else {
       
-      variable = variable2()
+      secondary_df = descriptive_statistics(table_df()) %>%
+        dplyr::select(mean, sd)
       
-      secondary_df  = summary_stat_num(df               = listings,
-                                       var              = variable,
-                                       constraint_var   = "district",
-                                       constraint_value = input$district)
     }
     
     return(secondary_df)
@@ -314,13 +346,13 @@ maps_district_server = function(input, output, session) {
   ## TITLE
   title_secondary_plot_change = reactive({
     
-    factor_vars <- c("room_type", "property_type", "room_type")
+    # factor_vars() <- c("room_type", "property_type", "room_type")
     
     if (variable2() == "none") { return() }
     
-    if (grepl(paste(factor_vars, collapse = "|"), variable2())) {
+    if (grepl(paste(factor_vars(), collapse = "|"), variable2())) {
       
-      variable = stringr::str_match(variable2(), paste(factor_vars, collapse = "|")) %>% 
+      variable = stringr::str_match(variable2(), paste(factor_vars(), collapse = "|")) %>% 
         c() %>% gsub("_", " ", .) %>% capwords()
       
     } else {
@@ -340,40 +372,26 @@ maps_district_server = function(input, output, session) {
   
   ## REACTIVE ELEMENTS
   
-  plot_df = reactive({
-    
-    factor_vars <- c("room_type", "property_type", "room_type")
-    
-    if (variable2() == "none") { 
-      
-      return() 
-      
-    } else if (grepl(paste(factor_vars, collapse = "|"), variable2())) {
-      
-      variable = var_table_plot2() %>% sym()
-      
+  plot_df2 = reactive({
+
+    if (variable2() == "none") {
+
+      return()
+
+    } else if (grepl(paste(factor_vars(), collapse = "|"), variable2())) {
+
       df = listings %>%
-        filter(district == input$district) %>%
-        group_by(!!variable) %>%
-        summarize(count = n()) %>%
-        rename(var = !!variable)
-      
+        filter(district == input$district) 
+
     } else {
-      
+
       variable = var_table_plot2() %>% sym()
-      
+
       df = listings %>%
-        filter(district == input$district) %>%
-        transmute(var    = !!variable,
-                  median = median(!!variable),
-                  mean   = mean(!!variable),
-                  `1Q`   = quantile(!!variable, probs = 0.25),
-                  `3Q`   = quantile(!!variable, probs = 0.75),
-                  `95P`  = quantile(!!variable, probs = 0.95),
-                  count  = sum(!!variable > unique(`95P`)))
+        filter(district == input$district) 
       
     }
-    
+
     return(df)
   })
   
@@ -381,55 +399,21 @@ maps_district_server = function(input, output, session) {
   
   output$secondary_plot = renderPlot({
     
-    factor_vars <- c("room_type", "property_type", "room_type")
-    
     if (variable2() == "none") { 
       
       return() 
       
-    } else if (grepl(paste(factor_vars, collapse = "|"), variable2())) {
+    } else if (grepl(paste(factor_vars(), collapse = "|"), variable2())) {
       
-      ggplot(plot_df()) +
-        geom_bar(aes(x = var, y = count), fill = "green", stat = "identity") +
-        labs(x = var_table_plot2()) +
-        theme_bw() +
-        theme(axis.text.x = element_text(angle = 90, hjust = 1, size = rel(1.5)))
+      plot2 = distribution_plot(plot_df2(), var_table_plot2(), tilt_text_x = TRUE)
       
     } else {
       
-      ggplot(plot_df()) +
-        geom_density(aes(x = var), fill = "green") +
-        geom_vline(aes(xintercept = unique(median)),
-                   color = "blue", linetype = "dashed") +
-        annotate(geom = "text", x = (unique(plot_df()$median) + 2.6), y = 0,
-                 label = "Median",
-                 colour = "blue", 
-                 angle = 90, hjust = 0) +
-        geom_vline(aes(xintercept = unique(mean)),
-                   color = "black", linetype = "dashed") +
-        annotate(geom = "text", x = (unique(plot_df()$mean) + 2.6), y = 0,
-                 label = "Mean",
-                 colour = "black", 
-                 angle = 90, hjust = 0) +
-        geom_vline(aes(xintercept = `1Q`),
-                   color = "red", linetype = "dashed") +
-        annotate(geom = "text", x = (unique(plot_df()$`1Q`) + 2.6), y = 0,
-                 label = "1st Quantile",
-                 colour = "red", 
-                 angle = 90, hjust = 0) +
-        geom_vline(aes(xintercept = `3Q`),
-                   color = "red", linetype = "dashed") +
-        annotate(geom = "text", x = (unique(plot_df()$`3Q`) + 2.6), y = 0,
-                 label = "3rd Quantile",
-                 colour = "red", 
-                 angle = 90, hjust = 0) +
-        scale_x_continuous(limits = c(min(plot_df()$var), unique(plot_df()$`95P`))) +
-        labs(caption = paste("Left limit set to 95% percentile:", unique(plot_df()$count), "values not displayed", sep = " "),
-             x = var_table_plot2()) +
-        theme_bw() +
-        theme(axis.text.x = element_text(size = rel(1.5)))
+      plot2 = distribution_plot(plot_df2(), var_table_plot2(), hide_outliers = TRUE)
       
     }
+    
+    return(plot2)
     
   })
   

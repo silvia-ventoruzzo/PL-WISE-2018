@@ -28,7 +28,7 @@ var_avg_map = function(summary_df, var_name,
     addLabelOnlyMarkers(data = polygon_names_df,
                         lng = ~long, lat = ~lat, label = ~lapply(polygon_names_df[,polygon_names_var], htmltools::HTML),
                         labelOptions = labelOptions(noHide = TRUE, direction = 'center',
-                                                    textOnly = TRUE, textsize = 12,
+                                                    textOnly = TRUE, textsize = 20,
                                                     style = list("color" = "black"))) %>%
     addLegend(position = "bottomleft", pal = colors, 
               values = summary_df[, var_name],

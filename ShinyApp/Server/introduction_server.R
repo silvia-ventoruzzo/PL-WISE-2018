@@ -14,7 +14,7 @@ introduction_server = function(input, output, session) {
       url2  = a("Humboldt-University of Berlin", 
                 href="https://www.hu-berlin.de/")
       text3 = " in the Winter Termin 2018/19. It shows some Exploratory Data Analysis of the Airbnb properties
-      in Berlin updated at the 7. November 2018."
+      in Berlin updated at the 14. January 2019."
       
       part1 = paste(text1, url1, text2, url2, text3, sep = "") %>%
         paste("<br/>", sep = "<br/>")
@@ -32,10 +32,19 @@ introduction_server = function(input, output, session) {
         paste(url4, sep = "") %>%
         paste(url5, sep = "</li><li>") %>%
         paste(url6, sep = "</li><li>") %>%
-        paste("",   sep = "</li>")
+        paste("",   sep = "</li></ul><br/>")
       html2 = HTML(part2)
       
-      tagList(html1, html2)
+      text5 = "The complete code for this project can be found on"
+      url7  = a("GitHub", 
+                href="https://github.com/silvia-ventoruzzo/SPL-WISE-2018")
+      text6 = "."
+      
+      part3 = paste(text5, url7, sep = " ") %>%
+        paste(text6, sep = "")
+      html3  = HTML(part3)
+      
+      tagList(html1, html2, html3)
       
       
     })

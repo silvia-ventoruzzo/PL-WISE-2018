@@ -5,9 +5,31 @@
 
 clustering_server = function(input, output, session) {
   
-  output$ctest_text <- renderText({
+  output$cluster_ui <- renderUI({
     
-    "In this tab you can do bla bla bla"
+    text1  = "In this tab you can cluster Airbnb properties in Berlin. The process is the following:"
+    text2  = "Choose the number of the clusters according to the elbow-method"
+    text2a = "Choose the number of clusters to test"
+    text2b = "Calculate for each number the percentage of the total variance explained"
+    text2c = "Plot the total variance explained against the number of clusters"
+    text2d = "Choose the number of clusters where adding another does not add sufficient informatoin"
+    text3  = "Cluster the properties with the selected number of clusters"
+    text4  = "Plot the clusters"
+  
+    intern = paste(text2, "<ul><li>", sep = "<br/>") %>%
+      paste(text2a, sep = "") %>%
+      paste(text2b, sep = "</li><li>") %>%
+      paste(text2c, sep = "</li><li>") %>%
+      paste(text2d, sep = "</li><li>") %>%
+      paste("",   sep = "</li></ul>")
+    
+    extern = paste(text1, "<ul><li>", sep = "<br/>") %>%
+      paste(intern, sep = "") %>%
+      paste(text3, sep = "</li><li>") %>%
+      paste(text4, sep = "</li><li>") %>%
+      paste("",   sep = "</li></ul>")
+    
+    html = HTML(extern)
     
   })
   
@@ -36,7 +58,6 @@ clustering_server = function(input, output, session) {
       for (k in seq(input$ctest[1], input$ctest[2], 1)) {
         
         clk[[k-1]] = kmeans(listings_scaled, centers = k, iter.max = 20)
-        # names(clk)[k-1] = paste(k, "clusters", sep = " ")
         tve$tve[k-1] = 1-clk[[k-1]]$tot.withinss/clk[[k-1]]$totss
         
         updateProgressBar(session = session, id = "ctest_progress",
@@ -58,7 +79,7 @@ clustering_server = function(input, output, session) {
         ggplot(aes(x = clusters, y = tve)) +
         geom_line(color = "grey") +
         geom_point(color = "red") +
-        scale_x_continuous(breaks = seq(input$ctest[1], input$ctest[2], 5)) +
+        scale_x_continuous(breaks = seq(input$ctest[1], input$ctest[2], 2)) +
         theme_bw()
       
     })
@@ -75,32 +96,46 @@ clustering_server = function(input, output, session) {
       tagList(text, url)
     })
     
-    clustered <- eventReactive(input$cnum_start, {
+    # REACTIVE ELEMENTS
+    
+    # k-means
+    k_means = eventReactive(input$cnum_start, {
       
-      k_means = kmeans(listings_scaled, centers = input$cnum, iter.max = 20)
+      kmeans(listings_scaled, centers = input$cnum, iter.max = 20)
       
-      clusters = k_means$cluster %>% as.factor()
-      
-      return(clusters)
     })
     
+    # clusters
+    clusters <- eventReactive(input$cnum_start, {
+      
+      k_means()$cluster %>% as.factor()
+      
+    })
     
-    output$clustering = renderPlot({
+    # Plot of cluster on coordinates
+    output$clustercoord = renderPlot({
       
       # Dependency on input$ctest_start
-      if (input$cnum_start == 0) return()
+      if (input$cnum_start == 0) { return() }
       
       ggplot() +
         geom_sf(data = berlin_sf %>% dplyr::filter(view == "Districts"),
                 show.legend = FALSE, color = "black") +
         coord_sf(datum = NA) +
-        geom_text(data = berlin_names %>% dplyr::filter(view == "Districts"), 
-                  aes(x = long, y = lat, label = lapply(name, htmltools::HTML), hjust = "center"), size = 3) +
-        geom_point(data = listings, aes(x = long, y = lat, color = clustered()), alpha = 0.5) +
+        geom_point(data = listings, aes(x = long, y = lat, color = clusters()), alpha = 0.5) +
         theme(plot.title = element_text(hjust = 0.5)) +
-        # ggtitle("Clustering of airbnb properties") +
-        # xlab("longitude") +
-        # ylab("latitude") +
+        labs(color = "clusters") +
+        theme_void()
+      
+    })
+    
+    # Plot of clusters on Principal Components
+    output$clusterpc = renderPlot({
+      
+      # Dependency on input$ctest_start
+      if (input$cnum_start == 0) { return() }
+      
+      ggplot2::autoplot(listings_pc, data = k_means(), colour = "cluster") +
         labs(color = "clusters") +
         theme_bw()
       

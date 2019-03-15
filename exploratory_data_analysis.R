@@ -15,10 +15,10 @@ rm("needed_packages", "package")
 # Set working directory to the one where the file is located
 
   # This works when run directly
-  setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) 
+  # setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) 
   
   # This works when sourced
-  # setwd(dirname(sys.frame(1)$ofile))
+  setwd(dirname(sys.frame(1)$ofile))
 
 # Load helper functions and other scripts
 source("data_preparation.R", chdir = TRUE)
@@ -35,7 +35,8 @@ statistics_num = listings %>%
 # Categorical variables
 statistics_cat = listings %>%
     dplyr::select(-id, -listing_url, -long, -lat) %>%
-    dplyr::select_if(function(x) is.character(x) | is.factor(x) | is.logical(x)) %>%
+    dplyr::select_if(function(x) is.character(x) | is.factor(x) 
+                                                 | is.logical(x)) %>%
     descriptive_statistics()
 
 # Latex tables
@@ -52,13 +53,16 @@ statistics_cat = listings %>%
 
 # Select numerical and categorical variables
 num_var = listings %>%
-    dplyr::select(-id, -listing_url, -long, -lat, -vbb_zone, -district, -neighbourhood) %>%
+    dplyr::select(-id, -listing_url, -long, -lat, 
+                  -vbb_zone, -district, -neighbourhood) %>%
     dplyr::select_if(is.numeric) %>%
     names()
 
 fact_var = listings %>%
-    dplyr::select(-id, -listing_url, -long, -lat, -vbb_zone, -district, -neighbourhood) %>%
-    dplyr::select_if(function(x) is.character(x) | is.factor(x) | is.logical(x)) %>%
+    dplyr::select(-id, -listing_url, -long, -lat, 
+                  -vbb_zone, -district, -neighbourhood) %>%
+    dplyr::select_if(function(x) is.character(x) | is.factor(x) 
+                                                 | is.logical(x)) %>%
     names()
 
 # For all Berlin
@@ -94,7 +98,8 @@ listings_neighbourhood_summary = summarize_df(df = listings,
                                               vars_count = fact_var)
 listings_neighbourhood_summary = berlin_neighbourhoods_names %>%
     dplyr::select(id, group) %>%
-    dplyr::left_join(listings_neighbourhood_summary, by = c("id" = "neighbourhood")) %>%
+    dplyr::left_join(listings_neighbourhood_summary, 
+                     by = c("id" = "neighbourhood")) %>%
     dplyr::mutate(view = "Neighbourhoods") %>%
     replace(is.na(.), 0)
 
@@ -105,20 +110,20 @@ listings_neighbourhood_summary = berlin_neighbourhoods_names %>%
 # Complete distribution
 distribution_plot(df = listings, var_name = "price")
 
-dev.copy2pdf(file = "./SeminarPaper/price_distribution_complete.pdf")
-dev.off()
+# dev.copy2pdf(file = "./SeminarPaper/price_distribution_complete.pdf")
+# dev.off()
 
 # Without outliers
 distribution_plot(df = listings, var_name = "price", hide_outliers = TRUE)
 
-dev.copy2pdf(file = "./SeminarPaper/price_distribution_nooutliers.pdf")
-dev.off()
+# dev.copy2pdf(file = "./SeminarPaper/price_distribution_nooutliers.pdf")
+# dev.off()
 
 # Plot factor variables
 distribution_plot(df = listings, var_name = "station_count")
   
-dev.copy2pdf(file = "./SeminarPaper/room_type_distribution.pdf")
-dev.off()
+# dev.copy2pdf(file = "./SeminarPaper/room_type_distribution.pdf")
+# dev.off()
 
 # Maps of variable distribution
 price_map_distr = var_avg_map(summary_df        = listings_district_summary,
@@ -128,11 +133,11 @@ price_map_distr = var_avg_map(summary_df        = listings_district_summary,
                               polygon_names_var = "name")
 price_map_distr
 
-mapview::mapshot(price_map_distr, file = "./SeminarPaper/price_map_distr.pdf",
-                remove_controls = c("zoomControl", "layersControl", "homeButton","scaleBar"))
+# mapview::mapshot(price_map_distr, file = "./SeminarPaper/price_map_distr.pdf",
+#                 remove_controls = c("zoomControl", "layersControl", "homeButton","scaleBar"))
 
 print("Exploratory Data Analysis done.")
 
 # Remove unnecessary objects
-rm("colors", "price_map_distr")
+rm("price_map_distr", "fact_var", "num_var")
 rm(list=lsf.str()) # All functions

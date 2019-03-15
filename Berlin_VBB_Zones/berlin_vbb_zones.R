@@ -20,8 +20,10 @@ rm("needed_packages", "package")
 source(file.path(getwd(), "Helpers", "points_midpoint.R", fsep="/"))
 
 # Load shapefiles
-berlin = sf::st_read(file.path(getwd(), "Data", "Berlin-Ortsteile-polygon.shp", fsep="/"))
-stations = sf::st_read(file.path(getwd(), "Data", "gis_osm_transport_free_1.shp", fsep="/"))
+berlin = sf::st_read(file.path(getwd(), "Data", 
+                               "Berlin-Ortsteile-polygon.shp", fsep="/"))
+stations = sf::st_read(file.path(getwd(), "Data", 
+                                 "gis_osm_transport_free_1.shp", fsep="/"))
 
 # Create dataframe with names of stations on the Ringbahn (delimits Area A)
 ringbahn_names_df = base::data.frame(
@@ -30,8 +32,8 @@ ringbahn_names_df = base::data.frame(
           "Messe Nord/ICC", "Westend", "Jungfernheide", "Beusselstraße",
           "Westhafen", "Wedding", "Gesundbrunnen", "Schönhauser Allee",
           "Prenzlauer Allee", "Greifswalder Straße", "Landsberger Allee", 
-          "Storkower Straße", "Frankfurter Allee", "Ostkreuz", "Treptower Park",
-          "Sonnenallee", "Neukölln", "Hermannstraße",
+          "Storkower Straße", "Frankfurter Allee", "Ostkreuz", 
+          "Treptower Park", "Sonnenallee", "Neukölln", "Hermannstraße",
           "Tempelhof", "Südkreuz"),
       stringsAsFactors = FALSE) %>% 
     tibble::rownames_to_column(var = "order") %>%
@@ -89,7 +91,7 @@ berlin_vbb_AB_names = berlin_vbb_A_names %>%
     dplyr::mutate(name = gsub("-", "-<br>", id))
 
 # Remove not needed data
-rm("berlin", "berlin_sf", "ringbahn_names_df", "stations", "berlin_vbb_A_sf", 
-   "berlin_vbb_A_names", "berlin_vbb_B_names")
+rm("berlin", "berlin_sf", "ringbahn_names_df", "stations", 
+   "berlin_vbb_A_sf", "berlin_vbb_A_names", "berlin_vbb_B_names")
 rm(list=lsf.str()) # All functions
 

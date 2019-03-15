@@ -3,48 +3,44 @@ Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: seminar_paper.aux
 The style file: ecta.bst
 Database file #1: literature.bib
-Warning--I didn't find a database entry for "airbnb"
-Warning--I didn't find a database entry for "statberlin:2018"
-Warning--I didn't find a database entry for "geofabrik:2018"
-You've used 12 entries,
+You've used 19 entries,
             2849 wiz_defined-function locations,
-            670 strings with 6479 characters,
-and the built_in function-call counts, 6521 in all, are:
-= -- 540
-> -- 228
-< -- 23
-+ -- 74
-- -- 60
-* -- 525
-:= -- 1012
-add.period$ -- 21
-call.type$ -- 12
-change.case$ -- 69
-chr.to.int$ -- 12
-cite$ -- 12
-duplicate$ -- 495
-empty$ -- 520
-format.name$ -- 112
-if$ -- 1306
+            701 strings with 7723 characters,
+and the built_in function-call counts, 9673 in all, are:
+= -- 812
+> -- 350
+< -- 35
++ -- 116
+- -- 93
+* -- 755
+:= -- 1546
+add.period$ -- 34
+call.type$ -- 19
+change.case$ -- 113
+chr.to.int$ -- 19
+cite$ -- 19
+duplicate$ -- 736
+empty$ -- 748
+format.name$ -- 161
+if$ -- 1927
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 92
-newline$ -- 41
-num.names$ -- 60
-pop$ -- 183
+missing$ -- 133
+newline$ -- 62
+num.names$ -- 95
+pop$ -- 254
 preamble$ -- 1
-purify$ -- 68
+purify$ -- 107
 quote$ -- 0
-skip$ -- 199
+skip$ -- 305
 stack$ -- 0
-substring$ -- 288
-swap$ -- 236
+substring$ -- 383
+swap$ -- 335
 text.length$ -- 3
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 132
+type$ -- 212
 warning$ -- 0
-while$ -- 49
+while$ -- 70
 width$ -- 0
-write$ -- 146
-(There were 3 warnings)
+write$ -- 228

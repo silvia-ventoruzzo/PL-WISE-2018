@@ -1,13 +1,21 @@
 ui = dashboardPage(
     skin = "red",
-    dashboardHeader(title = "Airbnb properties in Berlin"),
+    dashboardHeader(title = "Airbnb in Berlin"),
     dashboardSidebar(
       sidebarMenu(
         id = "tabs",
-        menuItem("Intro",      tabName = "intro",      icon = icon("play-circle")),
-        menuItem("Maps",       tabName = "maps",       icon = icon("map")),
-        menuItem("Price",      tabName = "price",      icon = icon("dollar")),
-        menuItem("Clustering", tabName = "cluster",    icon = icon("object-group"))
+        menuItem("Intro",      
+                 tabName = "intro",      
+                 icon = icon("play-circle")),
+        menuItem("Maps",       
+                 tabName = "maps",       
+                 icon = icon("map")),
+        menuItem("Price",      
+                 tabName = "price",      
+                 icon = icon("dollar")),
+        menuItem("Clustering", 
+                 tabName = "cluster",    
+                 icon = icon("object-group"))
         )
       ),
     dashboardBody(
@@ -34,8 +42,9 @@ ui = dashboardPage(
               column(width = 4, 
                      h4("Clustering Tab"),
                      textOutput("intro_cluster_text"),
-                     br(), br(),
-                     actionButton("switch_cluster", "Go to Clustering Tab")))
+                     br(),
+                     actionButton("switch_cluster", 
+                                  "Go to Clustering Tab")))
           )
       ), 
     
@@ -44,102 +53,120 @@ ui = dashboardPage(
           fluidRow(
             tabBox(id = "berlin",
                    width  = 12,
-                   tabPanel(title = "Berlin map",
-                            textOutput("berlin_text"),
-                            br(),
-                            box(width = 12,
-                                solidHeader=TRUE,
-                                column(width = 6,
-                                       selectInput(inputId = "view",
-                                                   label   = "Choose view",
-                                                   choices = berlin_sf %>%
-                                                     as.data.frame() %>%
-                                                     select(view) %>%
-                                                     unique() %>%
-                                                     t() %>%
-                                                     c() %>%
-                                                     setdiff("Neighbourhoods"))),
-                                column(width = 6,
-                                       selectInput(inputId = "variable1",
-                                                   label   = "Choose variable",
-                                                   choices = c("none", listings_area_summary %>%
-                                                                 colnames() %>%
-                                                                 setdiff(c("id", "view", "group")) %>%
-                                                                 gsub("_", " ", .))))
+                   tabPanel(
+                     title = "Berlin map",
+                     textOutput("berlin_text"),
+                     br(),
+                     box(
+                       width = 12,
+                       solidHeader=TRUE,
+                       column(
+                         width = 6,
+                         selectInput(
+                           inputId = "view",
+                           label   = "Choose view",
+                           choices = berlin_sf %>%
+                                        as.data.frame() %>%
+                                        select(view) %>%
+                                        unique() %>%
+                                        t() %>%
+                                        c() %>%
+                                        setdiff("Neighbourhoods"))),
+                       column(
+                         width = 6,
+                         selectInput(
+                           inputId = "variable1",
+                           label   = "Choose variable",
+                           choices = c("none", listings_area_summary %>%
+                                                 colnames() %>%
+                                                 setdiff(c("id", "view", "group")) %>%
+                                                 gsub("_", " ", .))))
                                 ),
-                            box(width = 12,
-                                solidHeader=TRUE,
-                                column(width = 4,
-                                       checkboxInput(inputId = "main_properties",
-                                                     label   = "Display properties",
-                                                     value   = FALSE)),
-                                column(width = 4,
-                                       checkboxInput(inputId = "main_stations",
-                                                     label   = "Display train/subway stations",
-                                                     value   = FALSE)),
-                                column(width = 4,
-                                       checkboxInput(inputId = "main_sights",
-                                                     label   = "Display top 10 attractions",
-                                                     value   = FALSE))
-                                ),
-                            box(width = 12,
-                                solidHeader = TRUE,
-                                h4(textOutput("title_main_map")),
-                                leafletOutput("main_map") %>% withSpinner()
-                                ),
-                            box(width = 12,
-                                solidHeader = TRUE,
-                                column(
-                                  width = 4,
-                                  h4(textOutput("title_main_table")),
-                                  tableOutput("main_table1"),
-                                  tableOutput("main_table2")
-                                ),
-                                column(
-                                  width = 8,
-                                  h4(textOutput("title_main_plot")),
-                                  plotOutput("main_plot")
-                                  )
-                                )
-                            ),
-                   
-                   tabPanel(title = "District map",
-                            textOutput("district_text"),
-                            br(),
                             box(
                               width = 12,
                               solidHeader=TRUE,
                               column(
-                                width = 6,
-                                selectInput(inputId  = "district",
-                                            label    = "Choose district",
-                                            choices  = berlin_names %>%
-                                                          filter(view == "Districts") %>%
-                                                          select(id) %>% unique() %>% t() %>% c(),
-                                            selected = "Mitte")),
+                                width = 4,
+                                checkboxInput(inputId = "main_properties",
+                                              label   = "Display properties",
+                                              value   = FALSE)),
                                 column(
-                                  width = 6,
-                                  selectInput(inputId = "variable2",
-                                              label   = "Choose variable",
-                                              choices = c("none", listings_area_summary %>%
+                                  width = 4,
+                                  checkboxInput(inputId = "main_stations",
+                                                label   = "Display train/subway stations",
+                                                value   = FALSE)),
+                                column(
+                                  width = 4,
+                                  checkboxInput(
+                                    inputId = "main_sights",
+                                    label   = "Display top 10 attractions",
+                                    value   = FALSE))
+                                ),
+                            box(
+                              width       = 12,
+                              align       = "center",
+                              solidHeader = TRUE,
+                              h4(textOutput("title_main_map")),
+                              leafletOutput("main_map") %>% withSpinner()
+                                ),
+                            box(
+                              width       = 12,
+                              align       = "center",
+                              solidHeader = TRUE,
+                              column(
+                                width = 4,
+                                h4(textOutput("title_main_table")),
+                                tableOutput("main_table1"),
+                                tableOutput("main_table2")
+                                ),
+                              column(
+                                width = 8,
+                                h4(textOutput("title_main_plot")),
+                                plotOutput("main_plot")
+                                )
+                              )
+                            ),
+                   tabPanel(
+                     title = "District map",
+                     textOutput("district_text"),
+                     br(),
+                     box(
+                       width = 12,
+                       solidHeader=TRUE,
+                       column(
+                         width = 6,
+                         selectInput(inputId  = "district",
+                                     label    = "Choose district",
+                                     choices  = berlin_names %>%
+                                                   filter(view == "Districts") %>%
+                                                   select(id) %>% unique() %>% t() %>% c(),
+                                     selected = "Mitte")),
+                       column(
+                         width = 6,
+                         selectInput(inputId = "variable2",
+                                     label   = "Choose variable",
+                                     choices = c("none", listings_area_summary %>%
                                                            colnames() %>%
                                                            setdiff(c("id", "view", "group")) %>%
                                                            gsub("_", " ", .))))
                             ),
-                            box(width = 12,
-                                solidHeader=TRUE,
-                                column(width = 4,
-                                       checkboxInput(inputId = "district_properties",
-                                                     label   = "Display properties",
-                                                     value   = FALSE)),
-                                column(width = 4,
-                                       checkboxInput(inputId = "district_stations",
-                                                     label   = "Display train/subway stations",
-                                                     value   = FALSE)),
-                                column(width = 4, 
-                                       checkboxInput(inputId = "district_sights",
-                                                     label   = "Display top 10 attractions",
-                                                     value   = FALSE))
+                            box(
+                              width = 12,
+                              solidHeader=TRUE,
+                              column(width = 4,
+                                     checkboxInput(inputId = "district_properties",
+                                                   label   = "Display properties",
+                                                   value   = FALSE)),
+                                column(
+                                  width = 4,
+                                  checkboxInput(inputId = "district_stations",
+                                                label   = "Display train/subway stations",
+                                                value   = FALSE)),
+                                column(
+                                  width = 4, 
+                                  checkboxInput(inputId = "district_sights",
+                                                label   = "Display top 10 attractions",
+                                                value   = FALSE))
 
                                 ),
                             box(width       = 12,
@@ -154,7 +181,8 @@ ui = dashboardPage(
                                 column(
                                   width = 4,
                                   h4(textOutput("title_secondary_table")),
-                                  tableOutput("secondary_table")
+                                  tableOutput("secondary_table1"),
+                                  tableOutput("secondary_table2")
                                 ),
                                 column(
                                   width = 8,
@@ -213,28 +241,21 @@ ui = dashboardPage(
                             width = 12,
                             tabPanel(
                               title = "Model",
-                              column(
-                                width = 6,
-                                h4("R-Squared of the model"),
-                                textOutput(outputId = "price_lm_r2")
-                              ),
-                              column(
-                                width = 6,
-                                h4("Choose variable to plot against price."),
-                                selectInput(inputId = "variable3_2",
-                                            label   = NULL,
-                                            choices = NULL)
-                              ),
-                              plotOutput(outputId = "price_lm_scatterplot")
-                            ),
-                            tabPanel(
-                              title = "Coefficients",
-                              box(width = 12,
-                                  solidHeader = TRUE,
-                                  align = "center",
-                                  h4("Coefficients of the linear regression on price"),
+                              box(
+                                width = 12,
+                                align = "center",
+                                solidHeader = TRUE,
+                                column(
+                                  width = 3,
+                                  h4("R-Squared of the model"),
+                                  textOutput(outputId = "price_lm_r2")
+                                  ),
+                                column(
+                                  width = 9,
+                                  h4("Coefficients of the linear regression on price."),
                                   tableOutput(outputId = "price_lm_coefficients")
-                                  )
+                                )
+                              )
                             ),
                             tabPanel(
                               title = "Residuals",
@@ -268,8 +289,7 @@ ui = dashboardPage(
           fluidRow(
             box(status = "danger",
                 width  = 12,
-                # align  = "center",
-                textOutput("cluster_text")),
+                uiOutput("cluster_ui")),
             tabBox(id = "cluster_test",
                 width  = 12,
                 tabPanel(title = "Find number of clusters",
@@ -295,8 +315,22 @@ ui = dashboardPage(
                                       min = 2, max = 96, value = 12, step = 1,
                                       width = "30%"),
                          actionButton("cnum_start", "Calculate"),
-                         plotOutput(outputId = "clustering")
+                         box(
+                           width       = 12,
+                           align       = "center",
+                           solidHeader = TRUE,
+                           column(
+                             width = 6, 
+                             h4("Clusters on coordinates"),
+                             plotOutput(outputId = "clustercoord") %>% withSpinner()
+                            ),
+                           column(
+                             width = 6,
+                             h4("Clusters on Principal Components"),
+                             plotOutput(outputId = "clusterpc") %>% withSpinner()
+                            )
                          )
+                    )
                 )
         )
         

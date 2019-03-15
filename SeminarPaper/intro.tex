@@ -1,30 +1,12 @@
 \section{Introduction}
 
-\begin{itemize}
+Airbnb (airbnb.com) is now a famous website allowing private people and commercial entities to rent out part of their spaces. It all started in 2007 when two 27-year-olds decided to sublet their living room in their San Francisco apartment during a conference to help pay their rent \citep{airbnbstory:2012}. Now, they are a multibillion-dollar company where properties from all over the world are on rent \citep{businessinsider}.
 
-    \item What is the subject of the study? Describe the
-        economic/econometric problem.
-        
-        Airbnb (airbnb.com) is now a famous website allowing private people and commercial entities to rent out part of their spaces. It all started in 2007 when two 27-year-olds decided to sublet their living room in their San Francisco apartment during a conference to help pay their rent \citep{airbnbstory:2012}. Now, ............
+Many studies have already been conducted on price determinants for the hotel industry, like the ones named in \cite{wang2017price}, and for Airbnb properties \cite{wang2017price} itself, but none so far specific for the city of Berlin. We therefore attempted an exploratory analysis of Airbnb listings in Berlin and, in particular, of their price. For this purpose linear regression on price was also run and properties were clustered.
 
-    \item What is the purpose of the study (working hypothesis)?
-    
-	Many studies have already been conducted on price determinants for the hotel industry, like the ones named in    \cite{wang2017price}, and for Airbnb properties (.......), but none so far specific for the city of Berlin. We therefore attempt an exploratory analysis of Airbnb listings in Berlin and, in particular, of their price. For this purpose also the properties were also clustered and....
+As in \cite{wang2017price} summarized, in the case of hotels, hotel prices are negatively influenced by the hotel's location, since shorter distance from the city center, the main attractions and/or important transportation points leads to higher prices. On the other side positive influences on price are hotels'star rating and online customer rating, the services and amenities provided, and by the "presense of car parks and fitness centers". But price determinants could be different in case of different types of accomodations, such as the ones offered on Airbnb. That's why \cite{wang2017price} also derived the drivers of price for Airbnb listings from 33 cities.
 
-    \item What do we already know about the subject (literature
-        
-    As in \cite{wang2017price} summarized, in the case of hotels, hotel prices are negatively influenced by the hotel's location, since shorter distance from the city center, the main attractions and/or important transportation points leads to higher prices. On the other side positive influences on price are hotels'star rating and online customer rating, the services and amenities provided, and by the "presense of car parks and fitness centers". But price determinants could be different in case of different types of accomodations, such as the ones offered on Airbnb. That's why \cite{wang2017price} also derived the drivers of price for Airbnb listings from 33 cities.
+What is observed is that the dimension as well as the type of the accomodation positively influences the price. However, the location has almost no impact on the price, except for the case of being inside the circulare with respect to the opposite. Clustering on the other hand did not deliver usable results,  because of the absence of easily recognizable patterns. Further analysis of the price determinans and the clusters may shed more light into the topic.
 
 
-    \item Provide an overview of your results.
-
-
-    \item Outline of the paper:\\
-        {\it The paper is organized as follows. The next section describes the
-        model under investigation. Section \ref{Sec:Data} describes the data set
-        and Section \ref{Sec:Results} presents the results. Finally, Section
-        \ref{Sec:Conc} concludes.}
-
-    \item The introduction should not be longer than 4 pages.
-
-\end{itemize}
+The paper is divided into 7 sections. Section \ref{Sec:Data Preparation} will present the data used for this study and explained how it was prepared. Consecutively, \ref{Sec:Exploratory} will run exploratory data analysis, both in form of tables and plots, on this data. Because of our interest in explaining property price, \ref{Sec:Price analysis} will focus on this feature and show correlation and regression with respect to it. Furthermore, an attempt at clustering the Airbnb properties will be done in \ref{Sec:cluster}. After that it will be explained in \ref{Sec:shiny} why a ShinyApp was develop to present this research. Finally, \ref{Sec:Conc} we will present the results and draw some conclusions.

@@ -1,3 +1,5 @@
+rm(list=ls())
+
 # Install and load needed packages
 needed_packages <- c("shiny",
                      "shinydashboard",
@@ -12,7 +14,8 @@ needed_packages <- c("shiny",
                      "Jmisc",
                      "stringr")
 for (package in needed_packages) {
-  if (!require(package, character.only=TRUE)) {install.packages(package, character.only=TRUE)}
+  if (!require(package, character.only=TRUE)) {
+    install.packages(package, character.only=TRUE)}
   library(package, character.only=TRUE)
 }
 devtools::install_github('andrewsali/shinycssloaders')

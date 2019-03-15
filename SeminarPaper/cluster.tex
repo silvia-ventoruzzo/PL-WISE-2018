@@ -38,7 +38,7 @@ The resulting plot can be seen in \ref{figure:numclusterplot}. In this case ther
 
 \begin{figure}[H]
 \begin{center}
-\includegraphics[width=0.8\textwidth, keepaspectratio]{numclusters.pdf} \\
+\includegraphics[width=0.7\textwidth, keepaspectratio]{numclusters.pdf} \\
 \caption{Plot of the total variance explained against different values of \textit{k} \protect\includegraphics[scale=0.05]{qletlogo.pdf} {\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Helpers/number_of_clusters.R}{number\_of\_clusters.R}}}
 \label{figure:numclusterplot}
 \end{center}
@@ -48,4 +48,16 @@ The resulting plot can be seen in \ref{figure:numclusterplot}. In this case ther
 
 After selecting the number of clusters to use, one can apply it inside the function \texttt{kmeans} and look at the cluster assignments of the different points.
 
-Having multiple variables, plotting the clustered points with respect to all variables is not feasible, one need therefore to find alternatives. Since we have coordinate points, one possibility is to plot the points with respect to their longitude and latitude, like in figure .... Another one can be to plot them with respect to the first two principal components.
+Having multiple variables, plotting the clustered points with respect to all variables is not feasible, one need therefore to find alternatives. Since we have coordinate points, one possibility is to plot the points with respect to their longitude and latitude, like in figure \ref{figure:cluster_map}. Another one can be to plot them with respect to the first two principal components, as in figure \ref{figure:cluster_plot}.
+
+\begin{figure}[H]
+\centering
+\subfloat[With respect to the coordinates]{\includegraphics[height=0.5\textwidth]{cluster_map.pdf}
+\label{figure:cluster_map}}
+\subfloat[With respect to Principal Components]{\includegraphics[height=0.5\textwidth]{cluster_plot.pdf}
+\label{figure:cluster_plot}}
+\caption{Plotting the clusters}
+\centering
+\end{figure}
+
+Because of the large amount of variables, points and clusters, it is not easy to visually display the groups. This task can be left for further studies.

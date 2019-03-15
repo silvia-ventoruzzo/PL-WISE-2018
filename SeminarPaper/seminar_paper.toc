@@ -10,9 +10,14 @@
 \contentsline {section}{\numberline {4}Price analysis}{14}{section.4}
 \contentsline {subsection}{\numberline {4.1}Correlation with price}{14}{subsection.4.1}
 \contentsline {subsection}{\numberline {4.2}Linear regression on price}{15}{subsection.4.2}
-\contentsline {section}{\numberline {5}Clustering}{15}{section.5}
-\contentsline {subsection}{\numberline {5.1}Choosing the number of clusters}{16}{subsection.5.1}
-\contentsline {subsection}{\numberline {5.2}k-means clustering}{18}{subsection.5.2}
-\contentsline {section}{\numberline {6}ShinyApp}{20}{section.6}
+\contentsline {section}{\numberline {5}Clustering}{17}{section.5}
+\contentsline {subsection}{\numberline {5.1}Choosing the number of clusters}{17}{subsection.5.1}
+\contentsline {subsection}{\numberline {5.2}k-means clustering}{20}{subsection.5.2}
+\contentsline {section}{\numberline {6}ShinyApp}{21}{section.6}
 \contentsline {section}{\numberline {7}Results and Conclusions}{22}{section.7}
 \contentsline {section}{References}{23}{section.7}
+\contentsline {section}{Appendix}{25}{section*.15}
+\contentsline {section}{\numberline {A}Code}{25}{appendix.A}
+\contentsline {subsection}{\numberline {A.1}Data and analysis}{25}{subsection.A.1}
+\contentsline {subsection}{\numberline {A.2}Functions}{49}{subsection.A.2}
+\contentsline {subsection}{\numberline {A.3}ShinyApp}{66}{subsection.A.3}
