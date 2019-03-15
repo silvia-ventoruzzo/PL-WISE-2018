@@ -1,4 +1,4 @@
-Name of Quantlet: berlin_districts_neighbourhoods
+Name of Quantlet: SPL_berlin_districts_neighbourhoods
 
 Published in: 'Statistical programming languages - Student Project on SPL_WISE_18/19’
 
