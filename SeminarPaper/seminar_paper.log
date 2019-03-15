@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.17)  15 MAR 2019 22:06
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.17)  15 MAR 2019 22:52
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -833,17 +833,17 @@ File: lstlang3.sty 2015/06/04 1.6 listings language file
 Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
 nput line 18.
 
-(../Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R
+(../SPL_Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 pdfTeX warning (ext4): destination with the same identifier (name{page.2}) has 
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.26                   group 
-                             = BEZNAME) %>% [2])
-(../Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R)
-(../Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R)
+l.27     dplyr:
+               :select(id, group, geometry) %>% [2])
+(../SPL_Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R)
+(../SPL_Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R)
 <berlin_district_leaflet.pdf, id=212, 995.72pt x 746.79pt>
 File: berlin_district_leaflet.pdf Graphic file (type pdf)
 <use berlin_district_leaflet.pdf>
@@ -869,7 +869,7 @@ Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 [3 <./berlin_district_leaflet.pdf> <./berlin_district_ggplot.pdf> <./qletlogo.p
 df>]
-<S_und_U-Bahnnetz_mit_Regionalbahn_Innenstadt.pdf, id=298, 1195.01462pt x 845.0
+<S_und_U-Bahnnetz_mit_Regionalbahn_Innenstadt.pdf, id=299, 1195.01462pt x 845.0
 471pt>
 File: S_und_U-Bahnnetz_mit_Regionalbahn_Innenstadt.pdf Graphic file (type pdf)
 <use S_und_U-Bahnnetz_mit_Regionalbahn_Innenstadt.pdf>
@@ -881,12 +881,12 @@ Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
 [4 <./S_und_U-Bahnnetz_mit_Regionalbahn_Innenstadt.pdf>]
-(../Berlin_VBB_Zones/berlin_vbb_zones.R)
-(../Berlin_VBB_Zones/berlin_vbb_zones.R)
+(../SPL_Berlin_VBB_Zones/berlin_vbb_zones.R)
+(../SPL_Berlin_VBB_Zones/berlin_vbb_zones.R)
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[5] (../Berlin_VBB_Zones/berlin_vbb_zones.R)
+[5] (../SPL_Berlin_VBB_Zones/berlin_vbb_zones.R)
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 69.
 
 (/usr/local/texlive/2018/texmf-dist/tex/latex/base/omscmr.fd
@@ -895,13 +895,13 @@ File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 69.
 
-(../Berlin_VBB_Zones/berlin_vbb_zones.R)
-<berlin_vbb_zones_leaflet.pdf, id=442, 995.72pt x 746.79pt>
+(../SPL_Berlin_VBB_Zones/berlin_vbb_zones.R)
+<berlin_vbb_zones_leaflet.pdf, id=443, 995.72pt x 746.79pt>
 File: berlin_vbb_zones_leaflet.pdf Graphic file (type pdf)
 <use berlin_vbb_zones_leaflet.pdf>
 Package pdftex.def Info: berlin_vbb_zones_leaflet.pdf  used on input line 85.
 (pdftex.def)             Requested size: 176.40439pt x 132.2969pt.
-<berlin_vbb_zones_ggplot.pdf, id=443, 514.92375pt x 414.54875pt>
+<berlin_vbb_zones_ggplot.pdf, id=444, 514.92375pt x 414.54875pt>
 File: berlin_vbb_zones_ggplot.pdf Graphic file (type pdf)
 <use berlin_vbb_zones_ggplot.pdf>
 Package pdftex.def Info: berlin_vbb_zones_ggplot.pdf  used on input line 86.
@@ -931,31 +931,31 @@ Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[9] (../Helpers/descriptive_statistics.R)
-File: qletlogo.pdf Graphic file (type pdf)
-<use qletlogo.pdf>
-Package pdftex.def Info: qletlogo.pdf  used on input line 42.
-(pdftex.def)             Requested size: 9.92516pt x 10.26393pt.
-File: qletlogo.pdf Graphic file (type pdf)
-<use qletlogo.pdf>
-Package pdftex.def Info: qletlogo.pdf  used on input line 42.
-(pdftex.def)             Requested size: 9.92516pt x 10.26393pt.
-
+[9] (../Helpers/descriptive_statistics.R
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[10] (../Helpers/descriptive_statistics.R
+[10])
+File: qletlogo.pdf Graphic file (type pdf)
+<use qletlogo.pdf>
+Package pdftex.def Info: qletlogo.pdf  used on input line 42.
+(pdftex.def)             Requested size: 9.92516pt x 10.26393pt.
+File: qletlogo.pdf Graphic file (type pdf)
+<use qletlogo.pdf>
+Package pdftex.def Info: qletlogo.pdf  used on input line 42.
+(pdftex.def)             Requested size: 9.92516pt x 10.26393pt.
+ (../Helpers/descriptive_statistics.R
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
 [11])
-<price_distribution_complete.pdf, id=698, 514.92375pt x 495.8525pt>
+<price_distribution_complete.pdf, id=695, 514.92375pt x 495.8525pt>
 File: price_distribution_complete.pdf Graphic file (type pdf)
 <use price_distribution_complete.pdf>
 Package pdftex.def Info: price_distribution_complete.pdf  used on input line 59
 .
 (pdftex.def)             Requested size: 206.83012pt x 199.16928pt.
-<price_distribution_nooutliers.pdf, id=699, 514.92375pt x 495.8525pt>
+<price_distribution_nooutliers.pdf, id=696, 514.92375pt x 495.8525pt>
 File: price_distribution_nooutliers.pdf Graphic file (type pdf)
 <use price_distribution_nooutliers.pdf>
 Package pdftex.def Info: price_distribution_nooutliers.pdf  used on input line 
@@ -969,7 +969,7 @@ File: qletlogo.pdf Graphic file (type pdf)
 <use qletlogo.pdf>
 Package pdftex.def Info: qletlogo.pdf  used on input line 61.
 (pdftex.def)             Requested size: 9.92516pt x 10.26393pt.
-<room_type_distribution.pdf, id=703, 514.92375pt x 495.8525pt>
+<room_type_distribution.pdf, id=700, 514.92375pt x 495.8525pt>
 File: room_type_distribution.pdf Graphic file (type pdf)
 <use room_type_distribution.pdf>
 Package pdftex.def Info: room_type_distribution.pdf  used on input line 70.
@@ -987,7 +987,7 @@ Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
 [12 <./price_distribution_complete.pdf> <./price_distribution_nooutliers.pdf>]
-<price_avg_map.png, id=730, 1206.5075pt x 793.96625pt>
+<price_avg_map.png, id=734, 1206.5075pt x 793.96625pt>
 File: price_avg_map.png Graphic file (type png)
 <use price_avg_map.png>
 Package pdftex.def Info: price_avg_map.png  used on input line 80.
@@ -1000,13 +1000,13 @@ File: qletlogo.pdf Graphic file (type pdf)
 <use qletlogo.pdf>
 Package pdftex.def Info: qletlogo.pdf  used on input line 81.
 (pdftex.def)             Requested size: 9.92516pt x 10.26393pt.
-)
+) (./price.tex
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[13 <./room_type_distribution.pdf> <./price_avg_map.png>] (./price.tex
+[13 <./room_type_distribution.pdf> <./price_avg_map.png>]
 (../Helpers/from_row_to_col.R)
-<price_correlation.pdf, id=751, 514.92375pt x 414.54875pt>
+<price_correlation.pdf, id=756, 514.92375pt x 414.54875pt>
 File: price_correlation.pdf Graphic file (type pdf)
 <use price_correlation.pdf>
 Package pdftex.def Info: price_correlation.pdf  used on input line 19.
@@ -1028,12 +1028,12 @@ Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
 [15 <./price_correlation.pdf>]
-<fittedactual.pdf, id=787, 514.92375pt x 493.845pt>
+<fittedactual.pdf, id=791, 514.92375pt x 493.845pt>
 File: fittedactual.pdf Graphic file (type pdf)
 <use fittedactual.pdf>
 Package pdftex.def Info: fittedactual.pdf  used on input line 67.
 (pdftex.def)             Requested size: 229.91426pt x 220.50885pt.
-<qqplot.pdf, id=788, 514.92375pt x 493.845pt>
+<qqplot.pdf, id=792, 514.92375pt x 493.845pt>
 File: qqplot.pdf Graphic file (type pdf)
 <use qqplot.pdf>
 Package pdftex.def Info: qqplot.pdf  used on input line 69.
@@ -1057,7 +1057,7 @@ Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
 [18])
-<numclusters.pdf, id=888, 514.92375pt x 495.8525pt>
+<numclusters.pdf, id=892, 514.92375pt x 495.8525pt>
 File: numclusters.pdf Graphic file (type pdf)
 <use numclusters.pdf>
 Package pdftex.def Info: numclusters.pdf  used on input line 41.
@@ -1075,12 +1075,12 @@ Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
 [19 <./numclusters.pdf>]
-<cluster_map.pdf, id=918, 514.92375pt x 493.845pt>
+<cluster_map.pdf, id=922, 514.92375pt x 493.845pt>
 File: cluster_map.pdf Graphic file (type pdf)
 <use cluster_map.pdf>
 Package pdftex.def Info: cluster_map.pdf  used on input line 56.
 (pdftex.def)             Requested size: 229.91426pt x 220.50885pt.
-<cluster_plot.pdf, id=919, 514.92375pt x 493.845pt>
+<cluster_plot.pdf, id=923, 514.92375pt x 493.845pt>
 File: cluster_plot.pdf Graphic file (type pdf)
 <use cluster_plot.pdf>
 Package pdftex.def Info: cluster_plot.pdf  used on input line 58.
@@ -1090,11 +1090,11 @@ Overfull \hbox (26.07188pt too wide) in paragraph at lines 56--59
  [][][][] 
  []
 
-)
+) (./shiny.tex
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[20 <./cluster_map.pdf> <./cluster_plot.pdf>] (./shiny.tex)
+[20 <./cluster_map.pdf> <./cluster_plot.pdf>])
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
@@ -1150,6 +1150,13 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
+
+Underfull \hbox (badness 6641) in paragraph at lines 88--90
+[]\T1/cmr/m/sc/10.95 Salter, J. T. T. \T1/cmr/m/n/10.95 (2012): ``Airbnb: The s
+tory be-hind the /$\OT1/cmr/m/n/10.95 1\OML/cmm/m/it/10.95 :\OT1/cmr/m/n/10.95 
+3\OML/cmm/m/it/10.95 bnroom \OMS/cmsy/m/n/10.95 ^^@
+ []
+
 ! Extra }, or forgotten \endgroup.
 \par ...m \@noitemerr {\@@par }\fi \else {\@@par }
                                                   \fi 
@@ -1166,12 +1173,13 @@ Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
 [24] (./code.tex
-(..//Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R
+(..//SPL_Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
 [25])
-(..//Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods_maps.R
+(..//SPL_Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods_maps.R
+
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
@@ -1179,7 +1187,7 @@ Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[27]) (../Berlin_VBB_Zones/berlin_vbb_zones.R
+[27]) (../SPL_Berlin_VBB_Zones/berlin_vbb_zones.R
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
@@ -1187,7 +1195,7 @@ Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[29]) (../Berlin_VBB_Zones/berlin_vbb_zones_maps.R
+[29]) (../SPL_Berlin_VBB_Zones/berlin_vbb_zones_maps.R
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
@@ -1231,11 +1239,11 @@ Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[40]) (../price_analysis.R
+[40])
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[41]
+[41] (../price_analysis.R
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
@@ -1263,11 +1271,11 @@ Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[48]) (../Helpers/capwords.R) (../Helpers/correlation_plot.R
+[48]) (../Helpers/capwords.R
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[49]
+[49]) (../Helpers/correlation_plot.R
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
@@ -1275,11 +1283,11 @@ Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[51]) (../Helpers/df_join_clean.R
+[51]
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[52]
+[52]) (../Helpers/df_join_clean.R
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
@@ -1312,11 +1320,11 @@ Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[60]) (../Helpers/points_midpoint.R) (../Helpers/recode_all.R
+[60]) (../Helpers/points_midpoint.R
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[61]) (../Helpers/summarize_df.R
+[61]) (../Helpers/recode_all.R) (../Helpers/summarize_df.R
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
@@ -1484,11 +1492,11 @@ Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[103]) (../ShinyApp/Server/clustering_server.R
+[103]
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[104]
+[104]) (../ShinyApp/Server/clustering_server.R
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
@@ -1500,31 +1508,35 @@ Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[107]) (../ShinyApp/app.R
+[107]
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[108]))
+[108]) (../ShinyApp/app.R
 Overfull \vbox (6.78236pt too high) has occurred while \output is active []
 
 
-[109] (./authorship.tex) [110]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 166.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 166.
+[109]))
+Overfull \vbox (6.78236pt too high) has occurred while \output is active []
+
+
+[110] (./authorship.tex) [111]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 164.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 164.
  (./seminar_paper.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 166.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 166.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 164.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 164.
 Package rerunfilecheck Info: File `seminar_paper.out' has not changed.
 (rerunfilecheck)             Checksum: C5822FB8FD86B6CA8833616B65619CE0;1336.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 166.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 164.
  ) 
 Here is how much of TeX's memory you used:
- 25296 strings out of 492649
- 436198 string characters out of 6129621
+ 25312 strings out of 492649
+ 436535 string characters out of 6129621
  803184 words of memory out of 5000000
  25013 multiletter control sequences out of 15000+600000
  25753 words of font info for 60 fonts, out of 8000000 for 9000
@@ -1560,10 +1572,10 @@ public/cm-super/sfti1440.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/pu
 blic/cm-super/sftt0800.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/publ
 ic/cm-super/sftt0900.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public
 /cm-super/sftt1095.pfb>
-Output written on seminar_paper.pdf (112 pages, 4915597 bytes).
+Output written on seminar_paper.pdf (113 pages, 4920644 bytes).
 PDF statistics:
- 5437 PDF objects out of 6186 (max. 8388607)
- 5096 compressed objects within 51 object streams
- 3588 named destinations out of 4296 (max. 500000)
+ 5463 PDF objects out of 6186 (max. 8388607)
+ 5120 compressed objects within 52 object streams
+ 3604 named destinations out of 4296 (max. 500000)
  284 words of extra memory for PDF output out of 10000 (max. 10000000)
 

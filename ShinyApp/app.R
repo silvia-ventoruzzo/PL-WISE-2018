@@ -1,4 +1,4 @@
-rm(list=ls())
+rm(list=ls(all = TRUE))
 
 # Install and load needed packages
 needed_packages <- c("shiny",

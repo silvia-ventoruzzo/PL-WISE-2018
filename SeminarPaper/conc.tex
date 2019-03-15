@@ -1,25 +1,13 @@
 \section{Results and Conclusions}\label{Sec:Conc}
 
-\begin{itemize}
-
-    \item Give a short summary of what has been done and what has been
-    found.
-    
 Airbnb is a relevant subject in this day and age where sharing economy has affected most business fields. Therefore there have been many studies about Airbnb, in relation to hotels \citep{wang2017price}, and to the rental market \citep{coles2017airbnb}.
 
 In this study we focused on the properties based in Berlin, the capital of Germany. We looked at how the properties are distributed across the cities, noting that most of them are in the central part of town, the one inside the circular line. We further explored the distribution of different attributes, identifying differences across the multiple the districts and neighbourhoods.
 
-As to be expected, most of the properties have at least one station within 1km, being fast to the center an important factor when choosing accomodation.
+Location is just relatively a good indicator of price. Being inside the circular line leads to higher prices, but the districts are not as strong of a guide. The amount of stations within 1km is more related to price than the amount of attractios wihin 2km, probably because of the well functioning transportation system in Berlin. Trustworthiness of the host is also not strongly correlated with price, only not having a profile pics has a high regression coefficient. Finally, the type of accomodation is probably the information that mostly predicts price. Hotels lead to much higher prices, as well as booking a whole apartent compared to just a room, or part of it. 
     
+Unfortunately, clustering did not give us much insight into the distribution of the properties and their common attributs. We will leave it to future research to try different clustering methods and maybe test other variables.
 
-    \item Expose results concisely.
+The same can be said for linear regression, which did not deliver such reliable results, since the model did not respect some of the assumptions. One can try running the model with fewer or other variables, or perform Quantile Regression as in \cite{wang2017price}.
 
-    \item Draw conclusions about the problem studied. What are the
-    implications of your findings?
-
-    \item Point out some limitations of study (assist reader in judging validity
-    of findings).
-
-    \item Suggest issues for future research.
-
-\end{itemize}
+One can however already try different variables and number of clusters in the web interface developed for this study.

@@ -1,3 +1,5 @@
+rm(list=ls(all = TRUE))
+
 # Install and load needed packages
 needed_packages = c("tidyverse",
                      "rstudioapi",
@@ -68,8 +70,7 @@ print("Price correlation calculated.")
 # dev.off()
 
 # Correlation with price plot
-correlation_plot(corr_df   = listings_price_correlation, 
-                 variables = c("property_type", "district"))
+correlation_plot(corr_df   = listings_price_correlation)
   
 # dev.copy2pdf(file = "./SeminarPaper/price_correlation.pdf")
 # dev.off()

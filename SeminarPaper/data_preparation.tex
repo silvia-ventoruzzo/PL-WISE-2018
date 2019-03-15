@@ -15,15 +15,15 @@ Berlin consists of 96 neighbourhoods (Ortsteile), which are grouped into 12 dist
 
 The polygons have been extracted from the relative shapefile with the function \texttt{st\_read} from the \texttt{sf} package. For the neighbourhoods we simply rename the variables and keep the ones of interest.
 
-\lstinputlisting[language=R, firstline=18, lastline=26, firstnumber=1, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}{berlin\_districts\_neighbourhoods.R}}|}]{../Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}
+\lstinputlisting[language=R, firstline=19, lastline=28, firstnumber=1, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/SPL_Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}{berlin\_districts\_neighbourhoods.R}}|}]{../SPL_Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}
 
 However, one of the neighbourhoods, Buckow, is composed of two separate polygons, which we therefore need to unite according to the neighbourhoods' names. Thanks to the flexibility of the \texttt{sf} objects, this is done simply with a \texttt{summarize} from the package \texttt{dyplr}.
 
-\lstinputlisting[language=R, firstline=29, lastline=31, firstnumber=11, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}{berlin\_districts\_neighbourhoods.R}}|}]{../Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}
+\lstinputlisting[language=R, firstline=31, lastline=33, firstnumber=11, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/SPL_Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}{berlin\_districts\_neighbourhoods.R}}|}]{../SPL_Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}
 
 For the districts we perform the same procedure as above, but this time we unite the polygons only by their district, which are represented here by the group variable.
 
-\lstinputlisting[language=R, firstline=34, lastline=37, firstnumber=19, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}{berlin\_districts\_neighbourhoods.R}}|}]{../Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}
+\lstinputlisting[language=R, firstline=36, lastline=39, firstnumber=19, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/SPL_Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}{berlin\_districts\_neighbourhoods.R}}|}]{../SPL_Berlin_Districts_Neighbourhoods/berlin_districts_neighbourhoods.R}
 
 The produced polygons can be used to map Berlin using \texttt{ggplot2} or \texttt{leaflet}, as shown in figure \ref{figure:berlin_map}. \texttt{leaflet} is more flexible and more suitable for plotting spatial data. Therefore, this package will be used for now on for mapping polygons and coordinate points.
 
@@ -54,15 +54,15 @@ First of all, we need to create the polygon for area A, which is done by joining
 
 Unfortunately the shapefile with the stations did not contain information about the line to which these stations correspond. Therefore we needed to filter the stations manually with the ones belonging to the circular line. This vector also contains the information in which order the points will be connected. You can notice that the first and last station are the same since the polygon needs to close.
 
-\lstinputlisting[language=R, firstline=27, lastline=38, firstnumber=1, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/berlin_vbb_zones/berlin_vbb_zones.R}{berlin\_vbb\_zones.R}}|}]{../Berlin_VBB_Zones/berlin_vbb_zones.R}
+\lstinputlisting[language=R, firstline=29, lastline=40, firstnumber=1, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/SPL_Berlin_VBB_Zones/berlin_vbb_zones.R}{berlin\_vbb\_zones.R}}|}]{../SPL_Berlin_VBB_Zones/berlin_vbb_zones.R}
 
 Since some stations appear multiple times, we firstly filter railway stations, which include both subway and lightrail, and then we calculate the middle point for each station among the ones having the same name. We then join this with the dataframe containing the names of the stations in the circular line, thus filtering the stations to the ones we are interested in. After performing some preparation steps, the function \texttt{st\_polygon} from the \texttt{sf} package was used to create a polygon out of a list of points.
 
-\lstinputlisting[language=R, firstline=41, lastline=57, firstnumber=13, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_VBB_Zones/berlin_vbb_zones.R}{berlin\_vbb\_zones.R}}|}]{../Berlin_VBB_Zones/berlin_vbb_zones.R}
+\lstinputlisting[language=R, firstline=43, lastline=59, firstnumber=13, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/SPL_Berlin_VBB_Zones/berlin_vbb_zones.R}{berlin\_vbb\_zones.R}}|}]{../SPL_Berlin_VBB_Zones/berlin_vbb_zones.R}
 
 Second af all, in order to create the polygon for zone B, we need to produce the  polygon for entire Berlin. This is done with a procedure already explained in subsection \ref{subsec:berlin}. In this case we don't perform any grouping, thus uniting all neighbourhoods.
 
-\lstinputlisting[language=R, firstline=60, lastline=61, firstnumber=31, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_VBB_Zones/berlin_vbb_zones.R}{berlin\_vbb\_zones.R}}|}]{../Berlin_VBB_Zones/berlin_vbb_zones.R}
+\lstinputlisting[language=R, firstline=62, lastline=63, firstnumber=31, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/SPL_Berlin_VBB_Zones/berlin_vbb_zones.R}{berlin\_vbb\_zones.R}}|}]{../SPL_Berlin_VBB_Zones/berlin_vbb_zones.R}
 
 Finally, we bind the two objects by row and calculate their intersections thanks to the function \texttt{st\_intersection} from the package \texttt{sf}. We then define the area names according to how many times the two previous polygons intersect:
 	\begin{itemize}
@@ -70,7 +70,7 @@ Finally, we bind the two objects by row and calculate their intersections thanks
     		\item Area B: where polygons do not intersect (n. overlaps $\leq$ 1)
     \end{itemize}
 
-\lstinputlisting[language=R, firstline=64, lastline=69, firstnumber=34, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/Berlin_VBB_Zones/berlin_vbb_zones.R}{berlin\_vbb\_zones.R}}|}]{../Berlin_VBB_Zones/berlin_vbb_zones.R}
+\lstinputlisting[language=R, firstline=66, lastline=71, firstnumber=34, escapechar=|, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/SPL_Berlin_VBB_Zones/berlin_vbb_zones.R}{berlin\_vbb\_zones.R}}|}]{../SPL_Berlin_VBB_Zones/berlin_vbb_zones.R}
 
 \iffalse
 In this code the custom-function \texttt{points\_midpoint} was used to calculate the middle point among many. It extracts the coordinates of the points thanks to \texttt{st\_coordinates} and then calculates the mean of latitude and longitude.
@@ -121,4 +121,4 @@ Then it calculates how many reference points are within the set distance and how
 
 In the end we use the calendar dataframe to calculate availability of each property in the different seasons.
 
-\lstinputlisting[language=R, firstline=170, lastline=183, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/data_preparation.R}{data\_preparation.R}}|}]{../data_preparation.R}
+\lstinputlisting[language=R, firstline=192, lastline=208, caption={|\textbf{\href{https://github.com/silvia-ventoruzzo/SPL-WISE-2018/blob/master/data_preparation.R}{data\_preparation.R}}|}]{../data_preparation.R}
